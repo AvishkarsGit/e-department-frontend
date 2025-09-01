@@ -1,0 +1,55 @@
+<div class="app-content-header bg-primary-color">
+  <div class="container-fluid p-4">
+    <div class="row">
+      <div class="col-sm-6">
+        <h1 class="m-0">{{ title() }}</h1>
+
+        <ol class="breadcrumb m-0">
+          <!-- <li routerLinkActive="active" class="breadcrumb-item active">
+            <a routerLink="/app">
+              {{ APP_NAME }}
+            </a>
+          </li> -->
+
+          <li routerLinkActive="active" class="breadcrumb-item">
+            <a routerLink="/app/dashboard">
+              <!-- <i class="fa fa-home primary-color"></i> -->
+              DASHBOARD
+            </a>
+          </li>
+          <li routerLinkActive="active" class="breadcrumb-item active">
+            <a [routerLink]="route()"> {{ subRoute() }}</a>
+          </li>
+          @if(lastRoute()) {
+          <li routerLinkActive="active" class="breadcrumb-item active">
+            <a> {{ lastRouteName() }}</a>
+          </li>
+          }
+        </ol>
+      </div>
+      <div class="col-sm-6 align-self-center">
+        <!-- <ol class="breadcrumb float-sm-end m-0">
+          <li routerLinkActive="active" class="breadcrumb-item">
+            <a routerLink="/app/dashboard"><i class="fa fa-home primary-color"></i></a>
+          </li>
+          <li routerLinkActive="active" class="breadcrumb-item active">
+            <a [routerLink]="route()"> {{ subRoute() }}</a>
+          </li>
+          @if(lastRoute()) {
+          <li routerLinkActive="active" class="breadcrumb-item active">
+            <a> {{ lastRouteName() }}</a>
+          </li>
+          }
+        </ol> -->
+
+        @if(buttonLabel()) {
+        <app-add-button
+          class="float-sm-end"
+          [label]="buttonLabel()"
+          (onClick)="addButton()"
+        ></app-add-button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

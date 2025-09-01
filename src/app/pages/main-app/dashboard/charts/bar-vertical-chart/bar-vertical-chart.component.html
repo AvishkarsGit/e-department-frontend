@@ -1,0 +1,17 @@
+<div class="p-3 my-chart">
+  <ngx-charts-bar-vertical
+    [scheme]="colorScheme()"
+    [results]="data()"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [yScaleMax]="100"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-bar-vertical>
+</div>

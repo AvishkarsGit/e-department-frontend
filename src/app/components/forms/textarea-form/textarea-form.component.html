@@ -1,0 +1,32 @@
+<div class="form-group form-label form-style">
+
+  @if(label()) {
+    <label>
+      {{ label() }}
+      @if(required()) {
+      <small>*</small>
+      }
+    </label>
+  }
+
+  @let controlValue = controlInput;
+
+  <textarea
+    [rows]="rows()"
+    class="form-control"
+    [readonly]="readOnly()"
+    [placeholder]="placeholder()"
+    [formControl]="controlValue!"
+  >
+  </textarea>
+
+  @if(required() && controlValue?.touched && controlValue?.invalid) {
+  <div class="invalid-feedback d-block">
+    <div>
+      <small class="text-danger">
+        @if(controlValue?.errors!['required']) { * Required }
+      </small>
+    </div>
+  </div>
+  }
+</div>

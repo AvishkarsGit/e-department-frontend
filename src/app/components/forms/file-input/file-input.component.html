@@ -1,0 +1,69 @@
+<div class="file-input-form form-group">
+  @if(label()) {
+  <label>
+    {{ label() }}
+    @if(required()) {
+    <small>*</small>
+    }
+  </label>
+  }
+  <div class="file-input row py-2">
+    <!-- File Input Section -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <input
+        #fileInput
+        type="file"
+        class="form-control"
+        [multiple]="multiple()"
+        (change)="onFileSelected($event)"
+      />
+      <!-- 
+        [formControl]="controlValue!" -->
+    </div>
+
+    <!-- Preview Image Section -->
+    <div class="col-xl-6 col-sm-6 col-12 text-center">
+      @if(previewUrls()) {
+
+      <!-- loop of images -->
+      @for(url of previewUrls(); track $index) {
+      <img
+        [src]="url ?? defaultImage"
+        alt="Preview"
+        class="mx-1"
+        (error)="resetPreview($index)"
+      />
+      }
+
+      <!-- end of loop -->
+      } @else {
+      <img [src]="defaultImage" alt="Preview" (error)="setPreviewUrls([defaultImage])" />
+      }
+    </div>
+  </div>
+</div>
+
+@if(isError()) {
+<div class="text-danger">
+  <small>{{ isError() }}</small>
+</div>
+}
+
+
+
+<!-- is formcontrol used then below error will show -->
+@let controlValue = controlInput;
+<!-- Error Handling using @if, @else if, @else -->
+@if (controlValue?.invalid && controlValue?.touched) {
+<div class="text-danger">
+  @if (controlValue?.hasError('required')) {
+  <small>* File is required</small>
+  } @else if (controlValue?.hasError('maxSize')) {
+  <small>* File size exceeds limit</small>
+  } @else if (controlValue?.hasError('invalidType')) {
+  <small>* Invalid file type</small>
+  } @else {
+  <small>* Invalid file selection</small>
+  }
+</div>
+}

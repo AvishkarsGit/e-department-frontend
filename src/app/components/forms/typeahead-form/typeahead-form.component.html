@@ -1,0 +1,50 @@
+<div class="form-group form-label form-style">
+  @if(label()) {
+  <label>
+    {{ label() }}
+    @if(required()) {
+    <small>*</small>
+    }
+  </label>
+  } @let controlValue = controlInput;
+
+  <div class="icons-input">
+    <span class="fas fa-{{ icon() }} align-item icons"></span>
+    <input
+      #typeaheadInput
+      [type]="type()"
+      class="form-control"
+      [placeholder]="placeholder()"
+      [formControl]="controlValue!"
+      [typeahead]="data()"
+      (typeaheadOnSelect)="onSelect($event)"
+      [typeaheadOptionField]="displayField()"
+      appDebounce
+      [debounceTime]="debounce()"
+      (debouncedInput)="onChange($event)"
+    />
+
+    @if(endText()) {
+    <span class="align-item text_end">
+      {{ endText() }}
+    </span>
+    } @if(endButton()) {
+    <span class="align-item button_end">
+      <app-icon-button
+        icon="fa fa-{{ buttonIcon() }}"
+        (onClick)="buttonTapped($event)"
+      ></app-icon-button>
+    </span>
+    }
+  </div>
+
+  @if(required() && controlValue?.touched && controlValue?.invalid) {
+  <div class="invalid-feedback d-block">
+    <div>
+      <small class="text-danger">
+        @if(controlValue?.errors!['required']) { * Required }
+      </small>
+    </div>
+  </div>
+  }
+</div>

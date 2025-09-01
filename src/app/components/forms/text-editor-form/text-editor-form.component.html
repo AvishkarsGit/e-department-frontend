@@ -1,0 +1,27 @@
+<div class="form-group form-label form-style">
+  @if(label()) {
+  <label>
+    {{ label() }}
+    @if(required()) {
+    <small>*</small>
+    }
+  </label>
+  }
+
+  @let controlValue = controlInput;
+
+  <div class="editor mt-1">
+    <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+    <ngx-editor [editor]="editor" [formControl]="controlValue!"> </ngx-editor>
+  </div>
+
+  @if(required() && controlValue?.touched && controlValue?.invalid) {
+  <div class="invalid-feedback d-block">
+    <div>
+      <small class="text-danger">
+        @if(controlValue?.errors!['required']) { * Required }
+      </small>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,33 @@
+.breadcrumb {
+  --bs-breadcrumb-divider: ">";
+}
+
+.breadcrumb-item a {
+  color: var(--primary-light-color);
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--light-color); /* on hover */
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  color: var(--medium-color); /* divider color */
+}
+
+.row {
+  margin-bottom: 11vh;
+}
+
+@media (max-width: 576px) {
+  .row {
+    margin-bottom: 8vh;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1500px) {
+  .row {
+    margin-bottom: 12vh;
+  }
+}

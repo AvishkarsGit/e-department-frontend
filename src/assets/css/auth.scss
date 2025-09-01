@@ -1,0 +1,74 @@
+@media only screen and (min-width: 960px) {
+  /* styles for browsers larger than 960px; */
+  .auth-form {
+    padding: 0 4vh;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  /* styles for browsers larger than 1440px; */
+  .auth-form {
+    padding: 0 4vh;
+  }
+}
+@media only screen and (min-width: 2000px) {
+  /* for sumo sized (mac) screens */
+  .auth-form {
+    padding: 0 4vh;
+  }
+}
+@media only screen and (max-device-width: 480px) {
+  /* styles for mobile browsers smaller than 480px; (iPhone) */
+  .auth-form {
+    padding: 1vh;
+  }
+}
+@media only screen and (device-width: 768px) {
+  /* default iPad screens */
+  .auth-form {
+    padding: 0.2vh 3vh;
+  }
+}
+/* different techniques for iPad screening */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: portrait) {
+  /* For portrait layouts only */
+  .auth-form {
+    padding: 0.5vh 2vh;
+  }
+}
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: landscape) {
+  /* For landscape layouts only */
+  .auth-form {
+    padding: 0.5vh 2vh;
+  }
+}
+
+.auth-button {
+  border-radius: 20px;
+  border: 1px solid var(--primary-color);
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-size: var(--font-size-small);
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+.auth-button:active {
+  transform: scale(0.95);
+}
+
+.auth-button:focus {
+  outline: none;
+}
+
+.form-style {
+  label {
+    font-weight: normal !important;
+    small {
+      color: var(--danger-color);
+    }
+  }
+}

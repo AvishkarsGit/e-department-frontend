@@ -1,0 +1,55 @@
+@defer(when formData()) {
+
+}
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <div class="form-group col-md-12" align="center">
+      <app-toggle-form-button
+        label="Status"
+        [control]="form.controls['status']"
+      >
+      </app-toggle-form-button>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="NAME"
+        placeholder="Name"
+        icon="building"
+        [required]="true"
+        [control]="form.controls['name']"
+      ></app-input-form>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-typeahead-form
+        label="COUNTRY"
+        placeholder="Country"
+        icon="building"
+        [required]="true"
+        [debounce]="800"
+        [control]="form.controls['country_name']"
+        [data]="countries()"
+        (query)="onCountryChange($event)"
+        [(updateSearchData)]="isCountryFetched"
+        (onSelected)="updateCountry($event)"
+      ></app-typeahead-form>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-textarea-form
+        label="REMARKS"
+        placeholder="Remarks"
+        [required]="false"
+        [control]="form.controls['remarks']"
+      ></app-textarea-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button> </app-submit-button>
+    </div>
+  </div>
+</form>
+

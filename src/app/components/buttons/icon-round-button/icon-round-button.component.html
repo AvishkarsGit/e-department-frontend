@@ -1,0 +1,10 @@
+<button
+  (click)="btnClick()"
+  class="{{addBtnClass()}} btn btn-sm round_shape"
+  [style.color]="color()"
+  type="button"
+  [tooltip]="tooltip()"
+  placement="auto"
+>
+  <i class="{{icon()}} {{addIconClass()}}"></i>
+</button>

@@ -1,0 +1,118 @@
+<!-- Main Sidebar Container -->
+<aside class="app-sidebar bg-body-tertiary shadow" data-bs-theme="light">
+  <div class="sidebar-brand bg-color rounded">
+    <!--begin::Brand Link-->
+    <a class="brand-link d-flex align-items-center bg-color">
+      <!--begin::Brand Image-->
+
+      <img
+        src="assets/imgs/logo.png"
+        alt="App"
+        class="brand-image shadow rounded"
+      />
+      <span class="brand-text fw-light">{{ APP_NAME }}</span>
+      <!--end::Brand Text-->
+    </a>
+    <!--end::Brand Link-->
+  </div>
+  <!--end::Sidebar Brand-->
+
+  @defer(when menuItems()) {
+
+    <!--begin::Sidebar Wrapper-->
+    <div class="sidebar-wrapper" data-overlayscrollbars="host">
+      <div
+        data-overlayscrollbars-viewport="scrollbarHidden overflowXHidden overflowYScroll"
+        overlay-scrollbars
+        [options]="{ scrollbars: { autoHide: 'scroll' } }"
+        [defer]="true"
+      >
+        <nav class="mt-2">
+          <!--begin::Sidebar Menu-->
+  
+          <ul
+            class="nav sidebar-menu flex-column"
+            data-lte-toggle="treeview"
+            role="menu"
+            data-accordion="false"
+          >
+            @for(item of menuItems(); track $index) {
+  
+              <!-- check role access -->
+  
+            <!-- check group or section -->
+            @if(item?.isGroupTitle || item?.isSectionTitle) {
+  
+            <li
+              class="nav-header primary-color"
+              [ngClass]="{ 'fs-8': item?.isSectionTitle }"
+            >
+              {{ item?.label }}
+            </li>
+  
+            } @else {
+  
+            <!-- is menu opened -->
+            @let isActive = activeMenu() === item?.label;
+  
+            <li class="nav-item" [ngClass]="{ 'menu-open': isActive }">
+              @if(!item?.children) {
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLink]="[item?.route]"
+              >
+                <i class="nav-icon" [ngClass]="item?.icon"></i>
+                <p>
+                  {{ item?.label }}
+                </p>
+              </a>
+              } @else {
+              <a class="nav-link" (click)="toggleMenu(item?.label)">
+                <i class="nav-icon" [ngClass]="item?.icon"></i>
+                <p>
+                  {{ item?.label }}
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+              </a>
+  
+              @if(isActive) {
+              <ul class="nav nav-treeview">
+                @for(subItem of item?.children; track $index) {
+  
+                <li class="nav-item">
+                  <a
+                    routerLinkActive="active"
+                    [routerLink]="[subItem?.route]"
+                    class="nav-link"
+                  >
+                    <i class="nav-icon" [ngClass]="subItem?.icon"></i>
+                    <p>{{ subItem?.label }}</p>
+                  </a>
+                </li>
+  
+                }
+              </ul>
+              } }
+            </li>
+            } }
+  
+            <li class="nav-item logout">
+              <a class="nav-link" (click)="logoutAlert()">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                  Logout
+                  <!-- <i class="nav-arrow bi bi-chevron-right"></i> -->
+                </p>
+              </a>
+            </li>
+          </ul>
+  
+          <!--end::Sidebar Menu-->
+        </nav>
+      </div>
+    </div>
+    
+  }
+
+</aside>

@@ -1,0 +1,36 @@
+form {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  text-align: center;
+
+  h1 {
+    font-size: var(--font-size-xxxl);
+    font-weight: 800;
+    margin: 0 0 4vh 0;
+  }
+
+  input {
+    background-color: var(--primary-light-color);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+  }
+
+  a {
+    color: var(--dark-color);
+    font-size: var(--font-size-medium);
+    text-decoration: none;
+    margin: 1.5vh 0;
+    align-self: flex-end;
+  }
+
+  .signin {
+    margin-top: 2vh;
+  }
+}

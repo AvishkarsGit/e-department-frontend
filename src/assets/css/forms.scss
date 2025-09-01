@@ -1,0 +1,35 @@
+.icons-input {
+  position: relative;
+  font-size: var(--font-size-medium);
+  input {
+    width: 100%;
+    border-radius: 10px;
+    text-indent: 32px;
+  }
+  input::placeholder {
+    font-size: var(--font-size-small);
+  }
+  
+  .align-item {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .icons {
+    left: 10px;
+  }
+  .text_end {
+    right: 40px;
+    font-size: var(--font-size-small);
+    // position: absolute;
+    // // top: 25%;
+    // top: 50%;
+    // transform: translateY(-50%);
+  }
+  .button_end {
+    // position: absolute;
+    // top: 5%;
+    right: 10px;
+  }
+}

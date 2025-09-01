@@ -1,0 +1,77 @@
+<ul class="navbar-nav ms-auto d-flex align-items-center">
+
+  <!--begin::Fullscreen Toggle-->
+  <li class="nav-item me-3">
+    <a
+      class="nav-link d-flex align-items-center"
+      data-lte-toggle="fullscreen"
+      (click)="toggleFullscreen()"
+    >
+      <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+      <i
+        data-lte-icon="minimize"
+        class="bi bi-fullscreen-exit"
+        style="display: none"
+      ></i>
+    </a>
+  </li>
+  <!--end::Fullscreen Toggle-->
+
+  <!-- profile -->
+  <li class="nav-item dropdown user-menu" [ngClass]="{ show: isProfileOpen() }">
+    <a
+      (click)="toggleProfileDropdown()"
+      class="nav-link dropdown-toggle d-flex align-items-center"
+      data-bs-toggle="dropdown"
+    >
+      <img
+        [src]="profile()?.photo ?? 'assets/imgs/avatar.png'"
+        class="user-image rounded-circle shadow mt-0"
+        alt="User Image"
+      />
+      <span class="d-none d-md-inline">{{ profile()?.name }}</span>
+    </a>
+    <ul
+      class="dropdown-menu dropdown-menu-lg dropdown-menu-end"
+      [ngClass]="{ show: isProfileOpen() }"
+      style="right: 0"
+    >
+      <!--begin::User Image-->
+      <li class="user-header text-bg-primary">
+        <img
+          [src]="profile()?.photo ?? avatar"
+          class="rounded-circle shadow"
+          alt="User Image"
+        />
+        <p class="pb-1">
+          {{ profile()?.name }}
+          <!-- <small>Member since</small> -->
+        </p>
+      </li>
+      <!--end::User Image-->
+      <!--begin::Menu Body-->
+      <li class="user-body">
+        <!--begin::Row-->
+        <!-- <div class="row">
+          <div class="col-4 text-center"><a href="#">Followers</a></div>
+          <div class="col-4 text-center"><a href="#">Sales</a></div>
+          <div class="col-4 text-center"><a href="#">Friends</a></div>
+        </div> -->
+        <!--end::Row-->
+      </li>
+      <!--end::Menu Body-->
+      <!--begin::Menu Footer-->
+      <li class="user-footer">
+        <a
+          [routerLink]="['/', 'app', 'profile']"
+          class="btn bg-primary-color btn-flat"
+          >Profile</a
+        >
+        <a class="btn btn-danger btn-flat float-end" (click)="auth.logout()"
+          >Logout</a
+        >
+      </li>
+      <!--end::Menu Footer-->
+    </ul>
+  </li>
+</ul>

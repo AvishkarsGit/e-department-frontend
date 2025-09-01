@@ -1,0 +1,179 @@
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+  buttonLabel="Add State"
+  (onButtonClick)="openAddModal(addStateTemplate)"
+>
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+
+    <app-excel-button
+      [fileName]="title"
+      [values]="states()"
+      api="getStates"
+      [fields]="['id', 'name', 'country_details.name', 'remarks', 'status']"
+    ></app-excel-button>
+
+    <app-print-button elementId="state-table" title="States"></app-print-button>
+
+    <!-- <app-add-button
+      label="ADD STATE"
+      (onClick)="openAddModal(addStateTemplate)"
+    ></app-add-button> -->
+  </div>
+
+  <div class="col-md-12 mb-3" id="state-table">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="states()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column>
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">COUNTRY</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.country_details?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="remarks">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">REMARKS</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value || "-" }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">STATUS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <!-- {{ value }} -->
+          <app-toggle-button
+            [checked]="row.status"
+            (checkedChange)="onStatusChange($event, row)"
+          ></app-toggle-button>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- <ngx-datatable-column prop="created_at">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">CREATED AT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="updated_at">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">UPDATED AT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+        </ng-template>
+      </ngx-datatable-column> -->
+
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addStateTemplate)"
+          >
+          </app-icon-round-button>
+
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add state modal -->
+<ng-template #addStateTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} STATE
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-state
+      [updateItem]="updateItem()!"
+      (added)="addData($event)"
+      (updated)="updateData($event)"
+    ></app-add-state>
+  </div>
+</ng-template>

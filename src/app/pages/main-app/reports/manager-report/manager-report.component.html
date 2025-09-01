@@ -1,0 +1,190 @@
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  @let form = filterForm()!;
+
+  <form [formGroup]="form" (ngSubmit)="applyFilters()">
+    <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
+      <!-- <div class="col-xl-12 col-sm-12 col-12">
+        <app-select-form
+          label="USER"
+          placeholder="Select User"
+          [required]="false"
+          [control]="form.controls['user_id']"
+          optionTextField="name"
+          optionValueField="id"
+          [items]="users()"
+        ></app-select-form>
+      </div> -->
+
+      <div class="col-xl-6 col-sm-6 col-12">
+        <!-- <app-datepicker-form
+          label="FROM DATE"
+          placeholder="Pick a date"
+          icon="calendar"
+          [required]="true"
+          [control]="form.controls['from_date']"
+        ></app-datepicker-form> -->
+        <app-mat-datepicker-form
+          label="FROM DATE"
+          placeholder="Pick a date"
+          [required]="true"
+          [control]="form.controls['from_date']"
+        ></app-mat-datepicker-form>
+      </div>
+
+      <div class="col-xl-6 col-sm-6 col-12">
+        <!-- <app-datepicker-form
+          label="TO DATE"
+          placeholder="Pick a date"
+          icon="calendar"
+          [required]="true"
+          [control]="form.controls['to_date']"
+        ></app-datepicker-form> -->
+        <app-mat-datepicker-form
+          label="TO DATE"
+          placeholder="Pick a date"
+          icon="calendar"
+          [required]="true"
+          [control]="form.controls['to_date']"
+        ></app-mat-datepicker-form>
+      </div>
+
+      <div class="box-footer mt-4 d-flex justify-content-center">
+        <app-submit-button> </app-submit-button>
+      </div>
+    </div>
+  </form>
+
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+
+    <app-excel-button
+      [fileName]="title"
+      [values]="managers()"
+      api="getAllManagers"
+      [fields]="[
+        'id',
+        'name',
+        'email',
+        'phone',
+        'status',
+        'role.name',
+        'created_at',
+        'updated_at'
+      ]"
+    ></app-excel-button>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [reorderable]="true"
+      [limit]="10"
+      [rows]="managers()"
+    >
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="email">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">EMAIL</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="phone">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHONE</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">STATUS</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value === 1 ? "Active" : "Inactive" }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="created_at">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">CREATED AT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="updated_at">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">UPDATED AT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            (onClick)="editItem(row, editSiteMachineTemplate)"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column> -->
+    </ngx-datatable>
+  </div>
+</div>

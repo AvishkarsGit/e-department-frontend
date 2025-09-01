@@ -1,0 +1,107 @@
+.search-table-input {
+  width: 30%;
+  // background: var(--primary-light-color) !important;
+}
+
+.table-wrapper {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 25vh); /* Center horizontally and move down */
+  width: 95%;
+  z-index: 10;
+  padding-bottom: 5rem;
+}
+
+// ngx-datatable
+.tableTitle {
+  margin: 0 !important;
+}
+.tableHeader {
+  // color: #fff;
+  color: var(--dark-color);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.ngx-datatable {
+  // border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  // box-shadow: none !important;
+  box-shadow: var(--card-shadow) !important;
+  // box-shadow: 0 5px 5px -3px rgb(0 0 0 / 20%), 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%);
+}
+
+.ngx-datatable.fixed-header
+  .datatable-header
+  .datatable-header-inner
+  .datatable-header-cell {
+  background: var(--primary-light-color);
+  // color: #fff;
+  // color: var(--primary-color);
+  opacity: 0.9;
+  text-wrap: wrap !important;
+  word-wrap: break-word !important;
+}
+
+.ngx-datatable.material:not(.cell-selection)
+  .datatable-body-row:hover
+  .datatable-row-group {
+  background-color: var(--light-color) !important;
+}
+
+.datatable-body {
+  word-wrap: break-word !important;
+}
+
+.ngx-datatable .datatable-body .datatable-body-row > div {
+  align-items: center;
+}
+
+.ngx-datatable.material .datatable-body .datatable-body-row {
+  border-bottom: none !important;
+}
+
+.ngx-select.dropdown {
+  width: -webkit-fill-available !important;
+}
+
+// buttons & icons
+// .round_shape {
+//   // border-radius: 50% !important;
+//   // background: var(--light-color) !important;
+// }
+.delete {
+  color: var(--danger-color);
+}
+.edit {
+  color: var(--primary-color);
+}
+
+.avatar-image {
+  background-color: var(--light-color);
+  // padding: 0.5rem;
+  width: 5vh;
+  height: 5vh;
+  object-fit: cover;
+}
+
+.thumbnail-image {
+  width: 8vh;
+  height: 8vh;
+  object-fit: cover;
+}
+
+// modal
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 95vw !important;
+    margin: 1rem auto;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,57 @@
+/* Text colors */
+.primary-color {
+  color: var(--primary-color) !important;
+}
+.error-color {
+  color: var(--danger-color);
+}
+.tertiary-color {
+  color: var(--tertiary-color) !important;
+}
+.secondary-color {
+  color: var(--secondary-color) !important;
+}
+.success-color {
+  color: var(--success-color) !important;
+}
+
+/* Font sizes */
+.font-large {
+  font-size: var(--font-size-large);
+}
+
+/* Backgrounds */
+.bg-primary-color {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+.bg-primary-light {
+  background-color: var(--primary-light-color) !important;
+}
+.bg-secondary-color {
+  background-color: var(--secondary-color) !important;
+  color: #fff !important;
+}
+.bg-tertiary-color {
+  background-color: var(--tertiary-color) !important;
+  color: #fff !important;
+}
+.bg-warning-color {
+  background-color: var(--warning-color) !important;
+  color: var(--dark-color) !important;
+}
+.bg-light-color {
+  background-color: var(--light-color) !important;
+}
+.bg-background-color {
+  background-color: var(--background-color) !important;
+}
+
+/* Borders */
+.border-primary-color {
+  border-color: var(--primary-color) !important;
+}
+
+.border-primary-light-color {
+  border-color: var(--primary-light-color) !important;
+}

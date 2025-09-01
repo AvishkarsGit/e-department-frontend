@@ -1,0 +1,75 @@
+<div
+  class="form-group form-label form-style {{ noMarginBottom() ? 'mb-0' : '' }}"
+>
+  @if(label()) {
+  <label>
+    {{ label() }}
+    @if(required()) {
+    <small>*</small>
+    }
+  </label>
+  } @let controlValue = controlInput; @if(!option_value()) {
+  <ngx-select
+    [items]="items()"
+    [optionValueField]="optionValueField()"
+    [optionTextField]="optionTextField()!"
+    [placeholder]="placeholder()"
+    [multiple]="multiple()"
+    [allowClear]="true"
+    [formControl]="controlValue!"
+    [size]="size()"
+    (selectionChanges)="onSelectionChange($event)"
+  >
+  </ngx-select>
+
+  } @else {
+  <ngx-select
+    [items]="items()"
+    [optionValueField]="optionValueField()"
+    [optionTextField]="optionTextField()!"
+    [placeholder]="placeholder()"
+    [multiple]="multiple()"
+    [allowClear]="true"
+    [formControl]="controlValue!"
+    [size]="size()"
+    (selectionChanges)="onSelectionChange($event)"
+  >
+    <ng-template ngx-select-option-selected let-option let-text="text">
+      <!-- <span
+              class="color-box"
+            ></span> -->
+      <span [innerHtml]="text"></span>
+      @if(append_string()) { ({{
+        option.data[option_value()] + append_string()
+      }}) } @else { ({{ option.data[option_value()] }}) }
+    </ng-template>
+
+    <ng-template ngx-select-option let-option let-text="text">
+      <!-- <span class="color-box"></span> -->
+      <span [innerHtml]="text"></span>
+
+      <!-- append string -->
+      @if(append_string()) {
+
+      <!-- option value + string -->
+      ({{ option.data[option_value()] + append_string() }})
+
+      <!-- end if -->
+      } @else {
+
+      <!-- option value -->
+      ({{ option.data[option_value()] }}) }
+    </ng-template>
+
+    <!-- <ng-template ngx-select-option-not-found> Nothing found </ng-template> -->
+  </ngx-select>
+  } @if(required() && controlValue?.touched && controlValue?.invalid) {
+  <div class="invalid-feedback d-block">
+    <div>
+      <small class="text-danger">
+        @if(controlValue?.errors!['required']) { * Required }
+      </small>
+    </div>
+  </div>
+  }
+</div>

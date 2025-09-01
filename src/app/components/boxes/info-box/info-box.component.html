@@ -1,0 +1,14 @@
+<div class="info-box" style="border-radius: 5px;">
+  <span class="info-box-icon" [style.background]="color" style="border-radius: 5px;">
+    <i class="ion {{ icon }}"></i>
+    <!-- <fa-icon [icon]="icon" class="icons"></fa-icon> -->
+  </span>
+
+  <div class="info-box-content">
+    <span class="info-box-text" [style.color]="tColor">{{ title }}</span>
+    <!-- <span *ngIf="!price" class="info-box-number" [style.color]="tColor">{{ count }}</span> -->
+    <!-- <span *ngIf="price" class="info-box-number" [style.color]="tColor">{{ count | number: '1.2-2' }}</span> -->
+  </div>
+  <!-- /.info-box-content -->
+</div>
+<!-- /.info-box -->

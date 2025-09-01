@@ -1,0 +1,9 @@
+<button
+  mat-raised-button
+  class="d-flex align-items-center justify-content-center border-primary-light-color"
+  [style.background-color]="color()"
+  [type]="type()"
+>
+  <mat-icon>{{ icon() }}</mat-icon>
+  {{ name() }}
+</button>

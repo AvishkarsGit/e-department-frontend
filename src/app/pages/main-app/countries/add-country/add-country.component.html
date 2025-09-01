@@ -1,0 +1,45 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+
+    <div class="form-group col-md-12" align="center">
+      <app-toggle-form-button
+        label="Status"
+        [control]="form.controls['status']"
+      >
+      </app-toggle-form-button>
+    </div>
+
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-input-form
+        label="NAME"
+        placeholder="Name"
+        icon="user"
+        [required]="true"
+        [control]="form.controls['name']"
+      ></app-input-form>
+    </div>
+
+    <!-- <div class="col-xl-6 col-sm-6 col-12">
+      <app-textarea-form
+        label="REMARKS"
+        placeholder="Remarks"
+        [required]="false"
+        [control]="form.controls['remarks']"
+      ></app-textarea-form>
+    </div> -->
+
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-text-editor-form
+        label="REMARKS"
+        [control]="form.controls['remarks']"
+        [required]="false"
+      ></app-text-editor-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button> </app-submit-button>
+    </div>
+  </div>
+</form>

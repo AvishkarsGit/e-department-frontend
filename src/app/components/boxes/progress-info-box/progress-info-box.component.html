@@ -1,0 +1,19 @@
+<!-- /.info-box -->
+<div class="info-box bg-{{ color }}" [style.color]="tColor">
+  <span class="info-box-icon">
+    <i class="ion {{ icon }}"></i>
+  </span>
+
+  <div class="info-box-content">
+    <span class="info-box-text">{{ title }}</span>
+    <span class="info-box-number">{{ count }}</span>
+
+    <div class="progress">
+      <div class="progress-bar" [style.width.%]="width"></div>
+    </div>
+    <span class="progress-description">
+      {{ progress }}
+    </span>
+  </div>
+  <!-- /.info-box-content -->
+</div>

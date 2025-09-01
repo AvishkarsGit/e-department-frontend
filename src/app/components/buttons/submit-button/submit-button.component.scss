@@ -1,0 +1,9 @@
+button {
+  border-radius: 10px;
+  color: white !important;
+  width: 15vh !important;
+  mat-icon {
+    font-size: var(--font-size-medium);
+    margin-top: 0.8vh;
+  }
+}

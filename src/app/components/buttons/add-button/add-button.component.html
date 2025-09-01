@@ -1,0 +1,12 @@
+<button
+  mat-raised-button
+  [color]="color()"
+  [class]="!color() ? classes() : ''"
+  (click)="addItem()"
+  type="button"
+>
+  <mat-icon class="add_new_icon">add</mat-icon>
+  @if(label()) {
+  {{ label() }}
+  }
+</button>

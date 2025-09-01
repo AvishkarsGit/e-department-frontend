@@ -1,0 +1,15 @@
+<button
+  mat-raised-button
+  [color]="color()"
+  [class]="customColorClass()"
+  (click)="buttonClicked()"
+>
+
+  @if(icon()) {
+  <mat-icon [ngClass]="{ 'm-0' : !label() }">{{ icon() }}</mat-icon>
+  } 
+  
+  @if(label()) {
+  {{ label() }}
+  }
+</button>

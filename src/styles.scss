@@ -1,0 +1,57 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.dev/guide/theming
+// @use '@angular/material' as mat;
+
+// html {
+//   @include mat.theme((
+//     color: (
+//       theme-type: light,
+//       primary: mat.$azure-palette,
+//       tertiary: mat.$blue-palette,
+//     ),
+//     typography: Roboto,
+//     density: 0,
+//   ));
+// }/* You can add global styles to this file, and also import other style files */
+// @use "./assets/css/variables.scss";
+// @use "./assets/fonts/fonts.scss";
+// @use "./assets/css/datatable.scss";
+// @use "./assets/css/auth.scss";
+// @use "./assets/css/layout.scss";
+// @use "./assets/css/charts.scss";
+
+* {
+  font-family: Gabarito;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+
+.bg-color {
+  background-color: var(--primary-color);
+}
+
+.avatar {
+  width: 3vh;
+  height: 3vh;
+}
+
+// alert
+.my-actions {
+  margin-inline-end: 0.5rem;
+}
+
+#toast-container {
+  z-index: 9999 !important;
+  position: fixed !important; // Just in case it's not already
+}
+
+.fs-lg {
+  font-size: var(--font-size-xl) !important;
+}

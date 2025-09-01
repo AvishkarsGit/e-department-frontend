@@ -1,0 +1,11 @@
+div {
+  border: 1px solid var(--primary-color);
+  width: 4vh;
+  height: 4vh;
+}
+@media (min-width: 1200px) {
+  div {
+    width: 4.3vh;
+    height: 4.3vh;
+  }
+}

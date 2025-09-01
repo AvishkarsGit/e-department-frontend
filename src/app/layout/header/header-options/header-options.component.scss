@@ -1,0 +1,16 @@
+ul {
+  .user-header {
+    background: linear-gradient(
+      to bottom,
+      var(--secondary-color),
+      var(--primary-color)
+    ) !important;
+  }
+  img {
+    object-fit: cover;
+  }
+
+  a {
+    cursor: pointer;
+  }
+}

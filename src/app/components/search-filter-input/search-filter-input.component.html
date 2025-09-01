@@ -1,0 +1,13 @@
+<div class="icons-input">
+  <input
+    type="text"
+    class="form-control border-primary-color bg-primary-light rounded px-2"
+    placeholder="Type to filter the records..."
+    appDebounce
+    [debounceTime]="500"
+    (debouncedInput)="updateFilter($event)"
+  />
+
+  <span class="fas fa-search align-item text_end"></span>
+  
+</div>

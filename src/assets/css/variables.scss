@@ -1,0 +1,76 @@
+:root {
+  --primary-color: #5E2BFF;         /* Strong blue-violet */
+  --primary-light-color: #E1D8FF;   /* Soft lavender */
+  --primary-dark-color: #3E1FB3;    /* Deep violet */
+
+  --secondary-color: #FC6DAB;       /* Candy pink */
+  --secondary-light-color: #FFE2EE; /* Pale pink highlight */
+
+  --tertiary-color: #C04CFD;        /* Magenta-purple */
+  --tertiary-light-color: #F3D9FF;  /* Pastel lavender */
+
+  --background-color: #F5F3FF;      /* Soft violet-white, very light */
+  --surface-color: #FCF9FF;         /* Clean paper white with a hint of lavender */
+  --light-color: #F1E7FF;           /* Subtle lilac for sections/cards */
+
+  --text-color: #111827;            /* Deep slate */
+  --text-muted-color: #6B7280;      /* Neutral gray */
+  --heading-color: #1F2937;         /* Strong dark slate */
+
+  --dark-color: #130B2D;            /* Dark tone */
+
+  --border-color: #E4DCFF;          /* Lavender border */
+  --medium-color: #D4C3FF;          /* Mid lavender separator */
+
+  --success-color: #10B981;         /* Emerald */
+  --danger-color: #EF4444;          /* Red */
+  --warning-color: #F59E0B;         /* Amber */
+  --info-color: #3B82F6;            /* Bright blue */
+
+  --card-shadow: 0 2px 8px rgba(94, 43, 255, 0.08); /* Slight violet glow */
+
+  /* Font Sizes */
+  --font-size-xs: 0.7rem;
+  --font-size-small: 0.8rem;
+  --font-size-medium: 0.9rem;
+  --font-size-large: 1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-xxl: 1.4rem;
+  --font-size-xxxl: 1.8rem;
+}
+
+
+
+
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     --background-color: #0B0B1C;
+//     --surface-color: #1A1A2E;
+//     --light-color: #23233B;
+
+//     --primary-color: #6F5CFF;
+//     --primary-light-color: #8A7EFF;
+//     --primary-dark-color: #2D00F7;
+
+//     --secondary-color: #B388FF;
+//     --secondary-light-color: #D1BFFF;
+
+//     --tertiary-color: #DA5CFF;
+//     --tertiary-light-color: #F1C7FF;
+
+//     --success-color: #34D399;
+//     --danger-color: #F87171;
+//     --warning-color: #FBBF24;
+//     --info-color: #60A5FA;
+
+//     --text-color: #F5F5F7;
+//     --text-muted-color: #A3A3B2;
+//     --heading-color: #FFFFFF;
+
+//     --border-color: #3F3F5F;
+//     --medium-color: #5A5A7A;
+//     --dark-color: #ffffff;
+
+//     --card-shadow: 0 2px 12px rgba(111, 92, 255, 0.1);
+//   }
+// }

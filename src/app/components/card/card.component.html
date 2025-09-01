@@ -1,0 +1,43 @@
+<div
+  class="card shadow border-0 mb-4 {{ classes() }}"
+  [ngClass]="{ 'collapsed-card': isCardCollapse() }"
+  [ngStyle]="{ display: isCardRemoved() ? 'none' : '' }"
+>
+  <div class="card-header {{ headerClass() }}">
+    <h3 class="card-title fw-bold">
+      {{ title() }}
+    </h3>
+    <div class="card-tools">
+      <button
+        type="button"
+        class="btn btn-tool {{ iconColor() }}"
+        data-lte-toggle="card-collapse"
+        (click)="toggleCardCollapse()"
+      >
+        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-tool {{ iconColor() }}"
+        data-lte-toggle="card-remove"
+        (click)="removeCard()"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <!-- /.card-header -->
+
+  <div class="card-body p-0">
+    <!-- Dynamic content goes here -->
+    <ng-content></ng-content>
+  </div>
+
+  @if(isFooter()) {
+  <div class="card-footer">
+    <!-- named slot for footer -->
+    <ng-content select="[card-footer]"></ng-content>
+  </div>
+  }
+</div>

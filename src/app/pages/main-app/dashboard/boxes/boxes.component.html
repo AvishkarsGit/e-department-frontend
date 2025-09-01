@@ -1,0 +1,50 @@
+<!--begin::Row-->
+<div class="row my-4">
+  <!--begin::Col-->
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Users"
+      [value]="counts()?.users"
+      icon="people"
+      iconBgColor="primary-color"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Orders"
+      [value]="counts()?.orders"
+      icon="box-seam"
+      iconBgColor="tertiary-color"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Vendors"
+      [value]="counts()?.vendors"
+      icon="inbox"
+      iconBgColor="secondary-color"
+      badgeBgColor="white"
+      badgeTextColor="muted"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Managers"
+      [value]="counts()?.managers"
+      icon="person-workspace"
+      iconBgColor="warning-color"
+      iconColor="text-dark"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+</div>
+<!--end::Row-->

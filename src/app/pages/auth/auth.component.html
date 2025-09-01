@@ -1,0 +1,64 @@
+<app-spinner></app-spinner>
+<div class="row container">
+
+  <div class="col-md-6 left">
+    <div class="overlay-container my-1">
+      <img
+        class="animation__wobble mb-4 rounded"
+        src="assets/imgs/logo_title.png"
+        alt="logo"
+        height="100"
+        width="100"
+      />
+      <h1>Welcome, my Friend!</h1>
+      <p>Start your journey with our innovative Angular Laravel UI Kit</p>
+
+      @if(isSignup()) {
+      <button class="ghost auth-button" id="signUp" (click)="signupModal(signupTemplate)">
+        Sign Up
+      </button>
+      }
+    </div>
+  </div>
+  
+  <div class="col-md-6 right">
+    <app-signin (resetPwd)="resetPassword($event, resetPasswordTemplate)"></app-signin>
+  </div>
+
+</div>
+
+
+<ng-template #resetPasswordTemplate>
+
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0">RESET PASSWORD</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-reset-password [emailVal]="email_value()"></app-reset-password>
+  </div>
+</ng-template>
+
+<ng-template #signupTemplate>
+
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0">SIGN UP</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-user [isSignup]="true" (register)="onSignupSubmit($event)"></app-add-user>
+  </div>
+  
+</ng-template>

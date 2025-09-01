@@ -1,0 +1,113 @@
+// @use url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+@media only screen and (min-width: 960px) {
+  /* styles for browsers larger than 960px; */
+  .container {
+    width: 60%;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  /* styles for browsers larger than 1440px; */
+  .container {
+    width: 60%;
+  }
+}
+@media only screen and (min-width: 2000px) {
+  /* for sumo sized (mac) screens */
+  .container {
+    width: 60%;
+  }
+}
+@media only screen and (max-device-width: 480px) {
+  /* styles for mobile browsers smaller than 480px; (iPhone) */
+  .container {
+    width: 90%;
+  }
+}
+@media only screen and (device-width: 768px) {
+  /* default iPad screens */
+  .container {
+    width: 70%;
+  }
+}
+/* different techniques for iPad screening */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: portrait) {
+  /* For portrait layouts only */
+  .container {
+    width: 80%;
+  }
+}
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: landscape) {
+  /* For landscape layouts only */
+  .container {
+    width: 80%;
+  }
+}
+
+.container {
+  background-color: #fff;
+  // font-family: "Montserrat", sans-serif;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  transform: translateY(12vh);
+  // max-width: 90%;
+  min-height: 70vh;
+
+  button.ghost {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    background-color: transparent;
+    border-color: #ffffff;
+  }
+
+  div.left {
+    background: var(--tertiary-color);
+    background: -webkit-linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--primary-color)
+    );
+    background: linear-gradient(
+      to right,
+      var(--primary-color),
+      var(--primary-color)
+    );
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0 5vh;
+    text-align: center;
+    vertical-align: middle;
+    div.overlay-container {
+      height: 95%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: transform 0.6s ease-in-out;
+      img {
+        object-fit: contain;
+      }
+    }
+  }
+  div.right {
+  h2 {
+    text-align: center;
+  }
+  p {
+    font-size: var(--font-size-medium);
+    font-weight: 100;
+    line-height: 2vh;
+    letter-spacing: 0.5px;
+    margin: 2vh 0 3vh;
+  }
+  span {
+    font-size: var(--font-size-small);
+  }
+  }
+}

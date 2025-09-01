@@ -1,0 +1,20 @@
+input {
+  width: 100%;
+  text-indent: 0;
+  padding-right: 2.5rem !important; // Reserve space for icon
+}
+
+.text_end {
+  right: 1rem;
+}
+
+@media (max-width: 576px) {
+  input {
+    text-indent: 0;
+    padding-right: 2rem !important; // Reduce padding if needed on small screens
+  }
+
+  .text_end {
+    right: 0.75rem;
+  }
+}

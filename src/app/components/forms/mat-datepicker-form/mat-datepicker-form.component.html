@@ -1,0 +1,40 @@
+<div class="form-group form-label form-style">
+  @if(label()) {
+  <label>
+    {{ label() }}
+    @if(required()) {
+    <small>*</small>
+    }
+  </label>
+  }
+
+  <!-- input value -->
+  @let controlValue = controlInput;
+
+  <div class="icons-input">
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="picker"
+      class="align-item icons"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <input
+      type="text"
+      class="form-control"
+      matInput
+      [matDatepicker]="picker"
+      [placeholder]="placeholder()"
+      [formControl]="controlValue!"
+    />
+  </div>
+
+  @if(required() && controlValue?.touched && controlValue?.invalid) {
+  <div class="invalid-feedback d-block">
+    <div>
+      <small class="text-danger">
+        @if(controlValue?.errors!['required']) { * Required }
+      </small>
+    </div>
+  </div>
+  }
+</div>
