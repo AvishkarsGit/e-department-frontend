@@ -70,15 +70,14 @@ export class ProfileComponent {
     try {
       this.global.showSpinner();
       await this.profileService.getProfile();
-      console.log(this.profile());
-  
+
       this.formData()?.patchValue({
         name: this.profile()?.name,
         email: this.profile()?.email,
         phone: this.profile()?.phone,
         // photo: this.profile()?.photo,
       });
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       this.global.showAlert('Error!', e, 'OK');
     } finally {
@@ -88,7 +87,6 @@ export class ProfileComponent {
 
   onSubmit() {
     if (this.formData()?.invalid) {
-      console.log('submit');
       this.formData()?.markAllAsTouched();
       return;
     }
@@ -100,11 +98,7 @@ export class ProfileComponent {
     try {
       this.global.showSpinner();
 
-      const data = await this.profileService.updateProfile(
-        this.formData()?.value
-      );
-      console.log(data);
-
+      await this.profileService.updateProfile(this.formData()?.value);
 
       this.global.showSuccess(
         'Profile updated successfully',

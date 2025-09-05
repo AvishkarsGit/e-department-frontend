@@ -50,6 +50,19 @@ export const routes: Routes = [
         },
         canActivate: [roleGuard],
       },
+      // classes
+      {
+        path: 'classes',
+        loadComponent: () =>
+          import('./pages/main-app/classes/classes.component').then(
+            (c) => c.ClassesComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
       {
         path: 'countries',
         loadComponent: () =>
@@ -64,13 +77,13 @@ export const routes: Routes = [
             (c) => c.StatesComponent
           ),
       },
-      
+
       {
         path: 'manager-report',
         loadComponent: () =>
-          import('./pages/main-app/reports/manager-report/manager-report.component').then(
-            (c) => c.ManagerReportComponent
-          ),
+          import(
+            './pages/main-app/reports/manager-report/manager-report.component'
+          ).then((c) => c.ManagerReportComponent),
         data: {
           role: 'admin',
         },
@@ -78,7 +91,7 @@ export const routes: Routes = [
       },
     ],
   },
-  
+
   // 404 fallback route — should always be last
   {
     path: '**',

@@ -19,7 +19,6 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { UserService } from '../../../services/user/user.service';
 import { RoleService } from '../../../services/role/role.service';
 import { ToggleButtonComponent } from '../../../components/buttons/toggle-button/toggle-button.component';
-// import { AddButtonComponent } from '../../../components/buttons/add-button/add-button.component';
 import { SearchFilterInputComponent } from '../../../components/search-filter-input/search-filter-input.component';
 import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
 import { AppConstants } from '../../../constants/app.constants';
@@ -36,7 +35,6 @@ type ItemType = User;
     NgxDatatableModule,
     AddUserComponent,
     ToggleButtonComponent,
-    // AddButtonComponent,
     SearchFilterInputComponent,
     ExcelButtonComponent,
     IconRoundButtonComponent,
@@ -70,7 +68,6 @@ export class UsersComponent {
 
   public global = inject(GlobalService);
   private userService = inject(UserService);
-  private roleService = inject(RoleService);
 
   constructor() {}
 
@@ -126,28 +123,6 @@ export class UsersComponent {
     }
   }
 
-  // async getAllUsers() {
-  //   try {
-  //     this.global.showSpinner();
-
-  //     const response = await this.userService.getAllUsers();
-  //     console.log(response);
-
-  //     this.allUsers.set(response.data);
-  //   } catch (e) {
-  //     console.log(e);
-  //     this.global.showErrorMessage(
-  //       e,
-  //       null,
-  //       3000,
-  //       false,
-  //       'decreasing',
-  //       'toast-top-center'
-  //     );
-  //   } finally {
-  //     this.global.hideSpinner();
-  //   }
-  // }
 
   onPageChange(event: any) {
     console.log('event :', event);
@@ -166,49 +141,13 @@ export class UsersComponent {
   }
 
   onFilterChange(event: any) {
-    console.log('event', event);
     this.filterText.set(event);
     this.loadData();
   }
 
-  // updateFilter(filteredData: any[]) {
-  //   // update the rows
-  //   this.setUsers(filteredData);
-  //   // Whenever the filter changes, always go back to the first page
-  //   this.table()!.offset = 0;
-  // }
-
   async openAddModal(template: TemplateRef<any>, update: boolean = false) {
     if (!update) this.updateItem.set(null);
-
-    // if (this.roles()?.length === 0) {
-    //   await this.getRoles();
-    // }
-
     this.global.showModal(template);
-  }
-
-  async getRoles() {
-    try {
-      this.global.showSpinner();
-      const roles = await this.roleService.getAllRoles();
-      console.log(roles);
-      this.roles.set(roles);
-      // this.global.hideSpinner();
-    } catch (e) {
-      console.log(e);
-      // this.global.hideSpinner();
-      this.global.showErrorMessage(
-        'Error! Please check & try again...',
-        null,
-        3000,
-        false,
-        'decreasing',
-        'toast-top-center'
-      );
-    } finally {
-      this.global.hideSpinner();
-    }
   }
 
   async deleteItemAlert(item: ItemType) {
@@ -234,20 +173,13 @@ export class UsersComponent {
   addData(user: ItemType) {
     this.users.update((users) => [...users, user]);
     this.updateTotalRecords(1);
-    // this.temp.update((tempUsers) => [...tempUsers, user]);
-    // this.refreshTable();
+   
   }
 
   updateData(updatedUser: ItemType) {
     this.users.update((users) =>
       users.map((user) => (user._id === updatedUser._id ? updatedUser : user))
     );
-
-    // this.temp.update((tempUsers) =>
-    //   tempUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    // );
-
-    // this.refreshTable();
   }
 
   deleteData(userId: string) {

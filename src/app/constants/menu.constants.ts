@@ -29,6 +29,15 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'users',
     allowedRoles: ['admin'],
   },
+
+  // classes
+  {
+    label: 'Classes',
+    icon: 'bi bi-buildings-fill',
+    route: 'classes',
+    allowedRoles: ['admin'],
+  },
+
   {
     label: 'Countries',
     icon: 'fas fa-building',
