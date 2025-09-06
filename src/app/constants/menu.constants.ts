@@ -37,12 +37,19 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'classes',
     allowedRoles: ['admin'],
   },
+  // subjects
+  {
+    label: 'Subjects',
+    icon: 'bi bi-journal-text',
+    route: 'subjects',
+  },
 
   {
     label: 'Countries',
     icon: 'fas fa-building',
     route: 'countries',
   },
+
   {
     label: 'States',
     icon: 'fas fa-building',

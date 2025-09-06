@@ -149,16 +149,18 @@ export class ClassesComponent {
   }
 
   addData(classData: ItemType) {
-    this.classes.update((classes) => [...classes, classData]);
-    this.updateTotalRecords(1);
+    // this.classes.update((classes) => [...classes, classData]);
+    // this.updateTotalRecords(1);
+    this.loadData();
   }
 
   updateData(classData: ItemType) {
-    this.classes.update((classes) =>
-      classes.map((class_data) =>
-        class_data._id === class_data._id ? classData : class_data
-      )
-    );
+    // this.classes.update((classes) =>
+    //   classes.map((class_data) =>
+    //     class_data._id === class_data._id ? classData : class_data
+    //   )
+    // );
+    this.loadData();
   }
 
   setLoadingIndicator(value: boolean) {
