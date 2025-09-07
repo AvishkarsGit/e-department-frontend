@@ -50,6 +50,18 @@ export const routes: Routes = [
         },
         canActivate: [roleGuard],
       },
+        {
+        path: 'departments',
+        loadComponent: () =>
+          import('./pages/main-app/departments/departments.component').then(
+            (c) => c.DepartmentsComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
       {
         path: 'countries',
         loadComponent: () =>

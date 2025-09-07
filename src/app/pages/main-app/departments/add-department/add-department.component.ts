@@ -1,45 +1,35 @@
 import { Component, inject, input, output, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Country } from '../../../../interfaces/country.interface';
+import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { GlobalService } from '../../../../services/global/global.service';
-import { CountryService } from '../../../../services/country/country.service';
 import { SubmitButtonComponent } from '../../../../components/buttons/submit-button/submit-button.component';
 import { InputFormComponent } from '../../../../components/forms/input-form/input-form.component';
-// import { TextareaFormComponent } from '../../../../components/forms/textarea-form/textarea-form.component';
-import { ToggleFormButtonComponent } from '../../../../components/forms/toggle-form-button/toggle-form-button.component';
-import { TextEditorFormComponent } from '../../../../components/forms/text-editor-form/text-editor-form.component';
+import { Department } from '../../../../interfaces/department.interface';
+import { DepartmentService } from '../../../../services/department/department.service';
+
 
 @Component({
-  selector: 'app-add-country',
+  selector: 'app-add-department',
   imports: [
     SubmitButtonComponent,
     ReactiveFormsModule,
     InputFormComponent,
-    // TextareaFormComponent,
-    ToggleFormButtonComponent,
-    TextEditorFormComponent,
   ],
-  templateUrl: './add-country.component.html',
-  styleUrl: './add-country.component.scss',
+  templateUrl: './add-department.component.html',
+  styleUrl: './add-department.component.scss'
 })
-export class AddCountryComponent {
+export class AddDepartmentComponent {
   formData = signal<FormGroup | null>(null);
 
-  updateItem = input<Country>();
+  updateItem = input<Department>();
 
-  added = output<Country>();
-  updated = output<Country>();
+  added = output<Department>();
+  updated = output<Department>();
 
   private formBuilder = inject(FormBuilder);
   private global = inject(GlobalService);
-  private countryService = inject(CountryService);
+  private departmentService = inject(DepartmentService);
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.initForm();
@@ -49,8 +39,7 @@ export class AddCountryComponent {
     const item = this.updateItem();
     const form = this.formBuilder.group({
       name: [item?.name ?? null, Validators.required],
-      status: [item?.status ?? false],
-      remarks: [item?.remarks ?? null],
+
     });
 
     this.formData.set(form);
@@ -64,44 +53,39 @@ export class AddCountryComponent {
     }
 
     console.log(this.formData()?.value);
-    this.addCountry();
+    this.addDepartment();
   }
 
-  async addCountry() {
+  async addDepartment() {
     try {
       this.global.showSpinner();
 
       let msg = 'added';
-      let data: Country;
+      let data: Department;
 
       const dataValue = this.formData()?.value;
-
-      const payload = {
-        ...dataValue,
-        remarks: dataValue?.remarks ? JSON.stringify(dataValue?.remarks) : null,
-      };
 
       // check if update is requested
       if (this.updateItem()) {
         // update item
 
         msg = 'updated';
-        
-        data = await this.countryService.updateCountry(
-          this.updateItem()!.id,
-          payload
+        data = await this.departmentService.updateDepartment(
+          this.updateItem()?._id!,
+          dataValue
         );
+
         // update records
         this.updated.emit(data);
       } else {
-        data = await this.countryService.addCountry(payload);
+        data = await this.departmentService.addDepartment(dataValue);
         // update records
         this.added.emit(data);
       }
-      console.log(data);
+      // console.log(data);
 
       this.global.showSuccess(
-      `Country ${msg} successfully`,
+       `Department ${msg} successfully`,
         null,
         5000,
         false,
