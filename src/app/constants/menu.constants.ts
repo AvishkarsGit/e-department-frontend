@@ -29,11 +29,27 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'users',
     allowedRoles: ['admin'],
   },
+
+  // classes
+  {
+    label: 'Classes',
+    icon: 'bi bi-buildings-fill',
+    route: 'classes',
+    allowedRoles: ['admin'],
+  },
+  // subjects
+  {
+    label: 'Subjects',
+    icon: 'bi bi-journal-text',
+    route: 'subjects',
+  },
+
   {
     label: 'Countries',
     icon: 'fas fa-building',
     route: 'countries',
   },
+
   {
     label:'Departments',
     icon:'bi bi-people',

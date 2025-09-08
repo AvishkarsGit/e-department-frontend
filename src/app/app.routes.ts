@@ -54,7 +54,14 @@ export const routes: Routes = [
         path: 'departments',
         loadComponent: () =>
           import('./pages/main-app/departments/departments.component').then(
-            (c) => c.DepartmentsComponent
+            (c) => c.DepartmentsComponent)
+          },
+      // classes
+      {
+        path: 'classes',
+        loadComponent: () =>
+          import('./pages/main-app/classes/classes.component').then(
+            (c) => c.ClassesComponent
           ),
         data: {
           role: 'admin',
@@ -70,19 +77,26 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'subjects',
+        loadComponent: () =>
+          import('./pages/main-app/subjects/subjects.component').then(
+            (c) => c.SubjectsComponent
+          ),
+      },
+      {
         path: 'states',
         loadComponent: () =>
           import('./pages/main-app/states/states.component').then(
             (c) => c.StatesComponent
           ),
       },
-      
+
       {
         path: 'manager-report',
         loadComponent: () =>
-          import('./pages/main-app/reports/manager-report/manager-report.component').then(
-            (c) => c.ManagerReportComponent
-          ),
+          import(
+            './pages/main-app/reports/manager-report/manager-report.component'
+          ).then((c) => c.ManagerReportComponent),
         data: {
           role: 'admin',
         },
@@ -90,7 +104,7 @@ export const routes: Routes = [
       },
     ],
   },
-  
+
   // 404 fallback route — should always be last
   {
     path: '**',

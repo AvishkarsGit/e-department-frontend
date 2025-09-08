@@ -1,60 +1,59 @@
 import {
   Component,
   inject,
-  input,
   signal,
   TemplateRef,
   viewChild,
 } from '@angular/core';
 import {
-  ColumnMode,
   DatatableComponent,
   NgxDatatableModule,
 } from '@swimlane/ngx-datatable';
-import { Role, User } from '../../../interfaces/user.interface';
-import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { AppConstants } from '../../../constants/app.constants';
 import { GlobalService } from '../../../services/global/global.service';
-import { AddUserComponent } from './add-user/add-user.component';
-// import { Role } from '../../../interfaces/role.interface';
-import { UserService } from '../../../services/user/user.service';
-import { RoleService } from '../../../services/role/role.service';
-import { ToggleButtonComponent } from '../../../components/buttons/toggle-button/toggle-button.component';
+import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
+import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
 import { SearchFilterInputComponent } from '../../../components/search-filter-input/search-filter-input.component';
 import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
-import { AppConstants } from '../../../constants/app.constants';
-import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
-import { Strings } from '../../../enums/strings';
-import { NgClass } from '@angular/common';
+// import { AddButtonComponent } from '../../../components/buttons/add-button/add-button.component';
+// import { AddCountryComponent } from './add-country/add-country.component';
+import { ToggleButtonComponent } from '../../../components/buttons/toggle-button/toggle-button.component';
+import { SafeHtmlPipe } from '../../../pipes/safe-html/safe-html.pipe';
+import { Subject } from '../../../interfaces/subject.interface';
+import { SubjectService } from '../../../services/subject/subject.service';
+import { AddSubjectComponent } from './add-subject/add-subject.component';
+import { Class } from '../../../interfaces/class.interface';
 
-type ItemType = User;
+type ItemType = Subject;
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-subjects',
   imports: [
-    ContentHeaderComponent,
-    NgxDatatableModule,
-    AddUserComponent,
-    ToggleButtonComponent,
-    SearchFilterInputComponent,
-    ExcelButtonComponent,
+    //AddCountryComponent,
     IconRoundButtonComponent,
-    NgClass,
+    NgxDatatableModule,
+    ContentHeaderComponent,
+    SearchFilterInputComponent,
+    // ExcelButtonComponent,
+    // AddButtonComponent,
+    //  ToggleButtonComponent,
+    SafeHtmlPipe,
+    AddSubjectComponent,
   ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+  templateUrl: './subjects.component.html',
+  styleUrl: './subjects.component.scss',
 })
-export class UsersComponent {
+export class SubjectsComponent {
   table = viewChild<DatatableComponent>(DatatableComponent);
 
   ColumnMode = ColumnMode;
-  title = 'USERS';
+  title = 'SUBJECTS';
 
-  avatar = Strings.AVATAR_IMAGE;
-
-  users = signal<ItemType[]>([]);
+  subjects = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
-  roles = signal<Role[]>([]);
   updateItem = signal<ItemType | null>(null);
+  updateClassItem = signal<Subject | null>(null);
 
   totalRecords = signal<number>(0);
   currentPage = signal<number>(0);
@@ -63,11 +62,8 @@ export class UsersComponent {
   sortOrder = signal<string>('asc');
   filterText = signal<string>('');
 
-  // check card for component reusability
-  isCard = input<boolean>(false);
-
   public global = inject(GlobalService);
-  private userService = inject(UserService);
+  private subjectService = inject(SubjectService);
 
   constructor() {}
 
@@ -75,8 +71,8 @@ export class UsersComponent {
     this.loadData();
   }
 
-  setUsers(data: ItemType[]) {
-    this.users.set(data);
+  setSubjects(data: ItemType[]) {
+    this.subjects.set(data);
   }
 
   setLoadingIndicator(value: boolean) {
@@ -98,14 +94,12 @@ export class UsersComponent {
         filter: this.filterText(),
       };
 
-      console.log('params : ', params);
-
       this.global.showSpinner();
 
-      const response = await this.userService.getUsers(params);
+      const response = await this.subjectService.getSubjects(params);
       console.log(response);
 
-      this.setUsers(response?.data);
+      this.setSubjects(response?.data);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
       console.log(e);
@@ -123,9 +117,8 @@ export class UsersComponent {
     }
   }
 
-
   onPageChange(event: any) {
-    console.log('event :', event);
+    console.log(event);
     this.currentPage.set(event.offset);
     this.loadData();
   }
@@ -141,20 +134,28 @@ export class UsersComponent {
   }
 
   onFilterChange(event: any) {
+    console.log(event);
     this.filterText.set(event);
     this.loadData();
   }
 
+  // updateFilter(filteredData: any[]) {
+  //   // update the rows
+  //   this.setUsers(filteredData);
+  //   // Whenever the filter changes, always go back to the first page
+  //   this.table()!.offset = 0;
+  // }
+
   async openAddModal(template: TemplateRef<any>, update: boolean = false) {
     if (!update) this.updateItem.set(null);
+
     this.global.showModal(template);
   }
 
   async deleteItemAlert(item: ItemType) {
-    console.log(item);
     const result = await this.global.showAlert(
       'Are you sure?',
-      'You want to delete this user!',
+      'You want to delete this subject!',
       'YES',
       false,
       'NO',
@@ -170,61 +171,49 @@ export class UsersComponent {
     }
   }
 
-  addData(user: ItemType) {
-    this.users.update((users) => [...users, user]);
-    this.updateTotalRecords(1);
-   
+  addData(subject: ItemType) {
+    // this.subjects.set([...this.subjects(), subject]);
+    // this.updateTotalRecords(1);
+    this.loadData();
   }
 
-  updateData(updatedUser: ItemType) {
-    this.users.update((users) =>
-      users.map((user) => (user._id === updatedUser._id ? updatedUser : user))
-    );
-  }
-
-  deleteData(userId: string) {
-    this.users.update((users) => users.filter((user) => user._id !== userId));
-    this.updateTotalRecords(-1);
-
-    // this.temp.update((tempUsers) =>
-    //   tempUsers.filter((user) => user.id !== userId)
+  updateData(updatedSubject: ItemType) {
+    // this.subjects.update((subjects) =>
+    //   subjects.map((subject) =>
+    //     subject._id === updatedSubject._id ? updatedSubject : subject
+    //   )
     // );
 
-    // this.refreshTable();
+    this.loadData();
   }
 
-  // refreshTable() {
-  //   // This ensures that if you are on another page, you return to page 1 when adding a new data.
-  //   setTimeout(() => {
-  //     if (this.table()) {
-  //       this.table()!.offset = 0; // Reset to first page
-  //     }
-  //   });
-  // }
+  deleteData(subjectId: string) {
+    this.subjects.update((subjects) =>
+      subjects.filter((subject) => subject._id !== subjectId)
+    );
+    this.updateTotalRecords(-1);
+  }
 
   async deleteItem(item: ItemType) {
     try {
       this.global.showSpinner();
 
-      const data = await this.userService.deleteUser(item?._id);
+      const data = await this.subjectService.deleteSubject(item?._id);
       console.log(data);
 
-      // update table
+      //update table
       this.deleteData(item?._id);
 
       this.global.showSuccess(
-        'Account deleted successfully',
+        'Country deleted successfully',
         null,
         5000,
         false,
         'increasing',
         'toast-top-center'
       );
-
-      this.global.hideSpinner();
     } catch (e) {
       console.log(e);
-      // this.global.hideSpinner();
       this.global.showAlert('Error!', e, 'OK');
     } finally {
       this.global.hideSpinner();
@@ -234,36 +223,5 @@ export class UsersComponent {
   editItem(item: ItemType, template: TemplateRef<any>) {
     this.updateItem.set(item);
     this.openAddModal(template, true);
-  }
-
-  async onStatusChange(event: any, item: ItemType) {
-    try {
-      this.global.showSpinner();
-
-      const data = await this.userService.updateUser(item?._id, {
-        account_status: event,
-      });
-      console.log(data);
-
-      // update table
-      this.updateData(data);
-
-      this.global.showSuccess(
-        `Account status ${event ? 'activated' : 'deactivated'} successfully`,
-        null,
-        5000,
-        false,
-        'increasing',
-        'toast-top-center'
-      );
-
-      // this.global.hideSpinner();
-    } catch (e) {
-      console.log(e);
-      // this.global.hideSpinner();
-      this.global.showAlert('Error!', e, 'OK');
-    } finally {
-      this.global.hideSpinner();
-    }
   }
 }

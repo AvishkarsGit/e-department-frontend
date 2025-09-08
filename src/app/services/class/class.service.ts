@@ -1,85 +1,87 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
-import { Department } from '../../interfaces/department.interface';
+import { Class } from '../../interfaces/class.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DepartmentService {
+export class ClassService {
   private http = inject(HttpService);
-  private apiUrl = 'department';
+  private apiUrl = 'class';
 
-  constructor() { }
+  constructor() {}
 
-  //adding the data from the form
-  async addDepartment(formData: Department) {
+  async getClasses(params: any) {
     try {
-      let formValues: any = formData;
-
       const response = await this.http.lastValueFrom(
-        this.http.post(`${this.apiUrl}/create-department`, formValues)
+        this.http.get(this.apiUrl + '/classes', params)
       );
-      console.log('add department response: ', response);
 
       if (!response?.success) {
         this.http.throwResponseError(response);
       }
-      return response?.data;
-    }
-    catch (e) {
-      throw e;
-    }
-  }
 
-  //Update
-  async updateDepartment(id: string, formValues: Partial<Department>) {
-    try {
-      // let isFormData = false;
-      console.log(formValues);
-      //clean the JSON data before processing
-      let updatedFormValues = this.http.cleanFormValues(formValues);
-
-      const response = await this.http.lastValueFrom(
-        this.http.patch(
-          `${this.apiUrl}/update-department/${id}`,
-          updatedFormValues
-        )
-      )
-      if (!response?.success) {
-        this.http.throwResponseError(response);
-      }
-      return response?.data;
-
+      return response;
     } catch (e) {
       throw e;
     }
   }
 
-  //get data
-
-  async getDepartments(params: any){
+  async updateClass(id: string, formValues: Partial<Class>) {
     try {
-      const response = await this.http.lastValueFrom(
-        this.http.get(this.apiUrl + '/get-department', params)
-      )
-      return response;
+      let isFormData = false;
 
-    } catch (error) {
-      throw error;
-    }
-  }
+      console.log(formValues);
 
-  //delete Data
-  async deleteDepartment(id: string) {
-    try {
+      // Clean the JSON data before processing
+      let updatedFormValues = this.http.cleanFormValues(formValues);
+
       const response = await this.http.lastValueFrom(
-        this.http.delete(`${this.apiUrl}/delete-department/${id}`)
+        this.http.patch(
+          `${this.apiUrl}/update/${id}`,
+          updatedFormValues,
+          isFormData
+        )
       );
 
       if (!response?.success) {
         this.http.throwResponseError(response);
       }
+
       return response?.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async addClass(formData: Class) {
+    try {
+      let formValues: any = formData;
+      let isFormData = false;
+
+      const response = await this.http.lastValueFrom(
+        this.http.post(`${this.apiUrl}/add`, formValues, isFormData)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response?.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteDepartment(id: string) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.delete(this.apiUrl + '/delete/' + id)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
     } catch (error) {
       throw error;
     }

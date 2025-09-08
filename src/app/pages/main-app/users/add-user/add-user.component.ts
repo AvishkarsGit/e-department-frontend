@@ -20,7 +20,7 @@ import { FileInputComponent } from '../../../../components/forms/file-input/file
     ReactiveFormsModule,
     SubmitButtonComponent,
     InputFormComponent,
-     //SelectFormComponent,
+    //SelectFormComponent,
     ToggleFormButtonComponent,
     FileInputComponent,
   ],
@@ -49,6 +49,7 @@ export class AddUserComponent {
 
   initForm() {
     const item = this.updateItem();
+    
     const form = this.formBuilder.group({
       name: [item?.name || null, Validators.required],
       role: [item?.role || null, Validators.required], //role
