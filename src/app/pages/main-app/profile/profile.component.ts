@@ -13,6 +13,7 @@ import { SubmitButtonComponent } from '../../../components/buttons/submit-button
 import { GlobalService } from '../../../services/global/global.service';
 import { ProfileService } from '../../../services/profile/profile.service';
 import { User } from '../../../interfaces/user.interface';
+import { ClickButtonComponent } from '../../../components/buttons/click-button/click-button.component';
 
 @Component({
   selector: 'app-profile',
@@ -91,7 +92,7 @@ export class ProfileComponent {
       return;
     }
 
-    this.updateProfile();
+    //this.updateProfile();
   }
 
   async updateProfile() {

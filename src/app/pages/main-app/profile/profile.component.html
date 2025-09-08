@@ -4,55 +4,53 @@
   </app-content-header>
 
   <div class="col-md-12 mb-3 mt-1 bg-white p-4 rounded">
+    @let form = formData()!;
 
-      @let form = formData()!;
-      
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="row g-4 mb-6 mx-4">
-      
-          <div class="form-group col-md-12">
-            <app-file-input
-              label="PHOTO"
-              [control]="form.controls['photo']"
-              [required]="false"
-            ></app-file-input>
-          </div>
-      
-          <div class="col-xl-6 col-sm-6 col-12">
-            <app-input-form
-              label="NAME"
-              placeholder="Name"
-              icon="user"
-              [required]="true"
-              [control]="form.controls['name']"
-            ></app-input-form>
-          </div>
-      
-          <div class="col-xl-6 col-sm-6 col-12">
-            <app-input-form
-              label="EMAIL"
-              type="email"
-              placeholder="Email"
-              icon="envelope"
-              [required]="true"
-              [control]="form.controls['email']"
-            ></app-input-form>
-          </div>
-      
-          <div class="col-xl-6 col-sm-6 col-12">
-            <app-input-form
-              label="PHONE"
-              type="number"
-              placeholder="Phone Number"
-              icon="phone"
-              [required]="true"
-              [control]="form.controls['phone']"
-              [minlength]="10"
-              [maxlength]="10"
-            ></app-input-form>
-          </div>
-      
-          <!-- <div class="col-xl-6 col-sm-6 col-12">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row g-4 mb-6 mx-4">
+        <div class="form-group col-md-12">
+          <app-file-input
+            label="PHOTO"
+            [control]="form.controls['photo']"
+            [required]="false"
+          ></app-file-input>
+        </div>
+
+        <div class="col-xl-6 col-sm-6 col-12">
+          <app-input-form
+            label="NAME"
+            placeholder="Name"
+            icon="user"
+            [required]="true"
+            [control]="form.controls['name']"
+          ></app-input-form>
+        </div>
+
+        <div class="col-xl-6 col-sm-6 col-12">
+          <app-input-form
+            label="EMAIL"
+            type="email"
+            placeholder="Email"
+            icon="envelope"
+            [required]="true"
+            [control]="form.controls['email']"
+          ></app-input-form>
+        </div>
+
+        <div class="col-xl-6 col-sm-6 col-12">
+          <app-input-form
+            label="PHONE"
+            type="number"
+            placeholder="Phone Number"
+            icon="phone"
+            [required]="true"
+            [control]="form.controls['phone']"
+            [minlength]="10"
+            [maxlength]="10"
+          ></app-input-form>
+        </div>
+
+        <!-- <div class="col-xl-6 col-sm-6 col-12">
             <app-select-form
               label="ROLE"
               placeholder="Select Role"
@@ -63,26 +61,23 @@
               [items]="roles()"
             ></app-select-form>
           </div> -->
-      
-          <div class="col-xl-6 col-sm-6 col-12">
-            <app-input-form
-              label="NEW PASSWORD"
-              type="text"
-              placeholder="Password"
-              icon="key"
-              [required]="false"
-              [control]="form.controls['password']"
-              [minlength]="8"
-            ></app-input-form>
-          </div>
-      
-          <div class="box-footer mt-4 d-flex justify-content-center">
-            <app-submit-button> </app-submit-button>
-          </div>
+
+        <div class="col-xl-6 col-sm-6 col-12">
+          <app-input-form
+            label="NEW PASSWORD"
+            type="text"
+            placeholder="Password"
+            icon="key"
+            [required]="false"
+            [control]="form.controls['password']"
+            [minlength]="8"
+          ></app-input-form>
         </div>
-      </form>
 
+        <div class="box-footer mt-4 d-flex justify-content-center">
+          <app-submit-button> </app-submit-button>
+        </div>
+      </div>
+    </form>
   </div>
-
-
 </div>

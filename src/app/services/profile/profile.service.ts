@@ -52,7 +52,7 @@ export class ProfileService {
       }
 
       const response = await this.http.lastValueFrom(
-        this.http.post('update_profile', formValue, isFormData)
+        this.http.post('user/update_profile', formValue, isFormData)
       );
       console.log(response);
 

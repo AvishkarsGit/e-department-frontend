@@ -49,7 +49,7 @@ export class AddUserComponent {
 
   initForm() {
     const item = this.updateItem();
-    
+
     const form = this.formBuilder.group({
       name: [item?.name || null, Validators.required],
       role: [item?.role || null, Validators.required], //role
@@ -73,8 +73,8 @@ export class AddUserComponent {
           this.updateItem() ? null : Validators.required,
         ].filter(Boolean), // Removes `null` values
       ],
-      account_status: [item?.account_status || true, Validators.required],
-      photo: [item?.photo || null],
+      account_status: [item?.account_status ?? true, Validators.required],
+      photo: [item?.photo ?? null],
     });
 
     this.formData.set(form);
@@ -92,6 +92,7 @@ export class AddUserComponent {
       return;
     }
 
+    console.log('form data:', this.formData()?.value);
     this.addUser();
   }
 
