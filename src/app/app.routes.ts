@@ -64,6 +64,18 @@ export const routes: Routes = [
         canActivate: [roleGuard],
       },
       {
+        path: 'students',
+        loadComponent: () =>
+          import('./pages/main-app/students/students.component').then(
+            (c) => c.StudentsComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
+      {
         path: 'countries',
         loadComponent: () =>
           import('./pages/main-app/countries/countries.component').then(

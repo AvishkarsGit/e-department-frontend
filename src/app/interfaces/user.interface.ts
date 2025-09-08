@@ -6,6 +6,7 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  username:string;
   account_status: boolean;
   photo?: any;
   created_at?: Date;

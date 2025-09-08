@@ -1,0 +1,13 @@
+import { Guardian } from './guardian.interface';
+import { User } from './user.interface';
+
+export interface Student {
+  _id:string;
+  user_id: string;
+  user?:User;
+  class_id: string;
+  created_at: Date;
+  updated_at: Date;
+  //guardian / parents detail
+  guardian: Guardian[];
+}
