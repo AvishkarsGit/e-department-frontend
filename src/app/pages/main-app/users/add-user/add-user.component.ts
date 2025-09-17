@@ -53,6 +53,7 @@ export class AddUserComponent {
     const form = this.formBuilder.group({
       name: [item?.name || null, Validators.required],
       role: [item?.role || null, Validators.required], //role
+      username: [item?.username || null, Validators.required], //role
       // role_id: [
       //   item?.role || (this.isSignup() ? 'admin' : null),
       //   Validators.required,

@@ -6,13 +6,15 @@ import { HttpService } from '../http/http.service';
 })
 export class ResetPasswordService {
   private http = inject(HttpService);
+  private apiUrl = 'user';
 
   constructor() { }
 
   async sendResetPasswordOtp(email: string) {
     try {
-      const data = { email };
-      const response = await this.http.lastValueFrom(this.http.post('sendOtp', data));
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/send/reset/password/token', email)
+      );
       console.log(response);
       return response;
     } catch(e) {

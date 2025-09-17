@@ -13,7 +13,6 @@ import { SubmitButtonComponent } from '../../../components/buttons/submit-button
 import { GlobalService } from '../../../services/global/global.service';
 import { ProfileService } from '../../../services/profile/profile.service';
 import { User } from '../../../interfaces/user.interface';
-import { ClickButtonComponent } from '../../../components/buttons/click-button/click-button.component';
 
 @Component({
   selector: 'app-profile',
@@ -31,6 +30,7 @@ import { ClickButtonComponent } from '../../../components/buttons/click-button/c
 export class ProfileComponent {
   title = 'PROFILE';
   formData = signal<FormGroup | null>(null);
+  
 
   readonly profile = computed<User | null>(() => this.profileService.profile());
 
@@ -46,6 +46,8 @@ export class ProfileComponent {
   }
 
   async initForm() {
+
+
     const form = this.formBuilder.group({
       name: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
@@ -59,7 +61,7 @@ export class ProfileComponent {
       ],
       password: [
         null,
-        [Validators.minLength(8)].filter(Boolean), // Removes `null` values
+        [Validators.minLength(8)].filter(Boolean), 
       ],
       photo: [null],
     });
@@ -76,7 +78,7 @@ export class ProfileComponent {
         name: this.profile()?.name,
         email: this.profile()?.email,
         phone: this.profile()?.phone,
-        // photo: this.profile()?.photo,
+        photo: this.profile()?.photo,
       });
     } catch (e) {
       console.log(e);
@@ -92,7 +94,7 @@ export class ProfileComponent {
       return;
     }
 
-    //this.updateProfile();
+    this.updateProfile();
   }
 
   async updateProfile() {

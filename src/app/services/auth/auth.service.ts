@@ -14,6 +14,7 @@ export class AuthService {
   private storage = inject(StorageService);
   private http = inject(HttpService);
   private profileService = inject(ProfileService);
+  private apiUrl = 'user';
 
   token = signal<string | null>(null);
 
@@ -29,16 +30,26 @@ export class AuthService {
   }
 
   getToken() {
-    if(!this.token()) {
+    if (!this.token()) {
       const token = this.storage.getStorage(Strings.TOKEN);
       this.updateToken(token);
     }
   }
 
-  async register(formValue: any) {
+  async register(formData: any) {
     try {
+
+      let formValues: any = formData;
+      let isFormData = false;
+
+      // Check if photo is selected (File type)
+      if (formValues?.photo instanceof File) {
+        formValues = this.http.convertToFormData(formValues);
+        isFormData = true;
+      }
+
       const response = await lastValueFrom(
-        this.http.post('signup', formValue)
+        this.http.post(this.apiUrl + '/signup', formValues, isFormData)
       );
       console.log(response);
 
@@ -47,30 +58,24 @@ export class AuthService {
 
       return response?.data;
     } catch (e) {
-      
       throw e;
     }
   }
 
   async login(email: string, password: string): Promise<any> {
     try {
-
       const data = {
         email,
         password,
       };
       console.log(data);
 
-      const response = await lastValueFrom(
-        this.http.post('user/login', data)
-      );
+      const response = await lastValueFrom(this.http.post('user/login', data));
 
-      console.log('response',response);
+      console.log('response', response);
 
       //save token in local storage
       this.setUserData(response?.data?.accessToken);
-
-      
 
       return response;
     } catch (e) {
@@ -89,9 +94,7 @@ export class AuthService {
 
   async logout() {
     try {
-      const response = await lastValueFrom(
-        this.http.get('logout')
-      );
+      const response = await lastValueFrom(this.http.get('logout'));
       console.log(response);
       this.logoutFromDevice();
     } catch (e) {

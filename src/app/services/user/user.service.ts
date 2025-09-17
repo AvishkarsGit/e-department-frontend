@@ -149,8 +149,6 @@ export class UserService {
         this.http.get('user/checkAdminExists')
       );
 
-      console.log('isAdminExists',response);
-
       if (!response?.success) {
         this.http.throwResponseError(response);
       }

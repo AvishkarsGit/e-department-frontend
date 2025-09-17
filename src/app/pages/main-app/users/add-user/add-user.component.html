@@ -40,6 +40,18 @@
       ></app-input-form>
     </div>
 
+    <!-- username -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="USERNAME"
+        type="text"
+        placeholder="Username"
+        icon="user"
+        [required]="true"
+        [control]="form.controls['username']"
+      ></app-input-form>
+    </div>
+
     <!-- phone -->
     <div class="col-xl-6 col-sm-6 col-12">
       <app-input-form

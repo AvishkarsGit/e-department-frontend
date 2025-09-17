@@ -11,3 +11,4 @@ export interface Class {
   department?: Department;
 
 }
+

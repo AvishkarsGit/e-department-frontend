@@ -1,25 +1,32 @@
-import { Component, inject, input, output, signal } from '@angular/core';
 import {
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { SubmitButtonComponent } from '../../../../components/buttons/submit-button/submit-button.component';
 import { InputFormComponent } from '../../../../components/forms/input-form/input-form.component';
 import { GlobalService } from '../../../../services/global/global.service';
-import { UserService } from '../../../../services/user/user.service';
-import { Role, User } from '../../../../interfaces/user.interface';
-//import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
-import { ToggleFormButtonComponent } from '../../../../components/forms/toggle-form-button/toggle-form-button.component';
 import { FileInputComponent } from '../../../../components/forms/file-input/file-input.component';
 import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
-import { Class, Semester, Year } from '../../../../interfaces/class.interface';
+import { Semester, Year } from '../../../../interfaces/class.interface';
 import { Department } from '../../../../interfaces/department.interface';
 import { DepartmentService } from '../../../../services/department/department.service';
-import { ClassService } from '../../../../services/class/class.service';
 import { Student } from '../../../../interfaces/student.interface';
+import { Guardian } from '../../../../interfaces/guardian.interface';
+import { StudentService } from '../../../../services/student/student.service';
+import { SubjectService } from '../../../../services/subject/subject.service';
 
 @Component({
   selector: 'app-add-student',
@@ -27,9 +34,8 @@ import { Student } from '../../../../interfaces/student.interface';
     ReactiveFormsModule,
     SubmitButtonComponent,
     InputFormComponent,
-    //SelectFormComponent,
-    //  ToggleFormButtonComponent,
     FileInputComponent,
+    SelectFormComponent,
   ],
   templateUrl: './add-student.component.html',
   styleUrl: './add-student.component.scss',
@@ -40,22 +46,32 @@ export class AddStudentComponent {
   register = output<Student>();
   updateItem = input<Student>();
 
+  years = input<Year[]>([1, 2, 3, 4]);
+  semesters = signal<Semester[]>([]);
+  departments = signal<Department[]>([]);
   added = output<Student>();
   updated = output<Student>();
 
   private formBuilder = inject(FormBuilder);
   private global = inject(GlobalService);
-  private userService = inject(UserService);
+  private departmentService = inject(DepartmentService);
+  private studentService = inject(StudentService);
+  private subjectService = inject(SubjectService);
 
   constructor() {}
 
   ngOnInit() {
     this.initForm();
+    this.loadDepartments();
+  }
+
+  atLeastOneGuardian(control: AbstractControl): ValidationErrors | null {
+    const formArray = control as FormArray;
+    return formArray && formArray.length > 0 ? null : { noGuardian: true };
   }
 
   initForm() {
     const item = this.updateItem();
-
     const form = this.formBuilder.group({
       name: [item?.user?.name || null, Validators.required],
       username: [item?.user?.username || null, Validators.required],
@@ -71,40 +87,61 @@ export class AddStudentComponent {
           Validators.maxLength(10),
         ],
       ],
-      //dynamic phone number
-      phoneNumbers: this.formBuilder.array([]),
 
       password: [
         null,
         [
           Validators.minLength(8),
           this.updateItem() ? null : Validators.required,
-        ].filter(Boolean), // Removes `null` values
+        ].filter(Boolean),
       ],
       photo: [item?.user?.photo ?? null],
+
+      // 👇 guardian FormArray
+      guardian: this.formBuilder.array(
+        item?.guardian?.map((g) => this.createGuardianForm(g)) || [],
+        { validators: [this.atLeastOneGuardian] }
+      ),
+
+      department: [item?.classData?.department_id || null, Validators.required],
+      year: [item?.classData?.year || null, Validators.required],
+      semester: [
+        item?.classData?.semester || null,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(2)],
+      ],
     });
 
     this.formData.set(form);
   }
 
-  get phoneNumbers(): FormArray {
-    return this.formData()?.get('phoneNumbers') as FormArray;
+  // helper function for guardian form
+  createGuardianForm(guardian?: Guardian): FormGroup {
+    return this.formBuilder.group({
+      name: [guardian?.name || null, Validators.required],
+      relation: [guardian?.relation || null, Validators.required],
+      phone: [
+        guardian?.phone || null,
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(10),
+        ],
+      ],
+    });
   }
 
-  //add phone number
-  addPhoneNumber() {
-    this.phoneNumbers.push(
-      this.formBuilder.group({
-        number: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-        type: ['home', Validators.required],
-      })
-    );
+  get guardianArray(): FormArray {
+    return this.formData()?.get('guardian') as FormArray;
   }
 
-  //remove phone numbers
-  removePhoneNumber(index: number) {
-    this.phoneNumbers.removeAt(index);
+  addGuardian() {
+    this.guardianArray.push(this.createGuardianForm());
   }
+
+  removeGuardian(index: number) {
+    this.guardianArray.removeAt(index);
+  }
+
   onSubmit() {
     if (this.formData()?.invalid) {
       console.log('submit');
@@ -117,16 +154,54 @@ export class AddStudentComponent {
       return;
     }
 
-    console.log('form data:', this.formData()?.value);
-    this.addUser();
+    this.addStudent();
   }
 
-  async addUser() {
+  async loadDepartments() {
+    try {
+      const response = await this.departmentService.getDepartments();
+      this.departments.set(response?.Alldata || []);
+      this.semesters.set([1, 2]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  setDepartments(data: Department[]) {
+    this.departments.set(data);
+  }
+
+  setSemester(data: Semester[]) {
+    this.semesters.set(data);
+  }
+  async addStudent() {
     try {
       this.global.showSpinner();
 
       let msg = 'added';
-      let data: User;
+      let data: Student;
+
+      //fetch classId
+      const class_id = await this.fetchClassId({
+        dept_id: this.formData()?.value.department,
+        year: this.formData()?.value.year,
+        semester: this.formData()?.value.semester,
+      });
+
+      const formDataValue = this.formData()?.value;
+
+      const payload = {
+        name: formDataValue.name,
+        email: formDataValue.email,
+        username: formDataValue.username,
+        password: formDataValue.password,
+        phone: formDataValue.phone,
+        class_id: class_id,
+        photo: formDataValue.photo,
+        guardian: JSON.stringify(formDataValue.guardian),
+      };
+
+      console.log('form data:', payload);
 
       // check if update is requested
       if (this.updateItem()) {
@@ -134,21 +209,22 @@ export class AddStudentComponent {
 
         msg = 'updated';
 
-        data = await this.userService.updateUser(
+        data = await this.studentService.updateStudent(
           this.updateItem()!._id,
-          this.formData()?.value
+          this.updateItem()!.user_id,
+          payload
         );
-        // update records
-        //this.updated.emit(data);
+        //update records
+        this.updated.emit(data);
       } else {
-        data = await this.userService.addUser(this.formData()?.value);
-        // update records
-        //    this.added.emit(data);
+        data = await this.studentService.addStudent(payload);
+        //  // update records
+        this.added.emit(data);
       }
-      console.log(data);
+      //  console.log(data);
 
       this.global.showSuccess(
-        `User ${msg} successfully`,
+        `Student ${msg} successfully`,
         null,
         5000,
         false,
@@ -163,5 +239,10 @@ export class AddStudentComponent {
     } finally {
       this.global.hideSpinner();
     }
+  }
+
+  async fetchClassId(payload: any) {
+    const response = await this.subjectService.fetchClassId(payload);
+    return response?.data;
   }
 }

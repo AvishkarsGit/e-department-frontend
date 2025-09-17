@@ -45,7 +45,7 @@
     <ngx-datatable
       #table
       class="material"
-      [rows]="classes()"
+      [rows]="students()"
       [columnMode]="ColumnMode.force"
       [headerHeight]="50"
       [footerHeight]="50"
@@ -59,6 +59,21 @@
       (page)="onPageChange($event)"
       (sort)="onSortChange($event)"
     >
+      <ngx-datatable-column prop="photo">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHOTO</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <img [src]="row?.user?.photo" class="avatar-image rounded-circle" />
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- student name -->
+
       <ngx-datatable-column prop="name">
         <ng-template
           let-column="column"
@@ -68,10 +83,52 @@
           <span class="tableHeader">NAME</span>
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="email">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">EMAIL</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.email }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- phone number -->
+      <ngx-datatable-column prop="phone">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHONE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- department -->
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DEPARTMENT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.department?.name }}
         </ng-template>
       </ngx-datatable-column>
 
+      <!-- year -->
       <ngx-datatable-column prop="year">
         <ng-template
           let-column="column"
@@ -80,21 +137,8 @@
         >
           <span class="tableHeader">YEAR</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column prop="semester">
-        <ng-template
-          let-column="column"
-          ngx-datatable-header-template
-          let-sort="sortFn"
-        >
-          <span class="tableHeader">SEMESTER</span>
-        </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value }}
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.classData?.year }}
         </ng-template>
       </ngx-datatable-column>
 
@@ -139,6 +183,10 @@
   </div>
 
   <div class="modal-body">
-    <app-add-student></app-add-student>
+    <app-add-student
+    [updateItem]="updateItem()!"
+    (added)="addData($event)"
+    (updated)="updateData($event)"
+    ></app-add-student>
   </div>
 </ng-template>

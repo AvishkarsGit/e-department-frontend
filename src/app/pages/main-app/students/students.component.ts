@@ -19,9 +19,11 @@ import { IconRoundButtonComponent } from '../../../components/buttons/icon-round
 import { NgClass } from '@angular/common';
 import { Class } from '../../../interfaces/class.interface';
 import { ClassService } from '../../../services/class/class.service';
-import { AddStudentComponent } from "./add-student/add-student.component";
+import { AddStudentComponent } from './add-student/add-student.component';
+import { Student } from '../../../interfaces/student.interface';
+import { StudentService } from '../../../services/student/student.service';
 
-type ItemType = Class;
+type ItemType = Student;
 
 @Component({
   selector: 'app-students',
@@ -31,8 +33,8 @@ type ItemType = Class;
     SearchFilterInputComponent,
     IconRoundButtonComponent,
     NgClass,
-    AddStudentComponent
-],
+    AddStudentComponent,
+  ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss',
 })
@@ -42,7 +44,7 @@ export class StudentsComponent {
   ColumnMode = ColumnMode;
   title = 'STUDENTS';
 
-  classes = signal<ItemType[]>([]);
+  students = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
   updateItem = signal<ItemType | null>(null);
 
@@ -57,7 +59,7 @@ export class StudentsComponent {
   isCard = input<boolean>(false);
 
   public global = inject(GlobalService);
-  private classService = inject(ClassService);
+  private studentService = inject(StudentService);
 
   constructor() {}
 
@@ -92,13 +94,14 @@ export class StudentsComponent {
 
   editItem(item: ItemType, template: TemplateRef<any>) {
     this.updateItem.set(item);
+    console.log('updated item', this.updateItem());
     this.openAddModal(template, true);
   }
 
   async deleteItemAlert(item: ItemType) {
     const result = await this.global.showAlert(
       'Are you sure?',
-      'You want to delete this department!',
+      'You want to delete this student!',
       'YES',
       false,
       'NO',
@@ -125,12 +128,11 @@ export class StudentsComponent {
         filter: this.filterText(),
       };
 
-      console.log('params : ', params);
-
       this.global.showSpinner();
 
-      const response = await this.classService.getClasses(params);
-      this.setClasses(response?.data);
+
+      const response = await this.studentService.getStudents(params);
+      this.setStudents(response?.data);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
       console.log(e);
@@ -148,18 +150,18 @@ export class StudentsComponent {
     }
   }
 
-  addData(classData: ItemType) {
-    // this.classes.update((classes) => [...classes, classData]);
-    // this.updateTotalRecords(1);
+  addData(student: ItemType) {
+    this.students.update((students) => [...students, student]);
+    this.updateTotalRecords(1);
     this.loadData();
   }
-
-  updateData(classData: ItemType) {
-    // this.classes.update((classes) =>
-    //   classes.map((class_data) =>
-    //     class_data._id === class_data._id ? classData : class_data
-    //   )
-    // );
+  
+  updateData(student: ItemType) {
+    this.students.update((students) =>
+      students.map((student_data) =>
+        student_data._id === student_data._id ? student : student_data
+      )
+    );
     this.loadData();
   }
 
@@ -170,22 +172,26 @@ export class StudentsComponent {
   updateTotalRecords(num: number) {
     this.totalRecords.update((total) => total + num);
   }
-  setClasses(data: ItemType[]) {
-    this.classes.set(data);
+  setStudents(data: ItemType[]) {
+    this.students.set(data);
   }
 
   async deleteItem(item: ItemType) {
     try {
       this.global.showSpinner();
 
-      const data = await this.classService.deleteDepartment(item?._id!);
-      console.log(data);
+      console.log('item', item);
+      const data = await this.studentService.deleteStudent(
+        item!._id,
+        item!.user_id
+      );
 
+     console.log(data);
       // update table
       this.deleteData(item?._id!);
 
       this.global.showSuccess(
-        'Class deleted successfully',
+        'Student deleted successfully',
         null,
         5000,
         false,
@@ -204,7 +210,9 @@ export class StudentsComponent {
   }
 
   deleteData(userId: string) {
-    this.classes.update((users) => users.filter((user) => user._id !== userId));
+    this.students.update((users) =>
+      users.filter((user) => user._id !== userId)
+    );
     this.updateTotalRecords(-1);
   }
 }

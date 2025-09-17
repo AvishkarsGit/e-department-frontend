@@ -2,20 +2,11 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="row g-4 mb-6 mx-4">
-    <div class="form-group col-md-12" align="center">
-      <!-- <app-toggle-form-button
-        label="Status"
-        [control]="form.controls['account_status']"
-      >
-      </app-toggle-form-button> -->
-    </div>
-
     <div class="form-group col-md-12">
       <app-file-input
         label="PHOTO"
         [isOnlyImage]="true"
         [control]="form.controls['photo']"
-        [required]="false"
       ></app-file-input>
     </div>
 
@@ -23,7 +14,7 @@
       <app-input-form
         label="NAME"
         placeholder="Name"
-        icon="user"
+        icon="user-graduate"
         [required]="true"
         [control]="form.controls['name']"
       ></app-input-form>
@@ -78,52 +69,111 @@
       ></app-input-form>
     </div>
 
-    <div class="col-xl-6 col-sm-6 col-12" formArrayName="phoneNumbers">
-      @for (phone of phoneNumbers.controls;track $index ) {
-      <div [formGroupName]="$index" class="mb-3">
-        <div class="row g-2">
-          <div class="col-md-8">
+    <!-- department -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="DEPARTMENT"
+        placeholder="Select Department"
+        [required]="true"
+        [control]="form.controls['department']"
+        optionTextField="name"
+        optionValueField="_id"
+        [items]="departments()"
+      ></app-select-form>
+    </div>
+
+    <!-- year -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="YEAR"
+        placeholder="Select Year"
+        [required]="true"
+        [control]="form.controls['year']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="years()"
+      ></app-select-form>
+    </div>
+
+    <!-- semesters -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="SEMESTER"
+        placeholder="Select Semester"
+        [required]="true"
+        [control]="form.controls['semester']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="semesters()"
+      ></app-select-form>
+    </div>
+
+    <!-- dynamic phone numbers -->
+    <div class="col-12">
+      <h5>Guardian Details</h5>
+
+      <div formArrayName="guardian">
+        @for (g of guardianArray.controls; track $index) {
+        <div class="row g-3 mb-3" [formGroupName]="$index">
+          <div class="col-md-4">
             <app-input-form
-              class="form-control"
-              type="number"
-              placeholder="Phone number"
-              formControlName="number"
-            />
+              label="Guardian Name"
+              placeholder="Enter Guardian Name"
+              icon="user"
+              [required]="true"
+              [control]="g.get('name')"
+            ></app-input-form>
+          </div>
+
+          <div class="col-md-4">
+            <app-input-form
+              label="Relation"
+              placeholder="Father / Mother / Other"
+              icon="person"
+              [required]="true"
+              [control]="g.get('relation')"
+            ></app-input-form>
           </div>
 
           <div class="col-md-3">
-            <select class="form-control" formControlName="type">
-              <option value="home">Home</option>
-              <option value="work">Work</option>
-              <option value="mobile">Mobile</option>
-            </select>
+            <app-input-form
+              label="Phone"
+              type="number"
+              icon="phone"
+              placeholder="Guardian Phone"
+              [required]="true"
+              [control]="g.get('phone')"
+              [minlength]="10"
+              [maxlength]="10"
+            ></app-input-form>
           </div>
 
-          <div class="col-md-1">
+          <div class="col-md-1 d-flex align-items-center">
             <button
-              class="btn btn-danger"
               type="button"
-              (click)="removePhoneNumber($index)"
+              class="btn btn-danger btn-sm"
+              (click)="removeGuardian($index)"
             >
-              Remove
+              X
             </button>
           </div>
         </div>
+        }
+      </div>
 
-        <div>
-          @let phoneNumber = phone.get('number'); @if (phoneNumber?.invalid &&
-          phoneNumber?.touched) {
-          <small class="text-danger">
-            @if (phoneNumber?.hasError('pattern')) { phone number must be 10
-            digit only } @else { phone number is required }
-          </small>
-          }
-        </div>
+      <!-- error if no guardian -->
+      @if (guardianArray.errors) {
+      <div class="text-danger small mt-1">
+        At least one guardian must be added
       </div>
       }
 
-      <button class="btn btn-primary" type="button" (click)="addPhoneNumber()">
-        Add phone number
+      <button
+        type="button"
+        class="btn btn-primary mt-2"
+        (click)="addGuardian()"
+      >
+        + Add Guardian
       </button>
     </div>
 

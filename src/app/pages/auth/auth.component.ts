@@ -18,7 +18,7 @@ import { User } from '../../interfaces/user.interface';
     SigninComponent,
     ResetPasswordComponent,
     AddUserComponent,
-],
+  ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
@@ -32,7 +32,7 @@ export class AuthComponent {
   private userService = inject(UserService);
 
   ngOnInit() {
-    console.log('auth oninit');
+    console.log('auth onInit');
   }
 
   setIsSignup(value: boolean) {
@@ -46,18 +46,18 @@ export class AuthComponent {
       console.log('isAdminExists: ', isAdminExists);
       this.setIsSignup(!isAdminExists);
 
-      // if (!this.isSignup()) {
-      //   this.global.hideSpinner();
+      if (!this.isSignup()) {
+        this.global.hideSpinner();
 
-      //   this.global.showAlert(
-      //     'Unauthorized Access!',
-      //     'You are not authorised to signup without Administrator permission. Kindly contact admin.',
-      //     'OK',
-      //     false
-      //   );
+        this.global.showAlert(
+          'Unauthorized Access!',
+          'You are not authorized to signup without Administrator permission. Kindly contact admin.',
+          'OK',
+          false
+        );
 
-      //   return;
-      // }
+        return;
+      }
 
       this.global.showModal(template);
     } catch (e) {
