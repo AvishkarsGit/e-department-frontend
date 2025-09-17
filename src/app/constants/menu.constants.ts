@@ -43,7 +43,13 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'bi bi-journal-text',
     route: 'subjects',
   },
-
+//faculties
+  {
+    label: 'Faculties',
+    icon: 'bi bi-person-vcard-fill',
+    route: 'faculties',
+    allowedRoles: ['admin'],
+  },
   {
     label: 'Countries',
     icon: 'fas fa-building',

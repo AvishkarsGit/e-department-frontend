@@ -50,18 +50,32 @@ export const routes: Routes = [
         },
         canActivate: [roleGuard],
       },
-        {
+      {
         path: 'departments',
         loadComponent: () =>
           import('./pages/main-app/departments/departments.component').then(
             (c) => c.DepartmentsComponent)
-          },
+      },
       // classes
       {
         path: 'classes',
         loadComponent: () =>
           import('./pages/main-app/classes/classes.component').then(
             (c) => c.ClassesComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
+      //faculties
+
+      {
+        path: 'faculties',
+        loadComponent: () =>
+          import('./pages/main-app/faculties/faculties.component').then(
+            (c) => c.FacultiesComponent
           ),
         data: {
           role: 'admin',

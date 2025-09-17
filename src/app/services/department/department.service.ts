@@ -34,8 +34,6 @@ export class DepartmentService {
   //Update
   async updateDepartment(id: string, formValues: Partial<Department>) {
     try {
-      // let isFormData = false;
-      console.log(formValues);
       //clean the JSON data before processing
       let updatedFormValues = this.http.cleanFormValues(formValues);
 
@@ -57,7 +55,7 @@ export class DepartmentService {
 
   //get data
 
-  async getDepartments(params: any){
+  async getDepartments(params?: any){
     try {
       const response = await this.http.lastValueFrom(
         this.http.get(this.apiUrl + '/get-department', params)

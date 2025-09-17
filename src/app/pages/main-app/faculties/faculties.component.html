@@ -1,0 +1,153 @@
+
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+  buttonLabel="Add Faculty"
+  (onButtonClick)="openAddModal(addSubjectTemplate)"
+>
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="subjects()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column prop="code">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">CODE</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <!-- {{ value ?? '-' }} -->
+          <!-- {{ value ? (value | stripeHtml) : "-" }} -->
+          <div [innerHTML]="value ?? '-' | safeHtml"></div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="class">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">CLASS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.classData?.department?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- year -->
+      <ngx-datatable-column prop="year">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">YEAR</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.classData?.year }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- semester -->
+      <ngx-datatable-column prop="semester">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">SEMESTER</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.classData?.semester }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addSubjectTemplate)"
+          >
+          </app-icon-round-button>
+
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add user modal -->
+<ng-template #addSubjectTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} SUBJECT
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- <app-add-subject
+      [updateItem]="updateItem()!"
+      (added)="addData($event)"
+      (updated)="updateData($event)"
+    ></app-add-subject> -->
+  </div>
+</ng-template>
