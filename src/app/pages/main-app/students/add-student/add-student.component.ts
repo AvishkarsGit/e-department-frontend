@@ -97,6 +97,8 @@ export class AddStudentComponent {
       ],
       photo: [item?.user?.photo ?? null],
 
+      rollNo: [item?.rollNo ?? null],
+
       // 👇 guardian FormArray
       guardian: this.formBuilder.array(
         item?.guardian?.map((g) => this.createGuardianForm(g)) || [],
@@ -104,7 +106,9 @@ export class AddStudentComponent {
       ),
 
       department: [item?.classData?.department_id || null, Validators.required],
+
       year: [item?.classData?.year || null, Validators.required],
+
       semester: [
         item?.classData?.semester || null,
         [Validators.required, Validators.minLength(1), Validators.maxLength(2)],
@@ -198,10 +202,10 @@ export class AddStudentComponent {
         phone: formDataValue.phone,
         class_id: class_id,
         photo: formDataValue.photo,
+        rollNo:parseInt(formDataValue.rollNo),
         guardian: JSON.stringify(formDataValue.guardian),
       };
 
-      console.log('form data:', payload);
 
       // check if update is requested
       if (this.updateItem()) {

@@ -45,6 +45,19 @@
       ></app-input-form>
     </div>
 
+    <!-- roll no (optional) -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="ROLL NO"
+        type="number"
+        placeholder="Roll Call Number"
+        icon="table"
+        [minlength]="1"
+        [maxlength]="2"
+        [control]="form.controls['rollNo']"
+      ></app-input-form>
+    </div>
+
     <!-- phone -->
     <div class="col-xl-6 col-sm-6 col-12">
       <app-input-form

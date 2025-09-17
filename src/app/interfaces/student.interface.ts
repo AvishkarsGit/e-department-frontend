@@ -9,6 +9,7 @@ export interface Student {
   class_id: string;
   classData: Class;
   created_at: Date;
+  rollNo?: number;
   updated_at: Date;
   //guardian / parents detail
   guardian: Guardian[];
