@@ -6,26 +6,8 @@
 
   <form [formGroup]="form" (ngSubmit)="applyFilters()">
     <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
-      <!-- <div class="col-xl-12 col-sm-12 col-12">
-        <app-select-form
-          label="USER"
-          placeholder="Select User"
-          [required]="false"
-          [control]="form.controls['user_id']"
-          optionTextField="name"
-          optionValueField="id"
-          [items]="users()"
-        ></app-select-form>
-      </div> -->
-
+      <!-- subjects -->
       <div class="col-xl-6 col-sm-6 col-12">
-        <!-- <app-datepicker-form
-          label="FROM DATE"
-          placeholder="Pick a date"
-          icon="calendar"
-          [required]="true"
-          [control]="form.controls['from_date']"
-        ></app-datepicker-form> -->
         <app-mat-datepicker-form
           label="FROM DATE"
           placeholder="Pick a date"
@@ -33,23 +15,40 @@
           [control]="form.controls['from_date']"
         ></app-mat-datepicker-form>
       </div>
-
       <div class="col-xl-6 col-sm-6 col-12">
-        <!-- <app-datepicker-form
-          label="TO DATE"
-          placeholder="Pick a date"
-          icon="calendar"
-          [required]="true"
-          [control]="form.controls['to_date']"
-        ></app-datepicker-form> -->
         <app-mat-datepicker-form
           label="TO DATE"
           placeholder="Pick a date"
-          icon="calendar"
           [required]="true"
           [control]="form.controls['to_date']"
-          
         ></app-mat-datepicker-form>
+      </div>
+
+      <!-- classes names -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-select-form
+          label="CLASSES"
+          placeholder="Select Class"
+          [required]="true"
+          [control]="form.controls['classes']"
+          optionTextField="label"
+          optionValueField="_id"
+          [items]="classItems()"
+          (onChange)="onClassSelected($event)"
+        ></app-select-form>
+      </div>
+
+      <!-- subjects -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-select-form
+          label="SUBJECTS"
+          placeholder="Select Subjects"
+          [required]="false"
+          [control]="form.controls['subject']"
+          optionTextField="subjectLabel"
+          optionValueField="_id"
+          [items]="subjectItems()"
+        ></app-select-form>
       </div>
 
       <div class="box-footer mt-4 d-flex justify-content-center">
@@ -66,8 +65,8 @@
 
     <app-excel-button
       [fileName]="title"
-      [values]="managers()"
-      api="getAllManagers"
+      [values]="students()"
+      api="getStudents"
       [fields]="[
         'id',
         'name',
@@ -85,16 +84,31 @@
     <ngx-datatable
       #table
       class="material"
+      [rows]="students()"
       [columnMode]="ColumnMode.force"
       [headerHeight]="50"
       [footerHeight]="50"
       [rowHeight]="'auto'"
       [loadingIndicator]="loadingIndicator()"
       [scrollbarH]="true"
-      [reorderable]="true"
-      [limit]="10"
-      [rows]="managers()"
+      [sorts]="[{ prop: 'rollNo', dir: 'asc' }]"
+      (sort)="onSortChange($event)"
     >
+      <ngx-datatable-column prop="rollNo" [sortable]="false">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ROLL NO</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.student_rollNo }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- student name -->
+
       <ngx-datatable-column prop="name">
         <ng-template
           let-column="column"
@@ -103,89 +117,80 @@
         >
           <span class="tableHeader">NAME</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value }}
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.student_name }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="email">
+      <ngx-datatable-column prop="subject">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">EMAIL</span>
+          <span class="tableHeader">SUBJECT</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value }}
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.subject_name }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="phone">
+      <!-- phone number -->
+      <ngx-datatable-column prop="total_classes">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">PHONE</span>
+          <span class="tableHeader">TOTAL CLASSES</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value }}
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.total_classes }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="status">
+      <!-- department -->
+      <ngx-datatable-column prop="attended_classes">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">STATUS</span>
+          <span class="tableHeader">ATTENDED CLASSES</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ value === 1 ? "Active" : "Inactive" }}
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.attended_classes }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="created_at">
+      <!-- year -->
+      <ngx-datatable-column prop="percentage">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">CREATED AT</span>
+          <span class="tableHeader">PERCENTAGE</span>
         </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column prop="updated_at">
-        <ng-template
-          let-column="column"
-          ngx-datatable-header-template
-          let-sort="sortFn"
-        >
-          <span class="tableHeader">UPDATED AT</span>
-        </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.attendance_percentage }}%
         </ng-template>
       </ngx-datatable-column>
 
-      <!-- <ngx-datatable-column [frozenRight]="true">
+      <!-- actions -->
+      <ngx-datatable-column [frozenRight]="true">
         <ng-template ngx-datatable-header-template>
           <span class="tableHeader">ACTION</span>
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
           <app-icon-round-button
-            icon="fa fa-edit"
-            addIconClass="edit"
-            (onClick)="editItem(row, editSiteMachineTemplate)"
+            icon="fa fa-eye"
+            addIconClass=" edit"
+            tooltip="View All"
           >
           </app-icon-round-button>
         </ng-template>
-      </ngx-datatable-column> -->
+      </ngx-datatable-column>
     </ngx-datatable>
   </div>
 </div>

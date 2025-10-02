@@ -1,0 +1,205 @@
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  @let form = filterForm()!;
+
+  <form [formGroup]="form" (ngSubmit)="applyFilters()">
+    <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
+      <!-- subjects -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-select-form
+          label="SUBJECTS"
+          placeholder="Select Subjects"
+          [required]="false"
+          [control]="form.controls['subject']"
+          optionTextField="name"
+          optionValueField="_id"
+          [items]="subjects()"
+        ></app-select-form>
+      </div>
+
+      <!-- periods -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-select-form
+          label="PERIODS"
+          placeholder="Select Period"
+          [required]="false"
+          [control]="form.controls['period']"
+          optionTextField="label"
+          optionValueField="_id"
+          [items]="periods()"
+        ></app-select-form>
+      </div>
+
+      <div class="box-footer mt-4 d-flex justify-content-center">
+        <app-submit-button> </app-submit-button>
+      </div>
+    </div>
+  </form>
+
+  <div class="d-flex align-items-center justify-content-end">
+    <app-click-button
+      label="save"
+      (onClick)="saveAttendance()"
+    ></app-click-button>
+
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+
+    <app-excel-button
+      [fileName]="title"
+      [values]="students()"
+      api="getStudents"
+      [fields]="[
+        'id',
+        'name',
+        'email',
+        'phone',
+        'status',
+        'role.name',
+        'created_at',
+        'updated_at'
+      ]"
+    ></app-excel-button>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="filteredStudents()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [sorts]="[{ prop: 'rollNo', dir: 'asc' }]"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column prop="rollNo" [sortable]="false">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ROLL NO</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.rollNo }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- student name -->
+
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="email">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">EMAIL</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.email }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- phone number -->
+      <ngx-datatable-column prop="phone">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHONE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- department -->
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DEPARTMENT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.department?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- year -->
+      <ngx-datatable-column prop="year">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">YEAR</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.classData?.year }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- actions -->
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <!-- <app-toggle-button
+            [label]="row.status"
+            [checked]="row.status === 'Present'"
+            (checkedChange)="onStatusChange($event, row)"
+          ></app-toggle-button> -->
+
+          <app-icon-round-button
+            icon="fa fa-check"
+            addIconClass="row.status === 'absent' ? 'common' : 'edit'"
+            tooltip="Present"
+            [color]="
+              row.status === 'present' ? 'white' : 'var(--primary-color)'
+            "
+            [backgroundColor]="
+              row.status === 'present' ? 'green' : 'transparent'
+            "
+            (onClick)="markAttendance(row, 'present')"
+          >
+          </app-icon-round-button>
+
+          <app-icon-round-button
+            icon="fa fa-close"
+            addIconClass="row.status === 'absent' ? 'common' : 'delete'"
+            tooltip="Absent"
+            [color]="row.status === 'absent' ? 'white' : 'var(--danger-color)'"
+            [backgroundColor]="row.status === 'absent' ? 'red' : 'transparent'"
+            (onClick)="markAttendance(row, 'absent')"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>

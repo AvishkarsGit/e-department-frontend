@@ -5,17 +5,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Country } from '../../../../interfaces/country.interface';
 import { GlobalService } from '../../../../services/global/global.service';
-import { CountryService } from '../../../../services/country/country.service';
 import { SubmitButtonComponent } from '../../../../components/buttons/submit-button/submit-button.component';
 import { InputFormComponent } from '../../../../components/forms/input-form/input-form.component';
 import { Subject } from '../../../../interfaces/subject.interface';
 import { SubjectService } from '../../../../services/subject/subject.service';
 import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
 import { Class, Semester, Year } from '../../../../interfaces/class.interface';
-import { ClassService } from '../../../../services/class/class.service';
-import { AddClassComponent } from '../../classes/add-class/add-class.component';
 import { Department } from '../../../../interfaces/department.interface';
 import { DepartmentService } from '../../../../services/department/department.service';
 
@@ -81,7 +77,6 @@ export class AddSubjectComponent {
       return;
     }
 
-    const data = this.formData()?.value;
     this.addSubject();
   }
 

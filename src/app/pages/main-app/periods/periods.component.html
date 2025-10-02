@@ -2,8 +2,8 @@
   [title]="title"
   [subRoute]="title"
   [lastRoute]="false"
-  buttonLabel="Add Country"
-  (onButtonClick)="openAddModal(addCountryTemplate)"
+  buttonLabel="Add Periods"
+  (onButtonClick)="openAddModal(addSubjectTemplate)"
 >
 </app-content-header>
 
@@ -13,108 +13,79 @@
       class="search-table-input"
       (filteredData)="onFilterChange($event)"
     ></app-search-filter-input>
-
-    <app-excel-button
-      [fileName]="title"
-      [values]="countries()"
-      api="getCountries"
-      [fields]="['id', 'name', 'remarks', 'status']"
-    ></app-excel-button>
-
-    <!-- <app-add-button
-      label="ADD COUNTRY"
-      (onClick)="openAddModal(addCountryTemplate)"
-    ></app-add-button> -->
   </div>
 
   <div class="col-md-12 mb-3">
     <ngx-datatable
       #table
       class="material"
-      [rows]="countries()"
+      [rows]="periods()"
       [columnMode]="ColumnMode.force"
       [headerHeight]="50"
       [footerHeight]="50"
       [rowHeight]="'auto'"
       [loadingIndicator]="loadingIndicator()"
       [scrollbarH]="true"
-      [externalPaging]="true"
       [limit]="pageSize()"
       [count]="totalRecords()"
       [offset]="currentPage()"
       (page)="onPageChange($event)"
-      (sort)="onSortChange($event)"
     >
-      <ngx-datatable-column prop="name">
+      <!-- period text -->
+      <ngx-datatable-column prop="period_text">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">NAME</span>
+          <span class="tableHeader">PERIOD_TEXT</span>
         </ng-template>
         <ng-template let-value="value" ngx-datatable-cell-template>
           {{ value }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="remarks">
+      <!-- period -->
+      <ngx-datatable-column prop="period">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">REMARKS</span>
+          <span class="tableHeader">PERIOD</span>
         </ng-template>
         <ng-template let-value="value" ngx-datatable-cell-template>
-          <!-- {{ value ?? '-' }} -->
-          <!-- {{ value ? (value | stripeHtml) : "-" }} -->
-          <div [innerHTML]="value ?? '-' | safeHtml"></div>
+          {{ value }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column prop="status">
+      <!-- starting time -->
+      <ngx-datatable-column prop="start_time">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">STATUS</span>
+          <span class="tableHeader">STARTING TIME</span>
         </ng-template>
-        <ng-template let-row="row" ngx-datatable-cell-template>
-          <!-- {{ value }} -->
-          <app-toggle-button
-            [checked]="row.status"
-            (checkedChange)="onStatusChange($event, row)"
-          ></app-toggle-button>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
         </ng-template>
       </ngx-datatable-column>
 
-      <!-- <ngx-datatable-column prop="created_at">
+      <!-- ending time -->
+      <ngx-datatable-column prop="ending_time">
         <ng-template
           let-column="column"
           ngx-datatable-header-template
           let-sort="sortFn"
         >
-          <span class="tableHeader">CREATED AT</span>
+          <span class="tableHeader">ENDING TIME</span>
         </ng-template>
         <ng-template let-value="value" ngx-datatable-cell-template>
-          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
+          {{ value }}
         </ng-template>
       </ngx-datatable-column>
-
-      <ngx-datatable-column prop="updated_at">
-        <ng-template
-          let-column="column"
-          ngx-datatable-header-template
-          let-sort="sortFn"
-        >
-          <span class="tableHeader">UPDATED AT</span>
-        </ng-template>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
-        </ng-template>
-      </ngx-datatable-column> -->
 
       <ngx-datatable-column [frozenRight]="true">
         <ng-template ngx-datatable-header-template>
@@ -125,7 +96,7 @@
             icon="fa fa-edit"
             addIconClass="edit"
             tooltip="Edit"
-            (onClick)="editItem(row, addCountryTemplate)"
+            (onClick)="editItem(row, addSubjectTemplate)"
           >
           </app-icon-round-button>
 
@@ -143,10 +114,10 @@
 </div>
 
 <!-- add user modal -->
-<ng-template #addCountryTemplate>
+<ng-template #addSubjectTemplate>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title mb-0 fw-bold">
-      {{ updateItem() ? "EDIT" : "ADD" }} COUNTRY
+      {{ updateItem() ? "EDIT" : "ADD" }} PERIOD
     </h4>
     <button
       type="button"
@@ -157,10 +128,10 @@
   </div>
 
   <div class="modal-body">
-    <app-add-country
+    <app-add-period
       [updateItem]="updateItem()!"
       (added)="addData($event)"
       (updated)="updateData($event)"
-    ></app-add-country>
+    ></app-add-period>
   </div>
 </ng-template>

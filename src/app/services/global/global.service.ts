@@ -130,7 +130,9 @@ export class GlobalService {
 
     if (isError) {
       message =
-        message?.error?.message || 'Something went wrong, please try again';
+        typeof message === 'string'
+          ? message
+          : message?.error?.message ?? 'Something went wrong, please try again';
     }
 
     const result = await swalWithBootstrapButtons.fire({
@@ -218,7 +220,7 @@ export class GlobalService {
       });
       this.printService.print(customPrintOptions);
     } catch (e) {
-      throw(e);
+      throw e;
     }
   }
 
@@ -228,5 +230,4 @@ export class GlobalService {
     audio.load();
     audio.play();
   }
-  
 }

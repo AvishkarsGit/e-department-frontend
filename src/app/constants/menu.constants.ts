@@ -37,6 +37,13 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'classes',
     allowedRoles: ['admin'],
   },
+  // periods
+  {
+    label: 'Periods',
+    icon: 'bi bi-clock-fill',
+    route: 'periods',
+    allowedRoles: ['admin'],
+  },
 
   // subjects
   {
@@ -44,6 +51,25 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'bi bi-book-fill',
     route: 'subjects',
   },
+
+  // attendance
+
+  {
+    label: 'Attendance',
+    icon: 'bi bi-file-earmark-spreadsheet-fill',
+    route: 'attendances',
+    allowedRoles: ['admin'],
+  },
+
+  // summaries
+
+  {
+    label: 'Summaries',
+    icon: 'bi bi-file-person-fill',
+    route: 'summaries',
+    allowedRoles: ['admin'],
+  },
+
   // students
   {
     label: 'Students',

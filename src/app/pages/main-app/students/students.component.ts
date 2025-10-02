@@ -17,8 +17,6 @@ import { SearchFilterInputComponent } from '../../../components/search-filter-in
 import { AppConstants } from '../../../constants/app.constants';
 import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
 import { NgClass } from '@angular/common';
-import { Class } from '../../../interfaces/class.interface';
-import { ClassService } from '../../../services/class/class.service';
 import { AddStudentComponent } from './add-student/add-student.component';
 import { Student } from '../../../interfaces/student.interface';
 import { StudentService } from '../../../services/student/student.service';

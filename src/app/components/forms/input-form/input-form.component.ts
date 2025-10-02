@@ -20,9 +20,9 @@ export class InputFormComponent {
   readonly placeholder = input<string>();
   readonly minlength = input<number>();
   readonly maxlength = input<number>();
-  
+
   readonly control = input<AbstractControl | null>();
-  
+
   get controlInput(): FormControl {
     const raw = this.control();
     return raw instanceof FormControl ? raw : new FormControl();
