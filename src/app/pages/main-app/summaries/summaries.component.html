@@ -126,6 +126,7 @@
         </ng-template>
       </ngx-datatable-column>
 
+      @if (!isAllSubjects()) {
       <ngx-datatable-column prop="subject">
         <ng-template
           let-column="column"
@@ -139,6 +140,7 @@
         </ng-template>
       </ngx-datatable-column>
 
+      }
       <!-- phone number -->
       <ngx-datatable-column prop="total_classes">
         <ng-template

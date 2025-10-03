@@ -118,6 +118,13 @@ export class SummariesComponent {
     this.filterForm.set(form);
   }
 
+  isAllSubjects() {
+    const formValue = this.filterForm()?.value;
+    // Ensure only the value (_id string) is checked
+    const subject = formValue?.subject;
+    return !subject || subject.toString().toLowerCase() === 'all';
+  }
+
   applyFilters() {
     if (this.filterForm()?.controls['classes'].invalid) {
       this.filterForm()?.markAllAsTouched();
@@ -126,6 +133,7 @@ export class SummariesComponent {
     }
     this.currentPage.set(1); // Reset to first page on new filter
     this.loadData();
+
   }
 
   markAttendance(row: any, status: string) {
