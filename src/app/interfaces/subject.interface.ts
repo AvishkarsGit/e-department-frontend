@@ -5,8 +5,8 @@ export interface Subject {
   name: string;
   code: string;
   class_id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   //class
   classData: Class;

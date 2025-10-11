@@ -21,16 +21,16 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/app/dashboard',
+        redirectTo: '/app/attendances',
         pathMatch: 'full',
       },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./pages/main-app/dashboard/dashboard.component').then(
-            (c) => c.DashboardComponent
-          ),
-      },
+      // {
+      //   path: 'dashboard',
+      //   loadComponent: () =>
+      //     import('./pages/main-app/dashboard/dashboard.component').then(
+      //       (c) => c.DashboardComponent
+      //     ),
+      // },
       {
         path: 'profile',
         loadComponent: () =>

@@ -128,8 +128,8 @@ export class StudentsComponent {
 
       this.global.showSpinner();
 
-
       const response = await this.studentService.getStudents(params);
+      console.log('result',response);
       this.setStudents(response?.data);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
@@ -151,16 +151,14 @@ export class StudentsComponent {
   addData(student: ItemType) {
     this.students.update((students) => [...students, student]);
     this.updateTotalRecords(1);
-    this.loadData();
   }
-  
-  updateData(student: ItemType) {
+
+  updateData(updatedStudent: ItemType) {
     this.students.update((students) =>
-      students.map((student_data) =>
-        student_data._id === student_data._id ? student : student_data
+      students.map((student) =>
+        student._id === updatedStudent._id ? updatedStudent : student
       )
     );
-    this.loadData();
   }
 
   setLoadingIndicator(value: boolean) {
@@ -184,7 +182,7 @@ export class StudentsComponent {
         item!.user_id
       );
 
-     console.log(data);
+      console.log(data);
       // update table
       this.deleteData(item?._id!);
 

@@ -1,20 +1,30 @@
 import { MenuItem } from '../interfaces/menu-item.interface';
 
 export const MENU_ITEMS: MenuItem[] = [
+  // {
+  //   label: 'Dashboard',
+  //   icon: 'bi bi-house-door-fill',
+  //   route: 'dashboard',
+  // },
+
+   // attendance
+
   {
-    label: 'Dashboard',
-    icon: 'bi bi-house-door-fill',
-    route: 'dashboard',
+    label: 'Attendance',
+    icon: 'bi bi-file-earmark-spreadsheet-fill',
+    route: 'attendances',
+    allowedRoles: ['admin'],
   },
   {
     label: 'Reports',
     // icon: 'fas fa-chart-line',
     icon: 'bi bi-bar-chart-fill',
     children: [
+      // summaries
       {
-        label: 'Manager Report',
-        icon: 'bi bi-bar-chart-line',
-        route: 'manager-report',
+        label: 'Attendance Summary',
+        icon: 'bi bi-file-person-fill',
+        route: 'summaries',
       },
     ],
     allowedRoles: ['admin'],
@@ -50,24 +60,6 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'Subjects',
     icon: 'bi bi-book-fill',
     route: 'subjects',
-  },
-
-  // attendance
-
-  {
-    label: 'Attendance',
-    icon: 'bi bi-file-earmark-spreadsheet-fill',
-    route: 'attendances',
-    allowedRoles: ['admin'],
-  },
-
-  // summaries
-
-  {
-    label: 'Summaries',
-    icon: 'bi bi-file-person-fill',
-    route: 'summaries',
-    allowedRoles: ['admin'],
   },
 
   // students

@@ -192,7 +192,8 @@
           <app-icon-round-button
             icon="fa fa-eye"
             addIconClass=" edit"
-            tooltip="View All"
+            tooltip="View Records"
+            (onClick)="viewRecords(row, viewRecordTemplate)"
           >
           </app-icon-round-button>
         </ng-template>
@@ -200,3 +201,19 @@
     </ngx-datatable>
   </div>
 </div>
+<!-- add user modal -->
+<ng-template #viewRecordTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">VIEW RECORDS</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body bg-light">
+    <app-records [updateRecordItem]="updateRecordItem()!"> </app-records>
+  </div>
+</ng-template>

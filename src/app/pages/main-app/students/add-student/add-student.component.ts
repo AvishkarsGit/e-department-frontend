@@ -213,16 +213,34 @@ export class AddStudentComponent {
 
         msg = 'updated';
 
-        data = await this.studentService.updateStudent(
+        const result = await this.studentService.updateStudent(
           this.updateItem()!._id,
           this.updateItem()!.user_id,
           payload
         );
+        data = {
+          _id: result?.student?._id,
+          user_id: result?.student?.user_id,
+          class_id: result?.student?.class_id,
+          rollNo: result?.student?.rollNo,
+          user: result?.user,
+          classData: result?.classData,
+          guardian: result?.student?.guardian,
+        };
         //update records
         this.updated.emit(data);
       } else {
-        data = await this.studentService.addStudent(payload);
+        const result = await this.studentService.addStudent(payload);
         //  // update records
+         data = {
+           _id: result?.student?._id,
+           user_id: result?.student?.user_id,
+           class_id: result?.student?.class_id,
+           rollNo: result?.student?.rollNo,
+           user: result?.user,
+           classData: result?.classData,
+           guardian: result?.student?.guardian,
+         };
         this.added.emit(data);
       }
       //  console.log(data);

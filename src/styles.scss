@@ -55,3 +55,6 @@ body {
 .fs-lg {
   font-size: var(--font-size-xl) !important;
 }
+.cdk-overlay-container {
+  z-index: 1060 !important; /* Bootstrap modal backdrop is 1050 */
+}

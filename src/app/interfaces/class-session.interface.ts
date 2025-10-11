@@ -5,6 +5,8 @@ export interface ClassSession {
   faculty_id: string;
   period: string;
   date: Date;
+  criteria?:number,
   created_at: Date;
   updated_at: Date;
+
 }

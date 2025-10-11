@@ -103,4 +103,17 @@ export class AttendanceService {
       throw error;
     }
   }
+
+  async getStudentAttendance(params: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/getStudentAttendance', params)
+      );
+      if (!response?.success) this.http.throwResponseError(response);
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

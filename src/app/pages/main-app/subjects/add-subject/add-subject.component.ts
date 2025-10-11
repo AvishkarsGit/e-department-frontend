@@ -98,7 +98,6 @@ export class AddSubjectComponent {
 
       //fetch class id
       const classId = await this.fetchClassId(payload);
-      console.log('class Id:', classId);
 
       // check if update is requested
       if (this.updateItem()) {
@@ -106,23 +105,43 @@ export class AddSubjectComponent {
 
         msg = 'updated';
 
-        data = await this.subjectService.updateSubject(this.updateItem()!._id, {
-          name: dataValue.name,
-          code: dataValue.code,
-          class_id: classId,
-        });
+        const response = await this.subjectService.updateSubject(
+          this.updateItem()!._id,
+          {
+            name: dataValue.name,
+            code: dataValue.code,
+            class_id: classId,
+          }
+        );
+
+        const result = response?.data;
+        data = {
+          _id: result?.subject?._id,
+          name: result?.subject?.name,
+          code: result?.subject?.code,
+          class_id: result?.subject?.class_id,
+          classData: result?.classData,
+        };
         //  update records
         this.updated.emit(data);
       } else {
-        data = await this.subjectService.addSubject({
+        const response = await this.subjectService.addSubject({
           name: dataValue.name,
           code: dataValue.code,
           class_id: classId,
         });
+
+        const result = response?.data;
+        data = {
+          _id: result?.subject?._id,
+          name: result?.subject?.name,
+          code: result?.subject?.code,
+          class_id: result?.subject?.class_id,
+          classData: result?.classData,
+        };
         // update records
         this.added.emit(data);
       }
-      // console.log(data);
 
       this.global.showSuccess(
         `Subject ${msg} successfully`,

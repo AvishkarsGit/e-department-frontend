@@ -8,9 +8,9 @@ export interface Student {
   user: User;
   class_id: string;
   classData: Class;
-  created_at: Date;
+  created_at?: Date;
   rollNo?: number;
-  updated_at: Date;
+  updated_at?: Date;
   //guardian / parents detail
   guardian: Guardian[];
 }

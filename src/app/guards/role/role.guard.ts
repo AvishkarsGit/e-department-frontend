@@ -22,7 +22,7 @@ export const roleGuard: CanActivateFn = async (route, segments) => {
 
   await global.showAlert(
     'Unauthorized Access!',
-    'You are not authorized to access this path. Contact Administrator for further information.',
+   'You are not authorized to access this path. Contact Administrator for further information.',
     'OK',
   );
 

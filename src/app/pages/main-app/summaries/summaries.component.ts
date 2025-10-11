@@ -6,6 +6,8 @@ import {
   EventEmitter,
   Output,
   Input,
+  TemplateRef,
+  input,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -35,6 +37,8 @@ import { IconRoundButtonComponent } from '../../../components/buttons/icon-round
 import { ProfileService } from '../../../services/profile/profile.service';
 import { ClassSession } from '../../../interfaces/class-session.interface';
 import { Class } from '../../../interfaces/class.interface';
+import { RecordsComponent } from './records/records.component';
+import { StudentRecord } from '../../../interfaces/student-record.interface';
 
 type ItemType = Student;
 
@@ -50,6 +54,7 @@ type ItemType = Student;
     SelectFormComponent,
     IconRoundButtonComponent,
     MatDatepickerFormComponent,
+    RecordsComponent,
   ],
   templateUrl: './summaries.component.html',
   styleUrl: './summaries.component.scss',
@@ -62,6 +67,7 @@ export class SummariesComponent {
   managers = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
   updateItem = signal<ClassSession | null>(null);
+  updateRecordItem = signal<StudentRecord | null>(null);
   filterForm = signal<FormGroup | null>(null);
 
   totalRecords = signal<number>(0);
@@ -115,8 +121,13 @@ export class SummariesComponent {
       to_date: [new Date(), [Validators.required]],
     });
 
+    // load attendance criteria
+
+
     this.filterForm.set(form);
   }
+
+
 
   isAllSubjects() {
     const formValue = this.filterForm()?.value;
@@ -133,32 +144,6 @@ export class SummariesComponent {
     }
     this.currentPage.set(1); // Reset to first page on new filter
     this.loadData();
-
-  }
-
-  markAttendance(row: any, status: string) {
-    row.status = status; // assign status only for that row
-    //creates an array
-    const payload = {
-      student_id: row?._id,
-      status,
-    };
-
-    // update or insert into signal
-    this.attendances.update((list) => {
-      const index = list.findIndex(
-        (att) => att.student_id === payload.student_id
-      );
-
-      if (index > -1) {
-        // update existing student status
-        list[index] = payload;
-        return [...list]; // return new reference
-      } else {
-        // add new student payload
-        return [...list, payload];
-      }
-    });
   }
 
   setLoadingIndicator(value: boolean) {
@@ -179,7 +164,7 @@ export class SummariesComponent {
       // Note: subject_id can be 'all' or null, so we use optional chaining
       const subject_id = formValue?.subject ?? 'all'; //later assign id of subject that assigns to the faculty
 
-      const params = {
+      const params: any = {
         // Required filters
         class_id: formValue?.classes,
         // Optional filters
@@ -208,9 +193,9 @@ export class SummariesComponent {
       this.filteredStudents.set(response?.data || []); // ngx-datatable uses filteredStudents for display
 
       // Update pagination signals from server response
-      this.totalRecords.set(response?.totalResults || 0);
-      this.totalPages.set(response?.totalPages || 0);
-      this.currentPage.set(response?.page || 1);
+      this.totalRecords.set(response?.pagination?.totalResults || 0);
+      this.totalPages.set(response?.pagination?.totalPages || 0);
+      this.currentPage.set(response?.pagination?.page || 1);
     } catch (e) {
       console.log(e);
       this.global.showErrorMessage(
@@ -284,47 +269,35 @@ export class SummariesComponent {
     );
   }
 
-  async saveAttendance() {
-    try {
-      this.global.showSpinner(); // show global spinner
-
-      if (this.students()?.length !== this.attendances()?.length) {
-        this.global.showAlert('Error!', 'mark all students attendance..', 'Ok');
-        return;
-      }
-
-      let msg = 'saved';
-
-      //create payload for session creation
-      const formValue = this.filterForm()?.value;
-      const payload = {
-        subject_id: formValue?.subject,
-        faculty_id: this.profileService.profile()?._id,
-        period: formValue?.period,
-        attendance: JSON.stringify(this.attendances()),
-      };
-
-      //save attendance
-      await this.attendanceService.markAttendance(payload);
-
-      this.global.showSuccess(
-        `Attendance ${msg} successfully`,
-        null,
-        5000,
-        false,
-        'increasing',
-        'toast-top-center'
-      );
-    } catch (error) {
-      this.global.showAlert('Error!', error, 'Ok');
-    } finally {
-      //hide spinner
-      this.global.hideSpinner();
-    }
-  }
   onPageChange(event: any) {
-    console.log(event);
     this.currentPage.set(event.offset);
     this.loadData();
+  }
+
+  viewRecords(item: StudentRecord, template: TemplateRef<any>) {
+    const data: StudentRecord = {
+      subject_id: item.subject_id,
+      student_id: item?.student_id,
+      class_id: item?.class_id,
+    };
+
+    if (
+      !data?.subject_id ||
+      data?.subject_id === 'All' ||
+      data?.subject_id === 'all'
+    ) {
+      this.global.showAlert(
+        'Error!',
+        'You cannot view all records at a time without export!...',
+        'Ok'
+      );
+      return;
+    }
+    this.updateRecordItem.set(data);
+    this.openAddModal(template);
+  }
+
+  async openAddModal(template: TemplateRef<any>) {
+    this.global.showModal(template);
   }
 }

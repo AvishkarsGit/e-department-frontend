@@ -80,15 +80,17 @@ export class AddPeriodComponent {
 
         msg = 'updated';
 
-        data = await this.periodService.updatePeriod(
+        const response = await this.periodService.updatePeriod(
           dataValue,
           this.updateItem()?._id!
         );
+        data = response?.data;
         //  update records
         this.updated.emit(data);
       } else {
-        data = await this.periodService.addPeriod(dataValue);
+        const response = await this.periodService.addPeriod(dataValue);
         // update records
+        data = response?.data;
         this.added.emit(data);
       }
 
