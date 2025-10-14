@@ -1,7 +1,7 @@
 @if(!isCard()) {
-  <app-content-header 
-    [title]="title" 
-    [subRoute]="title" 
+  <app-content-header
+    [title]="title"
+    [subRoute]="title"
     [lastRoute]="false"
     buttonLabel="Add User"
     (onButtonClick)="openAddModal(addUserTemplate)">
@@ -28,17 +28,14 @@
       [values]="users()"
       api="user/allUsers"
       [fields]="[
-        'id',
         'name',
-        'role_id',
-        'role.name',
         'phone',
         'email',
         'account_status'
       ]"
     ></app-excel-button>
 
-    <!-- 
+    <!--
       [allValues]="allUsers()"
       (exportAll)="getAllUsers()" -->
 
@@ -183,7 +180,7 @@
             (onClick)="editItem(row, addUserTemplate)"
           >
           </app-icon-round-button>
-          
+
           <app-icon-round-button
             icon="fa fa-trash"
             addIconClass="delete"
@@ -191,7 +188,7 @@
             (onClick)="deleteItemAlert(row)"
           >
           </app-icon-round-button>
-          
+
         </ng-template>
       </ngx-datatable-column>
     </ngx-datatable>

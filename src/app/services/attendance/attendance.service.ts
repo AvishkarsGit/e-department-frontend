@@ -116,4 +116,31 @@ export class AttendanceService {
       throw error;
     }
   }
+
+  async filterAttendanceForExport(params: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/filterAttendanceExcel', params)
+      );
+      if (!response?.success) this.http.throwResponseError(response);
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async fetchAllDates(params: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/fetchAllAttendanceDate', params)
+      );
+
+      if (!response?.success) this.http.throwResponseError(response);
+
+      return response?.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

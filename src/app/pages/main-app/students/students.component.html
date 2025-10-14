@@ -16,20 +16,20 @@
       (filteredData)="onFilterChange($event)"
     ></app-search-filter-input>
 
-    <!-- <app-excel-button
+    <app-excel-button
       [fileName]="title"
-      [values]="users()"
-      api="user/allUsers"
+      [values]="exported_students()"
+      api="student/students/export"
       [fields]="[
-        'id',
         'name',
-        'role_id',
-        'role.name',
+        'rollNo',
         'phone',
         'email',
-        'account_status'
+        'photo',
+        'year',
+        'semester',
       ]"
-    ></app-excel-button> -->
+    ></app-excel-button>
 
     <!--
       [allValues]="allUsers()"

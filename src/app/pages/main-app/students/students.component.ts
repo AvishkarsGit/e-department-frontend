@@ -20,6 +20,7 @@ import { NgClass } from '@angular/common';
 import { AddStudentComponent } from './add-student/add-student.component';
 import { Student } from '../../../interfaces/student.interface';
 import { StudentService } from '../../../services/student/student.service';
+import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
 
 type ItemType = Student;
 
@@ -32,6 +33,7 @@ type ItemType = Student;
     IconRoundButtonComponent,
     NgClass,
     AddStudentComponent,
+    ExcelButtonComponent,
   ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss',
@@ -43,6 +45,7 @@ export class StudentsComponent {
   title = 'STUDENTS';
 
   students = signal<ItemType[]>([]);
+  exported_students = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
   updateItem = signal<ItemType | null>(null);
 
@@ -92,7 +95,6 @@ export class StudentsComponent {
 
   editItem(item: ItemType, template: TemplateRef<any>) {
     this.updateItem.set(item);
-    console.log('updated item', this.updateItem());
     this.openAddModal(template, true);
   }
 
@@ -129,8 +131,19 @@ export class StudentsComponent {
       this.global.showSpinner();
 
       const response = await this.studentService.getStudents(params);
-      console.log('result',response);
+      console.log('student', response?.data);
       this.setStudents(response?.data);
+      //prepare an array of object for exporting student which are showing only on the table
+      const students_export = response?.data.map((s: any) => ({
+        name: s.user.name,
+        email: s.user.email,
+        phone: s.user.phone,
+        photo: s.user.photo,
+        rollNo: s.rollNo,
+        year: s.classData.year,
+        semester: s.classData.semester,
+      }));
+      this.exported_students.set(students_export);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
       console.log(e);

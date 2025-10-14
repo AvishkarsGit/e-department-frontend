@@ -83,6 +83,7 @@ export class SummariesComponent {
   _subjects = signal<Subject[]>([]);
   _classes = signal<Class[]>([]);
   classItems = signal<Class[]>([]);
+  classId = signal<string>('');
   subjectItems = signal<Subject[]>([]);
 
   attendances = signal<any[]>([]);
@@ -123,11 +124,8 @@ export class SummariesComponent {
 
     // load attendance criteria
 
-
     this.filterForm.set(form);
   }
-
-
 
   isAllSubjects() {
     const formValue = this.filterForm()?.value;
@@ -160,6 +158,10 @@ export class SummariesComponent {
 
     try {
       const formValue = this.filterForm()?.value;
+
+
+      //set class id
+      this.classId.set(formValue?.classes);
 
       // Note: subject_id can be 'all' or null, so we use optional chaining
       const subject_id = formValue?.subject ?? 'all'; //later assign id of subject that assigns to the faculty

@@ -65,18 +65,9 @@
 
     <app-excel-button
       [fileName]="title"
-      [values]="students()"
-      api="getStudents"
-      [fields]="[
-        'id',
-        'name',
-        'email',
-        'phone',
-        'status',
-        'role.name',
-        'created_at',
-        'updated_at'
-      ]"
+      [isAttendance]="true"
+      tooltip="Export All Subjects"
+      [classId]="classId()"
     ></app-excel-button>
   </div>
 
