@@ -6,10 +6,8 @@ import { Strings } from '../../../enums/strings';
 import { GlobalService } from '../../../services/global/global.service';
 import { HttpService } from '../../../services/http/http.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import * as Excel from 'exceljs';
-import { AttendanceService } from '../../../services/attendance/attendance.service';
 
-import moment from 'moment';
+import { AttendanceReportService } from '../../../services/attendance-report/attendance-report.service';
 // import { SpinnerComponent } from "../../spinner/spinner.component";
 
 @Component({
@@ -31,11 +29,13 @@ export class ExcelButtonComponent {
   readonly fields = input<string[]>([]);
   readonly sheetName = input<string>('Sheet1');
   readonly tooltip = input<string>('Excel');
+  readonly isSending = input<boolean>(false);
 
   // exportAll = output<boolean>();
 
   private global = inject(GlobalService);
-  private attendanceService = inject(AttendanceService);
+  private attendanceReportService = inject(AttendanceReportService);
+
   private http = inject(HttpService);
 
   constructor() {
@@ -66,7 +66,7 @@ export class ExcelButtonComponent {
         return;
       }
       //export attendance record
-      this.exportAttendanceRecord();
+      this.attendanceReportService.exportAttendanceRecord(this.classId());
     } else {
       if (this.pagination()) {
         const result = await this.global.showAlert(
@@ -242,96 +242,5 @@ export class ExcelButtonComponent {
     } catch (e) {
       throw e;
     }
-  }
-
-  async exportAttendanceRecord() {
-    const workbook = new Excel.Workbook();
-
-    // 1️⃣ Get subjects
-    const response = await this.attendanceService.fetchSubjectsByClass(
-      this.classId()
-    );
-    const subjects = response?.data || [];
-
-    for (let subject of subjects) {
-      // 2️⃣ Fetch attendance summary
-      const res = await this.attendanceService.filterAttendanceForExport({
-        class_id: this.classId(),
-        subject_id: subject?._id,
-      });
-      const data = res?.data || [];
-
-      if (!data.length) continue;
-
-      // 3️⃣ Generate lecture headers from first student’s records
-      const firstStudent = data[0];
-      const lectureHeaders = firstStudent.records.map(
-        (rec: any, index: number) =>
-          `${moment(rec.date).format('DD-MM-YYYY')} (${index + 1})`
-      );
-
-      // 4️⃣ Create worksheet
-      const worksheet = workbook.addWorksheet(subject?.name || 'Sheet');
-
-      // 5️⃣ Build header row
-      const headers = [
-        'Roll No',
-        'Student Name',
-        'Total Classes',
-        'Total Attended',
-        'Percentage',
-        ...lectureHeaders,
-      ];
-      const headerRow = worksheet.addRow(headers);
-
-      // Style header row
-      headerRow.font = { bold: true };
-      headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-      headerRow.height = 30;
-
-      // 6️⃣ Fill student rows
-      for (let student of data) {
-        const lectureStatus = student.records.map((rec: any) =>
-          rec.status === 'present' ? 'P' : 'A'
-        );
-        while (lectureStatus.length < lectureHeaders.length)
-          lectureStatus.push('-');
-
-        const percentage =
-          ((student.total_present / student.total_classes) * 100).toFixed(2) +
-          '%';
-
-        const row = [
-          student.roll_no,
-          student.student_name,
-          student.total_classes,
-          student.total_present,
-          percentage,
-          ...lectureStatus,
-        ];
-
-        const studentRow = worksheet.addRow(row);
-
-        // ✅ Center align each cell individually
-        studentRow.eachCell({ includeEmpty: true }, (cell) => {
-          cell.alignment = { vertical: 'middle', horizontal: 'center' };
-        });
-      }
-
-      // 7️⃣ Auto-width columns
-      worksheet.columns?.forEach((column) => {
-        if (!column) return; // extra safety
-        let maxLength = 10;
-        column.eachCell?.({ includeEmpty: true }, (cell) => {
-          const cellValue = cell.value ? cell.value.toString() : '';
-          maxLength = Math.max(maxLength, cellValue.length + 2);
-        });
-        column.width = maxLength;
-      });
-    }
-
-    // 8 Save workbook
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), `Attendance.xlsx`);
   }
 }

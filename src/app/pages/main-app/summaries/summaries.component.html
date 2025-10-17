@@ -6,7 +6,7 @@
 
   <form [formGroup]="form" (ngSubmit)="applyFilters()">
     <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
-      <!-- subjects -->
+      <!-- dates -->
       <div class="col-xl-6 col-sm-6 col-12">
         <app-mat-datepicker-form
           label="FROM DATE"
@@ -51,24 +51,48 @@
         ></app-select-form>
       </div>
 
+      <!-- attendance criteria less than -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-input-form
+          label="ATTENDANCE CRITERIA (less than)"
+          placeholder="(e.g.) 75"
+          icon="percent"
+          [required]="false"
+          type="number"
+          [control]="form.controls['criteria']"
+        ></app-input-form>
+      </div>
+
       <div class="box-footer mt-4 d-flex justify-content-center">
         <app-submit-button> </app-submit-button>
       </div>
     </div>
   </form>
 
-  <div class="d-flex align-items-center justify-content-end">
+  <div class="d-flex align-items-center justify-content-end m-3">
+    <!-- send bulk button -->
+    <app-icon-button
+      icon="bi bi-whatsapp"
+      color="green"
+      class="m-2"
+      addIconClass="text-lg"
+      (onClick)="sendToWhatsapp()"
+    ></app-icon-button>
+
+    <!-- search bar -->
     <app-search-filter-input
       class="search-table-input"
       (filteredData)="onFilterChange($event)"
     ></app-search-filter-input>
 
+    @if (classId()) {
     <app-excel-button
       [fileName]="title"
       [isAttendance]="true"
       tooltip="Export All Subjects"
       [classId]="classId()"
     ></app-excel-button>
+    }
   </div>
 
   <div class="col-md-12 mb-3">

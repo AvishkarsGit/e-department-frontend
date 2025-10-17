@@ -169,12 +169,7 @@
           <span class="tableHeader">ACTION</span>
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
-          <!-- <app-toggle-button
-            [label]="row.status"
-            [checked]="row.status === 'Present'"
-            (checkedChange)="onStatusChange($event, row)"
-          ></app-toggle-button> -->
-
+       
           <app-icon-round-button
             icon="fa fa-check"
             addIconClass="row.status === 'absent' ? 'common' : 'edit'"

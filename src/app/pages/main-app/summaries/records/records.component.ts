@@ -58,8 +58,8 @@ export class RecordsComponent {
   updateRecordItem = input<ItemType>();
 
   totalRecords = signal<number>(0);
-  currentPage = signal<number>(0);
-  pageSize = signal<number>(AppConstants.PAGE_SIZE);
+  //currentPage = signal<number>(0);
+  //pageSize = signal<number>(AppConstants.PAGE_SIZE);
   sortField = signal<string>('id');
   sortOrder = signal<string>('asc');
   filterText = signal<string>('');
@@ -99,8 +99,8 @@ export class RecordsComponent {
         student_id: this.updateRecordItem()?.student_id,
 
         // Optional filters
-        page: this.currentPage() + 1,
-        size: this.pageSize(),
+        // page: this.currentPage() + 1,
+        // size: this.pageSize(),
       };
 
       if (
@@ -153,7 +153,7 @@ export class RecordsComponent {
 
   onPageChange(event: any) {
     console.log(event);
-    this.currentPage.set(event.offset);
+   // this.currentPage.set(event.offset);
     this.loadData();
   }
 

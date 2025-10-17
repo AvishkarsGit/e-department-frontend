@@ -39,12 +39,7 @@
     [rowHeight]="'auto'"
     [loadingIndicator]="loadingIndicator()"
     [scrollbarH]="true"
-    [externalPaging]="true"
-    [limit]="pageSize()"
     [count]="totalRecords()"
-    [offset]="currentPage()"
-    (page)="onPageChange($event)"
-    (sort)="onSortChange($event)"
   >
     <ngx-datatable-column prop="sr_no">
       <ng-template

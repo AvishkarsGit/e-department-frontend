@@ -3,11 +3,7 @@ import {
   viewChild,
   signal,
   inject,
-  EventEmitter,
-  Output,
-  Input,
   TemplateRef,
-  input,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -39,6 +35,9 @@ import { ClassSession } from '../../../interfaces/class-session.interface';
 import { Class } from '../../../interfaces/class.interface';
 import { RecordsComponent } from './records/records.component';
 import { StudentRecord } from '../../../interfaces/student-record.interface';
+import { InputFormComponent } from '../../../components/forms/input-form/input-form.component';
+import { IconButtonComponent } from '../../../components/buttons/icon-button/icon-button.component';
+import { AttendanceReportService } from '../../../services/attendance-report/attendance-report.service';
 
 type ItemType = Student;
 
@@ -55,6 +54,8 @@ type ItemType = Student;
     IconRoundButtonComponent,
     MatDatepickerFormComponent,
     RecordsComponent,
+    InputFormComponent,
+    IconButtonComponent,
   ],
   templateUrl: './summaries.component.html',
   styleUrl: './summaries.component.scss',
@@ -69,6 +70,7 @@ export class SummariesComponent {
   updateItem = signal<ClassSession | null>(null);
   updateRecordItem = signal<StudentRecord | null>(null);
   filterForm = signal<FormGroup | null>(null);
+  isAllSubjects = signal<boolean>(false);
 
   totalRecords = signal<number>(0);
   currentPage = signal<number>(1);
@@ -94,6 +96,7 @@ export class SummariesComponent {
   public global = inject(GlobalService);
   public userService = inject(UserService);
   public attendanceService = inject(AttendanceService);
+  public attendanceReportService = inject(AttendanceReportService);
   public studentService = inject(StudentService);
   public profileService = inject(ProfileService);
 
@@ -120,24 +123,21 @@ export class SummariesComponent {
       classes: [item?.class_id ?? null, Validators.required],
       from_date: [new Date(), [Validators.required]],
       to_date: [new Date(), [Validators.required]],
+      criteria: [item?.criteria ?? 0, [Validators.required]],
     });
 
-    // load attendance criteria
-
     this.filterForm.set(form);
-  }
-
-  isAllSubjects() {
-    const formValue = this.filterForm()?.value;
-    // Ensure only the value (_id string) is checked
-    const subject = formValue?.subject;
-    return !subject || subject.toString().toLowerCase() === 'all';
   }
 
   applyFilters() {
     if (this.filterForm()?.controls['classes'].invalid) {
       this.filterForm()?.markAllAsTouched();
       this.global.showAlert('Error!', 'Class is required.', 'Ok');
+      return;
+    }
+    if (this.filterForm()?.controls['subject'].invalid) {
+      this.filterForm()?.markAllAsTouched();
+      this.global.showAlert('Error!', 'Subject is required.', 'Ok');
       return;
     }
     this.currentPage.set(1); // Reset to first page on new filter
@@ -158,21 +158,24 @@ export class SummariesComponent {
 
     try {
       const formValue = this.filterForm()?.value;
+      const { classes, subject, from_date, to_date, criteria } =
+        formValue || {};
 
+      if (!classes) {
+        this.setLoadingIndicator(false);
+        this.global.hideSpinner();
+        return; // Exit if class_id missing
+      }
 
-      //set class id
-      this.classId.set(formValue?.classes);
-
-      // Note: subject_id can be 'all' or null, so we use optional chaining
-      const subject_id = formValue?.subject ?? 'all'; //later assign id of subject that assigns to the faculty
+      this.classId.set(classes);
+      this.isAllSubjects.set(subject === 'all');
 
       const params: any = {
-        // Required filters
-        class_id: formValue?.classes,
-        // Optional filters
-        from_date: new Date(formValue?.from_date).toISOString(),
-        to_date: new Date(formValue?.to_date).toISOString(),
-        subject_id,
+        class_id: classes,
+        subject_id: subject,
+        from_date: from_date ? new Date(from_date).toISOString() : undefined,
+        to_date: to_date ? new Date(to_date).toISOString() : undefined,
+        criteria,
         page: this.currentPage(),
         limit: this.pageSize(),
         sortField: this.sortField(),
@@ -180,26 +183,23 @@ export class SummariesComponent {
         search: this.filterText(),
       };
 
-      if (!params.class_id) {
-        this.setLoadingIndicator(false);
-        this.global.hideSpinner();
-        return; // Exit if class_id is missing on initial load
-      }
-
       const response = await this.attendanceService.fetchAttendanceBySubject(
         params
       );
 
-      // set all student
-      this.students.set(response?.data || []);
-      this.filteredStudents.set(response?.data || []); // ngx-datatable uses filteredStudents for display
+      const students = response?.data ?? [];
+      const pagination = response?.pagination ?? {};
 
-      // Update pagination signals from server response
-      this.totalRecords.set(response?.pagination?.totalResults || 0);
-      this.totalPages.set(response?.pagination?.totalPages || 0);
-      this.currentPage.set(response?.pagination?.page || 1);
+      this.students.set(students);
+      this.filteredStudents.set(students);
+      this.totalRecords.set(pagination.totalResults ?? 0);
+      this.totalPages.set(pagination.totalPages ?? 0);
+      this.currentPage.set(pagination.page ?? 1);
     } catch (e) {
       console.log(e);
+       this.totalRecords.set(0);
+       this.students.set([]);
+       this.filteredStudents.set([]);
       this.global.showErrorMessage(
         e,
         null,
@@ -301,5 +301,41 @@ export class SummariesComponent {
 
   async openAddModal(template: TemplateRef<any>) {
     this.global.showModal(template);
+  }
+
+  async sendToWhatsapp() {
+    try {
+      if (!this.classId() || this.classId() === '') {
+        this.global.showAlert('Error!', 'Select Class First', 'Ok');
+        return;
+      }
+
+      this.global.showSpinner();
+
+      let msg = 'Attendance record sent successfully';
+
+      //attendance report generate and upload to the cloudinary
+      await this.attendanceReportService.exportAttendanceRecord(
+        this.classId(),
+        true
+      );
+
+      //send bulk message to the whatsapp
+      await this.attendanceReportService.sendBulkMessage();
+
+      this.global.showSuccess(
+        `${msg}`,
+        null,
+        5000,
+        false,
+        'increasing',
+        'toast-top-center'
+      );
+    } catch (error) {
+      console.log(error);
+      this.global.showAlert('Error!', error, 'OK');
+    } finally {
+      this.global.hideSpinner();
+    }
   }
 }
