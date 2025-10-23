@@ -1,0 +1,21 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-input-form
+        label="NAME"
+        placeholder="Name"
+        icon="user"
+        [required]="true"
+        [control]="form.controls['name']"
+      ></app-input-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button>
+         </app-submit-button>
+    </div>
+  </div>
+</form>

@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+<<<<<<< HEAD
 import { DepartmentService } from './department.service';
 
 
+=======
+
+import { DepartmentService } from './department.service';
+>>>>>>> feature/department
 
 describe('DepartmentServiceService', () => {
   let service: DepartmentService;

@@ -67,8 +67,14 @@ export const routes: Routes = [
         path: 'students',
         loadComponent: () =>
           import('./pages/main-app/students/students.component').then(
-            (c) => c.StudentsComponent
-          ),
+            (c) => c.StudentsComponent)
+},
+        {
+        path: 'departments',
+        loadComponent: () =>
+          import('./pages/main-app/departments/departments.component').then(
+            (c) => c.DepartmentsComponent
+         ),
         data: {
           role: 'admin',
           // role_name: 'Admin'

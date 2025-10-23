@@ -58,6 +58,12 @@ export const MENU_ITEMS: MenuItem[] = [
   },
 
   {
+    label:'Departments',
+    icon:'bi bi-people',
+    route:'departments',
+    allowedRoles: ['admin'],
+  },
+  {
     label: 'States',
     icon: 'fas fa-building',
     route: 'states',

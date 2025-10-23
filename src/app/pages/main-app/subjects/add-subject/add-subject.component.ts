@@ -14,8 +14,6 @@ import { Subject } from '../../../../interfaces/subject.interface';
 import { SubjectService } from '../../../../services/subject/subject.service';
 import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
 import { Class, Semester, Year } from '../../../../interfaces/class.interface';
-import { ClassService } from '../../../../services/class/class.service';
-import { AddClassComponent } from '../../classes/add-class/add-class.component';
 import { Department } from '../../../../interfaces/department.interface';
 import { DepartmentService } from '../../../../services/department/department.service';
 
@@ -103,7 +101,6 @@ export class AddSubjectComponent {
 
       //fetch class id
       const classId = await this.fetchClassId(payload);
-      console.log('class Id:', classId);
 
       // check if update is requested
       if (this.updateItem()) {
@@ -112,16 +109,16 @@ export class AddSubjectComponent {
         msg = 'updated';
 
         data = await this.subjectService.updateSubject(this.updateItem()!._id, {
-          name: dataValue.name,
-          code: dataValue.code,
+          name: dataValue.name.trim(),
+          code: dataValue.code.trim(),
           class_id: classId,
         });
         //  update records
         this.updated.emit(data);
       } else {
         data = await this.subjectService.addSubject({
-          name: dataValue.name,
-          code: dataValue.code,
+          name: dataValue.name.trim(),
+          code: dataValue.code.trim(),
           class_id: classId,
         });
         // update records
@@ -149,8 +146,9 @@ export class AddSubjectComponent {
 
   async getDepartments() {
     try {
-      const response = await this.departmentService.getDepartments();
-      this.setDepartments(response?.Alldata);
+
+      const response = await this.departmentService.getAllDepartments();
+      this.setDepartments(response?.data);
       //set semester data
       this.setSemester([1, 2]);
     } catch (error) {
