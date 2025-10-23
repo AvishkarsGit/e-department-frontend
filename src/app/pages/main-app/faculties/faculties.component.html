@@ -3,7 +3,7 @@
   [title]="title"
   [subRoute]="title"
   [lastRoute]="false"
-  buttonLabel="Add Student"
+  buttonLabel="Add Faculty"
   (onButtonClick)="openAddModal(addStudentTemplate)"
 >
 </app-content-header>
@@ -31,7 +31,7 @@
       ]"
     ></app-excel-button> -->
 
-    <!-- 
+    <!--
       [allValues]="allUsers()"
       (exportAll)="getAllUsers()" -->
 
@@ -158,7 +158,7 @@
 <ng-template #addStudentTemplate>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title mb-0 fw-bold">
-      {{ updateItem() ? "EDIT" : "ADD" }} STUDENT
+      {{ updateItem() ? "EDIT" : "ADD" }} FACULTY
     </h4>
     <button
       type="button"
@@ -169,7 +169,7 @@
   </div>
 
   <div class="modal-body">
-    <app-add-faculties 
+    <app-add-faculties
     [updateItem]="updateItem()!"
     (added)="addData($event)"
     (updated)="updateData($event)"
