@@ -1,0 +1,179 @@
+@if(!isCard()) {
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+  buttonLabel="Add Faculty"
+  (onButtonClick)="openAddModal(addStudentTemplate)"
+>
+</app-content-header>
+}
+
+<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+
+    <!-- <app-excel-button
+      [fileName]="title"
+      [values]="users()"
+      api="user/allUsers"
+      [fields]="[
+        'id',
+        'name',
+        'role_id',
+        'role.name',
+        'phone',
+        'email',
+        'account_status'
+      ]"
+    ></app-excel-button> -->
+
+    <!--
+      [allValues]="allUsers()"
+      (exportAll)="getAllUsers()" -->
+
+    <!-- <app-add-button
+      label="ADD USER"
+      (onClick)="openAddModal(addUserTemplate)"
+    ></app-add-button> -->
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="faculties()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column prop="photo">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHOTO</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <img [src]="row?.user?.photo" class="avatar-image rounded-circle" />
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- student name -->
+
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="email">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">EMAIL</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.email }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- phone number -->
+      <ngx-datatable-column prop="phone">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHONE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- department -->
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DEPARTMENT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.department?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addStudentTemplate)"
+          >
+          </app-icon-round-button>
+
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add user modal -->
+<ng-template #addStudentTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} FACULTY
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-faculties
+    [updateItem]="updateItem()!"
+    (added)="addData($event)"
+    (updated)="updateData($event)"
+    >
+    </app-add-faculties>
+  </div>
+</ng-template>

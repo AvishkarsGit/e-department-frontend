@@ -44,6 +44,15 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'bi bi-book-fill',
     route: 'subjects',
   },
+// faculties
+  
+  {
+    label: 'faculties',
+    icon: 'bi bi-mortarboard',
+    route: 'faculties',
+    allowedRoles: ['admin'],
+  },
+
   // students
   {
     label: 'Students',
@@ -51,6 +60,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'students',
     allowedRoles: ['admin'],
   },
+  
   {
     label: 'Countries',
     icon: 'fas fa-building',
