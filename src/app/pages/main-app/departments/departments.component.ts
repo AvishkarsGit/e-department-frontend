@@ -76,12 +76,9 @@ export class DepartmentsComponent {
         filter: this.filterText(),
       };
 
-      console.log('params : ', params);
-
       this.global.showSpinner();
 
       const response = await this.departmentService.getDepartments(params);
-      console.log(response);
 
       this.setDepartments(response?.data);
       this.totalRecords.set(response?.pagination?.total);
@@ -192,7 +189,6 @@ export class DepartmentsComponent {
 
   editItem(item: ItemType, template: TemplateRef<any>) {
     this.updateItem.set(item);
-    console.log('item id', item._id);
     this.openAddModal(template, true);
   }
 
