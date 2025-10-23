@@ -21,16 +21,16 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/app/attendances',
+        redirectTo: '/app/dashboard',
         pathMatch: 'full',
       },
-      // {
-      //   path: 'dashboard',
-      //   loadComponent: () =>
-      //     import('./pages/main-app/dashboard/dashboard.component').then(
-      //       (c) => c.DashboardComponent
-      //     ),
-      // },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/main-app/dashboard/dashboard.component').then(
+            (c) => c.DashboardComponent
+          ),
+      },
       {
         path: 'profile',
         loadComponent: () =>
@@ -103,7 +103,7 @@ export const routes: Routes = [
           // role_name: 'Admin'
         },
         canActivate: [roleGuard],
-      },
+      },  
       {
         path: 'students',
         loadComponent: () =>

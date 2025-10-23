@@ -17,8 +17,6 @@ import { AppConstants } from '../../../constants/app.constants';
     CardComponent,
     ChatBoxComponent,
     BoxesComponent,
-    PieChartComponent,
-    BarVerticalChartComponent,
     UsersComponent,
   ],
   templateUrl: './dashboard.component.html',

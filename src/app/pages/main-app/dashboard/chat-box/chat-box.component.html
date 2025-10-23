@@ -1,191 +1,94 @@
-<!-- Conversations are loaded here -->
-<div class="direct-chat-messages">
-  <!-- Message. Default to the start -->
-  <div class="direct-chat-msg">
-    <div class="direct-chat-infos clearfix">
-      <span class="direct-chat-name float-start"> Alexander Pierce </span>
-      <span class="direct-chat-timestamp float-end"> 23 Jan 2:00 pm </span>
+<div class="modern-chat">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-info">
+      <div class="ai-indicator">
+        <div class="pulse-dot"></div>
+        <span>Developers AI</span>
+      </div>
+      <div class="status">Online</div>
     </div>
-    <!-- /.direct-chat-infos -->
-    <img
-      class="direct-chat-img"
-      src="assets/imgs/avatars/avatar_male.jpg"
-      alt="message user image"
-    />
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">
-      Is this template really for free? That's unbelievable!
-    </div>
-    <!-- /.direct-chat-text -->
   </div>
-  <!-- /.direct-chat-msg -->
-  <!-- Message to the end -->
-  <div class="direct-chat-msg end">
-    <div class="direct-chat-infos clearfix">
-      <span class="direct-chat-name float-end"> Sarah Bullock </span>
-      <span class="direct-chat-timestamp float-start"> 23 Jan 2:05 pm </span>
-    </div>
-    <!-- /.direct-chat-infos -->
-    <img
-      class="direct-chat-img"
-      src="assets/imgs/avatars/avatar_female.jpg"
-      alt="message user image"
-    />
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">You better believe it!</div>
-    <!-- /.direct-chat-text -->
+
+  <!-- Messages Area -->
+  <div class="messages-area" #chatMessages>
+    @if (!hasMessages()) {
+      <div class="empty-state">
+        <div class="ai-icon">🤖</div>
+        <p>Start a conversation with AI</p>
+      </div>
+    }
+
+    @for (message of messages(); track message.id) {
+      <div class="message-row" [class.user-row]="message.isUser">
+        <div class="message-card" [class.user-card]="message.isUser">
+          <div class="sender-name">
+            {{ message.isUser ? 'You' : 'AI' }}
+          </div>
+
+          <div class="message-content">
+            @if (message.isSkeleton) {
+              <div class="skeleton-loader">
+                <div class="line"></div>
+                <div class="line short"></div>
+                <div class="line medium"></div>
+              </div>
+            } @else if (message.type === 'json') {
+              <div class="json-container">
+                <div class="content-header">
+                  <span class="type-label json-label">JSON</span>
+                  <button class="copy-btn" (click)="copyToClipboard(formatJson(message.content))">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+                <pre class="response-box">{{ formattedResponse()  }}</pre>
+              </div>
+            } @else if (message.type === 'code') {
+              <div class="code-container">
+                <div class="content-header">
+                  <span class="type-label code-label">{{ getCodeLanguage(message.content) }}</span>
+                  <button class="copy-btn" (click)="copyToClipboard(formatCode(message.content))">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+                <pre class="code-content">{{ formatCode(message.content) }}</pre>
+              </div>
+            } @else {
+              <div class="text-content">
+                @for (paragraph of message.content.split('\n'); track $index) {
+                  @if (paragraph.trim()) {
+                    <p>{{ paragraph }}</p>
+                  }
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
   </div>
-  <!-- /.direct-chat-msg -->
-  <!-- Message. Default to the start -->
-  <div class="direct-chat-msg">
-    <div class="direct-chat-infos clearfix">
-      <span class="direct-chat-name float-start"> Alexander Pierce </span>
-      <span class="direct-chat-timestamp float-end"> 23 Jan 5:37 pm </span>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <div class="input-container">
+      <textarea
+        class="message-input"
+        [(ngModel)]="inputMessage"
+        (keypress)="handleKeyPress($event)"
+        [disabled]="isTyping()"
+        placeholder="Ask me anything..."
+        rows="1"></textarea>
+
+      <button
+        class="send-button"
+        (click)="sendMessage()"
+        [disabled]="!inputMessage().trim() || isTyping()">
+        @if (isTyping()) {
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        } @else {
+          <i class="bi bi-send-fill"></i>
+        }
+      </button>
     </div>
-    <!-- /.direct-chat-infos -->
-    <img
-      class="direct-chat-img"
-      src="assets/imgs/avatars/avatar_male.jpg"
-      alt="message user image"
-    />
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">
-      Working with AdminLTE on a great new app! Wanna join?
-    </div>
-    <!-- /.direct-chat-text -->
   </div>
-  <!-- /.direct-chat-msg -->
-  <!-- Message to the end -->
-  <div class="direct-chat-msg end">
-    <div class="direct-chat-infos clearfix">
-      <span class="direct-chat-name float-end"> Sarah Bullock </span>
-      <span class="direct-chat-timestamp float-start"> 23 Jan 6:10 pm </span>
-    </div>
-    <!-- /.direct-chat-infos -->
-    <img
-      class="direct-chat-img"
-      src="assets/imgs/avatars/avatar_female.jpg"
-      alt="message user image"
-    />
-    <!-- /.direct-chat-img -->
-    <div class="direct-chat-text">I would love to.</div>
-    <!-- /.direct-chat-text -->
-  </div>
-  <!-- /.direct-chat-msg -->
 </div>
-<!-- /.direct-chat-messages-->
-<!-- Contacts are loaded here -->
-<div class="direct-chat-contacts">
-  <ul class="contacts-list">
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_male.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            Count Dracula
-            <small class="contacts-list-date float-end"> 2/28/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> How have you been? I was... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_female3.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            Sarah Doe
-            <small class="contacts-list-date float-end"> 2/23/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> I will be waiting for... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_female.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            Nadia Jolie
-            <small class="contacts-list-date float-end"> 2/20/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> I'll call you back at... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_female2.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            Nora S. Vans
-            <small class="contacts-list-date float-end"> 2/10/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> Where is your new... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_male2.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            John K.
-            <small class="contacts-list-date float-end"> 1/27/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> Can I take a look at... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-    <li>
-      <a href="#">
-        <img
-          class="contacts-list-img"
-          src="assets/imgs/avatars/avatar_female3.jpg"
-          alt="User Avatar"
-        />
-        <div class="contacts-list-info">
-          <span class="contacts-list-name">
-            Kenneth M.
-            <small class="contacts-list-date float-end"> 1/4/2023 </small>
-          </span>
-          <span class="contacts-list-msg"> Never mind I found... </span>
-        </div>
-        <!-- /.contacts-list-info -->
-      </a>
-    </li>
-    <!-- End Contact Item -->
-  </ul>
-  <!-- /.contacts-list -->
-</div>
-<!-- /.direct-chat-pane -->

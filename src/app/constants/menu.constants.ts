@@ -1,13 +1,13 @@
 import { MenuItem } from '../interfaces/menu-item.interface';
 
 export const MENU_ITEMS: MenuItem[] = [
-  // {
-  //   label: 'Dashboard',
-  //   icon: 'bi bi-house-door-fill',
-  //   route: 'dashboard',
-  // },
+  {
+    label: 'Dashboard',
+    icon: 'bi bi-house-door-fill',
+    route: 'dashboard',
+  },
 
-   // attendance
+  // attendance
 
   {
     label: 'Attendance',
@@ -29,6 +29,7 @@ export const MENU_ITEMS: MenuItem[] = [
     ],
     allowedRoles: ['admin'],
   },
+
   {
     label: 'MANAGE',
     isGroupTitle: true,
@@ -69,6 +70,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'students',
     allowedRoles: ['admin'],
   },
+
   {
     label: 'Countries',
     icon: 'fas fa-building',
