@@ -97,7 +97,7 @@ export class SubjectsComponent {
       this.global.showSpinner();
 
       const response = await this.subjectService.getSubjects(params);
-      console.log(response);
+      console.log('subjects',response);
 
       this.setSubjects(response?.data);
       this.totalRecords.set(response?.pagination?.total);
@@ -172,19 +172,20 @@ export class SubjectsComponent {
   }
 
   addData(subject: ItemType) {
-    // this.subjects.set([...this.subjects(), subject]);
-    // this.updateTotalRecords(1);
-    this.loadData();
+    this.subjects.update((subjects) => [...subjects, subject]);
+    this.updateTotalRecords(1);
+
+    // this.loadData();
   }
 
   updateData(updatedSubject: ItemType) {
-    // this.subjects.update((subjects) =>
-    //   subjects.map((subject) =>
-    //     subject._id === updatedSubject._id ? updatedSubject : subject
-    //   )
-    // );
+    this.subjects.update((subjects) =>
+      subjects.map((subject) =>
+        subject._id === updatedSubject._id ? updatedSubject : subject
+      )
+    );
 
-    this.loadData();
+    // this.loadData();
   }
 
   deleteData(subjectId: string) {

@@ -1,0 +1,54 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-input-form
+        label="PERIOD TEXT"
+        placeholder="(e.g. 1st, 2nd, etc)"
+        icon="code"
+        [required]="true"
+        [control]="form.controls['period_text']"
+      ></app-input-form>
+    </div>
+
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-input-form
+        label="PERIOD NUMBER"
+        placeholder="Period number"
+        type="number"
+        icon="list"
+        [required]="true"
+        [control]="form.controls['period']"
+      ></app-input-form>
+    </div>
+
+    <!-- starting time -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        [label]="'Select Starting Time'"
+        [type]="'time'"
+        [placeholder]="'HH:MM'"
+        icon="time"
+        [control]="form.controls['start_time']"
+        [required]="true"
+      >
+      </app-input-form>
+    </div>
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        [label]="'Select Ending Time'"
+        [type]="'time'"
+        [placeholder]="'HH:MM'"
+        icon="time"
+        [control]="form.controls['ending_time']"
+        [required]="true"
+      >
+      </app-input-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button> </app-submit-button>
+    </div>
+  </div>
+</form>

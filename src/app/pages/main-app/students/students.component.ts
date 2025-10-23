@@ -17,11 +17,10 @@ import { SearchFilterInputComponent } from '../../../components/search-filter-in
 import { AppConstants } from '../../../constants/app.constants';
 import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
 import { NgClass } from '@angular/common';
-import { Class } from '../../../interfaces/class.interface';
-import { ClassService } from '../../../services/class/class.service';
 import { AddStudentComponent } from './add-student/add-student.component';
 import { Student } from '../../../interfaces/student.interface';
 import { StudentService } from '../../../services/student/student.service';
+import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
 
 type ItemType = Student;
 
@@ -34,6 +33,7 @@ type ItemType = Student;
     IconRoundButtonComponent,
     NgClass,
     AddStudentComponent,
+    ExcelButtonComponent,
   ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss',
@@ -45,6 +45,7 @@ export class StudentsComponent {
   title = 'STUDENTS';
 
   students = signal<ItemType[]>([]);
+  exported_students = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
   updateItem = signal<ItemType | null>(null);
 
@@ -94,7 +95,6 @@ export class StudentsComponent {
 
   editItem(item: ItemType, template: TemplateRef<any>) {
     this.updateItem.set(item);
-    console.log('updated item', this.updateItem());
     this.openAddModal(template, true);
   }
 
@@ -130,9 +130,20 @@ export class StudentsComponent {
 
       this.global.showSpinner();
 
-
       const response = await this.studentService.getStudents(params);
+      console.log('student', response?.data);
       this.setStudents(response?.data);
+      //prepare an array of object for exporting student which are showing only on the table
+      const students_export = response?.data.map((s: any) => ({
+        name: s.user.name,
+        email: s.user.email,
+        phone: s.user.phone,
+        photo: s.user.photo,
+        rollNo: s.rollNo,
+        year: s.classData.year,
+        semester: s.classData.semester,
+      }));
+      this.exported_students.set(students_export);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
       console.log(e);
@@ -153,16 +164,14 @@ export class StudentsComponent {
   addData(student: ItemType) {
     this.students.update((students) => [...students, student]);
     this.updateTotalRecords(1);
-    this.loadData();
   }
-  
-  updateData(student: ItemType) {
+
+  updateData(updatedStudent: ItemType) {
     this.students.update((students) =>
-      students.map((student_data) =>
-        student_data._id === student_data._id ? student : student_data
+      students.map((student) =>
+        student._id === updatedStudent._id ? updatedStudent : student
       )
     );
-    this.loadData();
   }
 
   setLoadingIndicator(value: boolean) {
@@ -186,7 +195,7 @@ export class StudentsComponent {
         item!.user_id
       );
 
-     console.log(data);
+      console.log(data);
       // update table
       this.deleteData(item?._id!);
 

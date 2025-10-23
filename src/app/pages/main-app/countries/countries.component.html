@@ -1,13 +1,13 @@
-<app-content-header 
-  [title]="title" 
-  [subRoute]="title" 
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
   [lastRoute]="false"
   buttonLabel="Add Country"
-  (onButtonClick)="openAddModal(addCountryTemplate)">
+  (onButtonClick)="openAddModal(addCountryTemplate)"
+>
 </app-content-header>
 
 <div class="table-wrapper rounded">
-
   <div class="d-flex align-items-center justify-content-end">
     <app-search-filter-input
       class="search-table-input"

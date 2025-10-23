@@ -16,8 +16,8 @@ export class ClickButtonComponent {
   readonly color = input<string>('');
   readonly customColorClass = input<string>('bg-tertiary-color');
 
-  onClick = output<boolean>();
 
+  onClick = output<boolean>();
   buttonClicked() {
     this.onClick.emit(true);
   }

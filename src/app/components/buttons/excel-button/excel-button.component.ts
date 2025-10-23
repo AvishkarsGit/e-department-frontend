@@ -6,6 +6,8 @@ import { Strings } from '../../../enums/strings';
 import { GlobalService } from '../../../services/global/global.service';
 import { HttpService } from '../../../services/http/http.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+import { AttendanceReportService } from '../../../services/attendance-report/attendance-report.service';
 // import { SpinnerComponent } from "../../spinner/spinner.component";
 
 @Component({
@@ -22,13 +24,18 @@ export class ExcelButtonComponent {
   readonly api = input<string>(); // api to get all records
   // allValues = input<any[]>([]);
   readonly pagination = input<boolean>(true);
+  readonly isAttendance = input<boolean>(false);
+  readonly classId = input<string>('');
   readonly fields = input<string[]>([]);
   readonly sheetName = input<string>('Sheet1');
   readonly tooltip = input<string>('Excel');
+  readonly isSending = input<boolean>(false);
 
   // exportAll = output<boolean>();
 
   private global = inject(GlobalService);
+  private attendanceReportService = inject(AttendanceReportService);
+
   private http = inject(HttpService);
 
   constructor() {
@@ -46,34 +53,50 @@ export class ExcelButtonComponent {
 
   async export() {
     // this.setIsExportAll(false);
-    if (this.pagination()) {
-      const result = await this.global.showAlert(
-        'Choose an Export Option',
-        'Would you like to export all records, or just the records displayed in the table?',
-        'Export All Records',
-        false,
-        'Export Visible Table Records Only',
-        'info',
-        'primary'
-      );
 
-      if (result.isConfirmed) {
-        // export all
-        // this.setIsExportAll(true);
+    //check if the record is attendance record
+    if (this.isAttendance()) {
+      //check if class id is provided or not
+      if (this.classId() === '' || !this.classId()) {
+        this.global.showAlert(
+          'Error!',
+          'Please provide class which you wants to export data',
+          'Ok'
+        );
+        return;
+      }
+      //export attendance record
+      this.attendanceReportService.exportAttendanceRecord(this.classId());
+    } else {
+      if (this.pagination()) {
+        const result = await this.global.showAlert(
+          'Choose an Export Option',
+          'Would you like to export all records, or just the records displayed in the table?',
+          'Export All Records',
+          false,
+          'Export Visible Table Records Only',
+          'info',
+          'primary'
+        );
 
-        // if(this.allValues()?.length === 0) {
-        //   this.exportAll.emit(true);
-        // }
-        this.exportToExcel(true);
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === this.global.cancelSwal()
-      ) {
-        // export only in view
+        if (result.isConfirmed) {
+          // export all
+          // this.setIsExportAll(true);
+
+          // if(this.allValues()?.length === 0) {
+          //   this.exportAll.emit(true);
+          // }
+          this.exportToExcel(true);
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === this.global.cancelSwal()
+        ) {
+          // export only in view
+          this.exportToExcel();
+        }
+      } else {
         this.exportToExcel();
       }
-    } else {
-      this.exportToExcel();
     }
   }
 
@@ -112,7 +135,7 @@ export class ExcelButtonComponent {
       return capitalized;
     } else {
       // If there's no dot, return the field name as is
-      return field;
+      return field.toUpperCase();
     }
   }
 
@@ -157,7 +180,7 @@ export class ExcelButtonComponent {
 
       if (values?.length === 0) {
         this.global.hideSpinner();
-        
+
         await this.global.showAlert(
           'No Records Found',
           'There are no records available at the moment.',
@@ -210,8 +233,6 @@ export class ExcelButtonComponent {
       const response = await this.http.lastValueFrom(
         this.http.get(this.api()!)
       );
-
-      console.log(response);
 
       if (!response?.success) {
         this.http.throwResponseError(response);

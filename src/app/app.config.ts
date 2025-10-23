@@ -25,6 +25,8 @@ import {
 } from '@angular/platform-browser';
 import { TokenInterceptor } from './services/token-interceptor/token-interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATEPICKER_SCROLL_STRATEGY } from '@angular/material/datepicker';
+import { Overlay } from '@angular/cdk/overlay';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,5 +46,11 @@ export const appConfig: ApplicationConfig = {
     ),
     provideClientHydration(withEventReplay()),
     provideNativeDateAdapter(), // mat-datepicker
+    {
+      provide: MAT_DATEPICKER_SCROLL_STRATEGY,
+      deps: [Overlay],
+      useFactory: (overlay: Overlay) => () =>
+        overlay.scrollStrategies.reposition(),
+    },
   ],
 };

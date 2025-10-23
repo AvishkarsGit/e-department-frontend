@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { DebounceDirective } from '../../directives/debounce/debounce.directive';
 
 @Component({
@@ -12,6 +12,7 @@ export class SearchFilterInputComponent {
   fields = input<string[]>([]);
   isSSR = input<boolean>(true);
 
+
   filteredData = output<any>();
 
   updateFilter(event: string) {
@@ -19,7 +20,7 @@ export class SearchFilterInputComponent {
     const val = event.toLowerCase();
 
     // if server side rendering
-    if(this.isSSR()) {
+    if (this.isSSR()) {
       this.filteredData.emit(val);
       return;
     }

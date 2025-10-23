@@ -5,9 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Country } from '../../../../interfaces/country.interface';
 import { GlobalService } from '../../../../services/global/global.service';
-import { CountryService } from '../../../../services/country/country.service';
 import { SubmitButtonComponent } from '../../../../components/buttons/submit-button/submit-button.component';
 import { InputFormComponent } from '../../../../components/forms/input-form/input-form.component';
 import { Subject } from '../../../../interfaces/subject.interface';
@@ -79,7 +77,6 @@ export class AddSubjectComponent {
       return;
     }
 
-    const data = this.formData()?.value;
     this.addSubject();
   }
 
@@ -108,23 +105,43 @@ export class AddSubjectComponent {
 
         msg = 'updated';
 
-        data = await this.subjectService.updateSubject(this.updateItem()!._id, {
-          name: dataValue.name.trim(),
-          code: dataValue.code.trim(),
-          class_id: classId,
-        });
+        const response = await this.subjectService.updateSubject(
+          this.updateItem()!._id,
+          {
+            name: dataValue.name.trim(),
+            code: dataValue.code.trim(),
+            class_id: classId,
+          }
+        );
+
+        const result = response?.data;
+        data = {
+          _id: result?.subject?._id,
+          name: result?.subject?.name,
+          code: result?.subject?.code,
+          class_id: result?.subject?.class_id,
+          classData: result?.classData,
+        };
         //  update records
         this.updated.emit(data);
       } else {
-        data = await this.subjectService.addSubject({
+        const response = await this.subjectService.addSubject({
           name: dataValue.name.trim(),
           code: dataValue.code.trim(),
           class_id: classId,
         });
+
+        const result = response?.data;
+        data = {
+          _id: result?.subject?._id,
+          name: result?.subject?.name,
+          code: result?.subject?.code,
+          class_id: result?.subject?.class_id,
+          classData: result?.classData,
+        };
         // update records
         this.added.emit(data);
       }
-      // console.log(data);
 
       this.global.showSuccess(
         `Subject ${msg} successfully`,

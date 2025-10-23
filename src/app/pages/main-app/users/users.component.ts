@@ -90,7 +90,7 @@ export class UsersComponent {
   async loadData() {
     this.setLoadingIndicator(true);
     try {
-      const params = {
+      const params: any = {
         page: this.currentPage() + 1,
         size: this.pageSize(),
         sortField: this.sortField(),
@@ -98,12 +98,13 @@ export class UsersComponent {
         filter: this.filterText(),
       };
 
-      console.log('params : ', params);
-
+      if (this.isCard()) {
+        params.isCard = this.isCard();
+      }
+      
       this.global.showSpinner();
 
       const response = await this.userService.getUsers(params);
-      console.log(response);
 
       this.setUsers(response?.data);
       this.totalRecords.set(response?.pagination?.total);
@@ -123,9 +124,7 @@ export class UsersComponent {
     }
   }
 
-
   onPageChange(event: any) {
-    console.log('event :', event);
     this.currentPage.set(event.offset);
     this.loadData();
   }
@@ -173,7 +172,6 @@ export class UsersComponent {
   addData(user: ItemType) {
     this.users.update((users) => [...users, user]);
     this.updateTotalRecords(1);
-   
   }
 
   updateData(updatedUser: ItemType) {

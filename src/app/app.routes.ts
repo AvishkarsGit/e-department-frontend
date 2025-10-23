@@ -63,6 +63,47 @@ export const routes: Routes = [
         },
         canActivate: [roleGuard],
       },
+
+      // attendance
+      {
+        path: 'attendances',
+        loadComponent: () =>
+          import('./pages/main-app/attendance/attendance.component').then(
+            (c) => c.AttendanceComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
+      // summaries
+      {
+        path: 'summaries',
+        loadComponent: () =>
+          import('./pages/main-app/summaries/summaries.component').then(
+            (c) => c.SummariesComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
+
+      // periods
+      {
+        path: 'periods',
+        loadComponent: () =>
+          import('./pages/main-app/periods/periods.component').then(
+            (c) => c.PeriodsComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
+        },
+        canActivate: [roleGuard],
+      },
       // faculties
       {
         path: 'faculties',
