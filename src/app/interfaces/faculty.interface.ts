@@ -1,4 +1,5 @@
 import { Department } from "./department.interface";
+import { Guardian } from "./guardian.interface";
 import { Subject } from "./subject.interface";
 import { User } from "./user.interface";
 
@@ -13,4 +14,5 @@ export interface Faculty {
 
     //subject array store data
     subjects: Subject[],
+
 }

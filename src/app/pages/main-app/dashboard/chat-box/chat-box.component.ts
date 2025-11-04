@@ -41,7 +41,7 @@ export class ChatBoxComponent {
     // Auto scroll effect
     effect(() => {
       if (this.messages().length > 0) {
-        queueMicrotask(() => this.scrollToBottom());
+        setTimeout(() => this.scrollToBottom(), 100);
       }
     });
   }

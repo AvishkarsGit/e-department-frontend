@@ -27,6 +27,8 @@ import { Student } from '../../../../interfaces/student.interface';
 import { Guardian } from '../../../../interfaces/guardian.interface';
 import { StudentService } from '../../../../services/student/student.service';
 import { SubjectService } from '../../../../services/subject/subject.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { Strings } from '../../../../enums/strings';
 
 @Component({
   selector: 'app-add-student',
@@ -57,6 +59,7 @@ export class AddStudentComponent {
   private departmentService = inject(DepartmentService);
   private studentService = inject(StudentService);
   private subjectService = inject(SubjectService);
+  private auth = inject(AuthService);
 
   constructor() {}
 
@@ -163,8 +166,8 @@ export class AddStudentComponent {
 
   async loadDepartments() {
     try {
-      const response = await this.departmentService.getDepartments();
-      this.departments.set(response?.Alldata || []);
+      const response = await this.departmentService.getAllDepartments();
+      this.departments.set(response?.data);
       this.semesters.set([1, 2]);
     } catch (err) {
       console.error(err);
@@ -182,7 +185,7 @@ export class AddStudentComponent {
     try {
       this.global.showSpinner();
 
-      let msg = 'added';
+      let msg = 'registered';
       let data: Student;
 
       //fetch classId
@@ -202,10 +205,9 @@ export class AddStudentComponent {
         phone: formDataValue.phone,
         class_id: class_id,
         photo: formDataValue.photo,
-        rollNo:parseInt(formDataValue.rollNo),
+        rollNo: parseInt(formDataValue.rollNo),
         guardian: JSON.stringify(formDataValue.guardian),
       };
-
 
       // check if update is requested
       if (this.updateItem()) {
@@ -232,18 +234,17 @@ export class AddStudentComponent {
       } else {
         const result = await this.studentService.addStudent(payload);
         //  // update records
-         data = {
-           _id: result?.student?._id,
-           user_id: result?.student?.user_id,
-           class_id: result?.student?.class_id,
-           rollNo: result?.student?.rollNo,
-           user: result?.user,
-           classData: result?.classData,
-           guardian: result?.student?.guardian,
-         };
+        data = {
+          _id: result?.student?._id,
+          user_id: result?.student?.user_id,
+          class_id: result?.student?.class_id,
+          rollNo: result?.student?.rollNo,
+          user: result?.user,
+          classData: result?.classData,
+          guardian: result?.student?.guardian,
+        };
         this.added.emit(data);
       }
-      //  console.log(data);
 
       this.global.showSuccess(
         `Student ${msg} successfully`,
@@ -255,6 +256,9 @@ export class AddStudentComponent {
       );
 
       this.global.hideModal();
+
+      //verify the email
+      this.auth.navigateByUrl('/verification');
     } catch (e) {
       console.log(e);
       this.global.showAlert('Error!', e, 'OK');

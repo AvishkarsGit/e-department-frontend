@@ -10,9 +10,11 @@ import { InputFormComponent } from '../../../../components/forms/input-form/inpu
 import { GlobalService } from '../../../../services/global/global.service';
 import { UserService } from '../../../../services/user/user.service';
 import { Role, User } from '../../../../interfaces/user.interface';
-//import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
+import { SelectFormComponent } from '../../../../components/forms/select-form/select-form.component';
 import { ToggleFormButtonComponent } from '../../../../components/forms/toggle-form-button/toggle-form-button.component';
 import { FileInputComponent } from '../../../../components/forms/file-input/file-input.component';
+import { Department } from '../../../../interfaces/department.interface';
+import { DepartmentService } from '../../../../services/department/department.service';
 
 @Component({
   selector: 'app-add-user',
@@ -20,8 +22,7 @@ import { FileInputComponent } from '../../../../components/forms/file-input/file
     ReactiveFormsModule,
     SubmitButtonComponent,
     InputFormComponent,
-    //SelectFormComponent,
-    ToggleFormButtonComponent,
+    SelectFormComponent,
     FileInputComponent,
   ],
   templateUrl: './add-user.component.html',
@@ -33,6 +34,7 @@ export class AddUserComponent {
   register = output<User>();
   roles = input<Role[]>([]);
   updateItem = input<User>();
+  departments = signal<Department[]>([]);
 
   added = output<User>();
   updated = output<User>();
@@ -40,11 +42,13 @@ export class AddUserComponent {
   private formBuilder = inject(FormBuilder);
   private global = inject(GlobalService);
   private userService = inject(UserService);
+  private departmentService = inject(DepartmentService);
 
   constructor() {}
 
   ngOnInit() {
     this.initForm();
+    this.loadDepartments();
   }
 
   initForm() {
@@ -52,12 +56,7 @@ export class AddUserComponent {
 
     const form = this.formBuilder.group({
       name: [item?.name || null, Validators.required],
-      role: [item?.role || null, Validators.required], //role
-      username: [item?.username || null, Validators.required], //role
-      // role_id: [
-      //   item?.role || (this.isSignup() ? 'admin' : null),
-      //   Validators.required,
-      // ],
+      username: [item?.username || null, Validators.required],
       email: [item?.email || null, [Validators.required, Validators.email]],
       phone: [
         item?.phone || null,
@@ -74,7 +73,7 @@ export class AddUserComponent {
           this.updateItem() ? null : Validators.required,
         ].filter(Boolean), // Removes `null` values
       ],
-      account_status: [item?.account_status ?? true, Validators.required],
+      department: [item?.department?._id || null, Validators.required],
       photo: [item?.photo ?? null],
     });
 
@@ -138,6 +137,15 @@ export class AddUserComponent {
       this.global.showAlert('Error!', e, 'OK');
     } finally {
       this.global.hideSpinner();
+    }
+  }
+
+  async loadDepartments() {
+    try {
+      const response = await this.departmentService.getAllDepartments();
+      this.departments.set(response?.data);
+    } catch (error) {
+      throw error;
     }
   }
 }

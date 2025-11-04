@@ -18,13 +18,10 @@ import {
   DatatableComponent,
   NgxDatatableModule,
 } from '@swimlane/ngx-datatable';
-import { DatepipeTextFormatComponent } from '../../../components/datepipe-text-format/datepipe-text-format.component';
 import { SearchFilterInputComponent } from '../../../components/search-filter-input/search-filter-input.component';
-import { MatDatepickerFormComponent } from '../../../components/forms/mat-datepicker-form/mat-datepicker-form.component';
 import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
 import { SubmitButtonComponent } from '../../../components/buttons/submit-button/submit-button.component';
 import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
-import { User } from '../../../interfaces/user.interface';
 import { AppConstants } from '../../../constants/app.constants';
 import { GlobalService } from '../../../services/global/global.service';
 import { UserService } from '../../../services/user/user.service';
@@ -35,10 +32,7 @@ import { Subject } from '../../../interfaces/subject.interface';
 import { StudentService } from '../../../services/student/student.service';
 import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
 import { ProfileService } from '../../../services/profile/profile.service';
-import { Attendance } from '../../../interfaces/attendance.interface';
-import { ToggleFormButtonComponent } from '../../../components/forms/toggle-form-button/toggle-form-button.component';
 import { ClickButtonComponent } from '../../../components/buttons/click-button/click-button.component';
-import { ToggleButtonComponent } from '../../../components/buttons/toggle-button/toggle-button.component';
 import { ClassSession } from '../../../interfaces/class-session.interface';
 import { Period } from '../../../interfaces/period.interface';
 
@@ -104,6 +98,7 @@ export class AttendanceComponent {
   }
 
   ngOnInit() {
+    console.log('ngOnInit');
     this.loadData();
 
     //fetch subjects and periods
@@ -171,8 +166,12 @@ export class AttendanceComponent {
     try {
       const formValue = this.filterForm()?.value;
 
-      const subject_id = formValue?.subject || '68bc2af4052adba3be028323'; //later assign id of subject that assigns to the faculty
-
+      //subjects for logged in faculty if present
+      const subjectId = this.profileService.profile()!.subjects![0]._id;
+      if (!subjectId) {
+        this.global.showAlert('Error!', 'No subjects assigned to you', 'Ok');
+      }
+      const subject_id = formValue?.subject || subjectId;
       const response = await this.attendanceService.filterStudentBySubject(
         subject_id
       );
@@ -258,8 +257,10 @@ export class AttendanceComponent {
   }
 
   async setSubjects() {
-    const response = await this.attendanceService.getAllSubjects();
-    this.subjects.set(response);
+    // const response = await this.attendanceService.getAllSubjects();
+    //reduces api call for getting all subjects. instead we can show only assigned subjects.
+    const subjects: Subject[] = this.profileService.profile()?.subjects!;
+    this.subjects.set(subjects);
   }
 
   async setPeriods() {

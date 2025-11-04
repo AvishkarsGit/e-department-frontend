@@ -101,7 +101,7 @@ export class UsersComponent {
       if (this.isCard()) {
         params.isCard = this.isCard();
       }
-      
+
       this.global.showSpinner();
 
       const response = await this.userService.getUsers(params);
@@ -145,7 +145,7 @@ export class UsersComponent {
   }
 
   async openAddModal(template: TemplateRef<any>, update: boolean = false) {
-    if (!update) this.updateItem.set(null);
+   if (!update) this.updateItem.set(null);
     this.global.showModal(template);
   }
 

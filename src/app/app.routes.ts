@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth/auth.guard';
 import { roleGuard } from './guards/role/role.guard';
+import { verifyEmailGuardGuard } from './guards/verify-email/verify-email.guard';
 
 export const routes: Routes = [
   {
@@ -14,10 +15,17 @@ export const routes: Routes = [
       import('./pages/auth/auth.component').then((c) => c.AuthComponent),
   },
   {
+    path: 'verification',
+    loadComponent: () =>
+      import('./pages/auth/verification/verification.component').then(
+        (c) => c.VerificationComponent
+      ),
+  },
+  {
     path: 'app',
     loadComponent: () =>
       import('./layout/layout.component').then((c) => c.LayoutComponent),
-    canActivate: [authGuard],
+    canActivate: [authGuard, verifyEmailGuardGuard],
     children: [
       {
         path: '',
@@ -38,18 +46,6 @@ export const routes: Routes = [
             (c) => c.ProfileComponent
           ),
       },
-      {
-        path: 'users',
-        loadComponent: () =>
-          import('./pages/main-app/users/users.component').then(
-            (c) => c.UsersComponent
-          ),
-        data: {
-          role: 'admin',
-          // role_name: 'Admin'
-        },
-        canActivate: [roleGuard],
-      },
       // classes
       {
         path: 'classes',
@@ -59,7 +55,6 @@ export const routes: Routes = [
           ),
         data: {
           role: 'admin',
-          // role_name: 'Admin'
         },
         canActivate: [roleGuard],
       },
@@ -72,8 +67,7 @@ export const routes: Routes = [
             (c) => c.AttendanceComponent
           ),
         data: {
-          role: 'admin',
-          // role_name: 'Admin'
+          roles: ['admin', 'faculty'],
         },
         canActivate: [roleGuard],
       },
@@ -85,8 +79,7 @@ export const routes: Routes = [
             (c) => c.SummariesComponent
           ),
         data: {
-          role: 'admin',
-          // role_name: 'Admin'
+          roles: ['admin', 'faculty'],
         },
         canActivate: [roleGuard],
       },
@@ -122,26 +115,23 @@ export const routes: Routes = [
         path: 'students',
         loadComponent: () =>
           import('./pages/main-app/students/students.component').then(
-            (c) => c.StudentsComponent)
-},
-        {
-        path: 'departments',
-        loadComponent: () =>
-          import('./pages/main-app/departments/departments.component').then(
-            (c) => c.DepartmentsComponent
-         ),
+            (c) => c.StudentsComponent
+          ),
         data: {
-          role: 'admin',
-          // role_name: 'Admin'
+          roles: ['admin', 'faculty'],
         },
         canActivate: [roleGuard],
       },
       {
-        path: 'countries',
+        path: 'departments',
         loadComponent: () =>
-          import('./pages/main-app/countries/countries.component').then(
-            (c) => c.CountriesComponent
+          import('./pages/main-app/departments/departments.component').then(
+            (c) => c.DepartmentsComponent
           ),
+        data: {
+          role: 'admin',
+        },
+        canActivate: [roleGuard],
       },
       {
         path: 'subjects',
@@ -149,13 +139,10 @@ export const routes: Routes = [
           import('./pages/main-app/subjects/subjects.component').then(
             (c) => c.SubjectsComponent
           ),
-      },
-      {
-        path: 'states',
-        loadComponent: () =>
-          import('./pages/main-app/states/states.component').then(
-            (c) => c.StatesComponent
-          ),
+        data: {
+          roles: ['admin', 'faculty', 'student'],
+        },
+        canActivate: [roleGuard],
       },
 
       {

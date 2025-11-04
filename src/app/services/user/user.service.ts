@@ -44,8 +44,6 @@ export class UserService {
 
       console.log(formValues);
 
-  
-
       // Clean the JSON data before processing
       let updatedFormValues = this.http.cleanFormValues(formValues);
 
@@ -76,7 +74,7 @@ export class UserService {
   async getUsers(params: any) {
     try {
       const response = await this.http.lastValueFrom(
-        this.http.get(this.apiUrl+'/users', params)
+        this.http.get(this.apiUrl + '/users', params)
       );
 
       // console.log(response);
@@ -156,6 +154,21 @@ export class UserService {
       return response?.data?.admin_exists;
     } catch (e) {
       throw e;
+    }
+  }
+
+  async viewProfile(id: string) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + `/view-profile/${id}`)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+      return response;
+    } catch (err) {
+      throw err;
     }
   }
 }

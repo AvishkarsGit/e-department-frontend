@@ -1,12 +1,25 @@
 <div class="modern-chat">
   <!-- Header -->
   <div class="chat-header">
-    <div class="header-info">
-      <div class="ai-indicator">
-        <div class="pulse-dot"></div>
-        <span>Developers AI</span>
+    <div class="header-content">
+      <div class="ai-info">
+        <div class="ai-avatar">
+          <i class="bi bi-robot"></i>
+          <div class="pulse-ring"></div>
+        </div>
+        <div class="ai-details">
+          <h4>Developers AI</h4>
+          <span class="ai-status">
+            <div class="status-dot"></div>
+            Ready to help
+          </span>
+        </div>
       </div>
-      <div class="status">Online</div>
+      <div class="header-actions">
+        <button class="minimize-btn">
+          <i class="bi bi-dash"></i>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -37,17 +50,17 @@
               <div class="json-container">
                 <div class="content-header">
                   <span class="type-label json-label">JSON</span>
-                  <button class="copy-btn" (click)="copyToClipboard(formatJson(message.content))">
+                  <button class="copy-btn" type="button">
                     <i class="bi bi-clipboard"></i>
                   </button>
                 </div>
-                <pre class="response-box">{{ formattedResponse()  }}</pre>
+                <pre class="json-content">{{ formatJson(message.content) }}</pre>
               </div>
             } @else if (message.type === 'code') {
               <div class="code-container">
                 <div class="content-header">
                   <span class="type-label code-label">{{ getCodeLanguage(message.content) }}</span>
-                  <button class="copy-btn" (click)="copyToClipboard(formatCode(message.content))">
+                  <button class="copy-btn" type="button">
                     <i class="bi bi-clipboard"></i>
                   </button>
                 </div>

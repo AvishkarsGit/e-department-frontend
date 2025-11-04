@@ -15,6 +15,7 @@ export class AuthService {
   private http = inject(HttpService);
   private profileService = inject(ProfileService);
   private apiUrl = 'user';
+  private isVerified = signal<boolean>(false);
 
   token = signal<string | null>(null);
 
@@ -22,6 +23,10 @@ export class AuthService {
 
   updateToken(token: string | null) {
     this.token.set(token);
+  }
+
+  updateIsVerified(value: boolean) {
+    this.isVerified.set(value);
   }
 
   setUserData(token: string) {
@@ -36,9 +41,24 @@ export class AuthService {
     }
   }
 
+  setIsVerified(value: boolean) {
+    this.storage.setStorage(Strings.IS_VERIFIED, value);
+    this.updateIsVerified(value);
+  }
+
+  getIsVerified(): Boolean {
+    let value: boolean;
+    if (!this.isVerified()) {
+      const result = this.storage.getStorage(Strings.IS_VERIFIED);
+      if (result === 'true') value = true;
+      else value = false;
+      this.updateIsVerified(value);
+    }
+    return value!;
+  }
+
   async register(formData: any) {
     try {
-
       let formValues: any = formData;
       let isFormData = false;
 
@@ -94,7 +114,7 @@ export class AuthService {
 
   async logout() {
     try {
-      const response = await lastValueFrom(this.http.get('logout'));
+      const response = await lastValueFrom(this.http.get('user/logout'));
       console.log(response);
       this.logoutFromDevice();
     } catch (e) {
@@ -108,5 +128,56 @@ export class AuthService {
     this.updateToken(null);
     this.profileService.setProfile(null);
     this.router.navigateByUrl(Strings.LOGIN, { replaceUrl: true });
+  }
+
+  async checkUser(email: string) {
+    try {
+      const data = { email };
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/exists', data)
+      );
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendOtp(email: string) {
+    try {
+      const data = { email };
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/send/verification/token', data)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async verifyEmail(email: string, otp: string) {
+    try {
+      const data = { email, otp };
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/verify-email', data)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+      //set email is verified
+      this.setIsVerified(true);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 }

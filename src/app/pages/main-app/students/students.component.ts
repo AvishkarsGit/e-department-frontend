@@ -17,10 +17,11 @@ import { SearchFilterInputComponent } from '../../../components/search-filter-in
 import { AppConstants } from '../../../constants/app.constants';
 import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
 import { NgClass } from '@angular/common';
-import { AddStudentComponent } from './add-student/add-student.component';
 import { Student } from '../../../interfaces/student.interface';
 import { StudentService } from '../../../services/student/student.service';
 import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
+import { UserProfile } from '../../../interfaces/user-profile.interface';
+import { ViewProfileComponent } from '../view-profile/view-profile.component';
 
 type ItemType = Student;
 
@@ -32,8 +33,8 @@ type ItemType = Student;
     SearchFilterInputComponent,
     IconRoundButtonComponent,
     NgClass,
-    AddStudentComponent,
     ExcelButtonComponent,
+    ViewProfileComponent,
   ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss',
@@ -48,6 +49,8 @@ export class StudentsComponent {
   exported_students = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
   updateItem = signal<ItemType | null>(null);
+  role = signal<string>('student');
+  updateProfileItem = signal<UserProfile | null>(null);
 
   totalRecords = signal<number>(0);
   currentPage = signal<number>(0);
@@ -223,5 +226,32 @@ export class StudentsComponent {
       users.filter((user) => user._id !== userId)
     );
     this.updateTotalRecords(-1);
+  }
+
+  viewProfile(item: ItemType, template: TemplateRef<any>) {
+    //prepare userProfile data
+    this.prepareData(item);
+    this.global.showModal(template);
+  }
+
+  prepareData(item: ItemType) {
+    const data: UserProfile = {
+      _id: item?._id,
+      name: item?.user?.name,
+      email: item?.user?.email,
+      phone: item?.user?.phone,
+      photo: item?.user?.photo!,
+      username: item?.user?.username,
+      role: item?.user?.role,
+      rollNo: item?.rollNo,
+      semester: item?.classData?.semester,
+      year: item?.classData?.year,
+      department: item?.classData?.department?.name!,
+      emailVerified: item?.user?.email_verified,
+      guardians: item?.guardian,
+      createdAt: item?.user?.created_at!,
+    };
+
+    this.updateProfileItem.set(data);
   }
 }

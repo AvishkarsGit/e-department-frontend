@@ -10,11 +10,14 @@ export const roleGuard: CanActivateFn = async (route, segments) => {
   const auth = inject(AuthService);
 
   const profile = await profileService.getProfile();
-  console.log(profile);
 
-  const role = route.data?.['role'];
+  // Support both single role and multiple roles
+  const requiredRoles = route.data?.['roles'] || [route?.data?.['role']];
 
-  if (profile?.role && profile?.role === role) {
+
+  // Check if user's role matches any of the allowed ones
+  const userRole = profile?.role;
+  if (userRole && requiredRoles.includes(userRole)) {
     return true;
   }
 
@@ -22,8 +25,8 @@ export const roleGuard: CanActivateFn = async (route, segments) => {
 
   await global.showAlert(
     'Unauthorized Access!',
-   'You are not authorized to access this path. Contact Administrator for further information.',
-    'OK',
+    'You are not authorized to access this path. Contact Administrator for further information.',
+    'OK'
   );
 
   return false;

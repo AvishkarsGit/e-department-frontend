@@ -3,13 +3,13 @@ import { HttpService } from '../http/http.service';
 import { Faculty } from '../../interfaces/faculty.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FacultyService {
   private apiUrl = 'faculty';
   private http = inject(HttpService);
 
-  async addFaculty(data: any){
+  async addFaculty(data: any) {
     try {
       let formValues: any = data;
       let isFormData = false;
@@ -50,8 +50,8 @@ export class FacultyService {
     }
   }
 
-  async updateFaculty(id:string,user_id:string,data:any){
-     try {
+  async updateFaculty(id: string, user_id: string, data: any) {
+    try {
       let formValues: any = data;
       let isFormData = false;
 
@@ -79,8 +79,8 @@ export class FacultyService {
     }
   }
 
-  async deleteFaculty(id:string,user_id:string){
-    try{
+  async deleteFaculty(id: string, user_id: string) {
+    try {
       const response = await this.http.lastValueFrom(
         this.http.delete(`${this.apiUrl}/delete-faculty/${user_id}/${id}`)
       );
@@ -90,9 +90,40 @@ export class FacultyService {
       }
 
       return response?.data;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
+  async getAllFaculties() {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/get-all-faculty')
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async assignSubjects(data: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/assign-faculty', data)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

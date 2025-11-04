@@ -1,4 +1,7 @@
-export type Role = 'admin'| 'hod' | 'faculty' | 'student';
+import { Department } from './department.interface';
+import { Subject } from './subject.interface';
+
+export type Role = 'admin' | 'faculty' | 'student';
 
 export interface User {
   _id: string;
@@ -6,9 +9,12 @@ export interface User {
   name: string;
   email: string;
   phone: string;
-  username:string;
+  username: string;
   account_status: boolean;
-  photo?: any;
+  email_verified: string;
+  photo?: string;
+  subjects?: Subject[];
+  department?: Department;
   created_at?: Date;
   updated_at?: Date;
 }

@@ -147,9 +147,9 @@ export class DepartmentsComponent {
     this.updateTotalRecords(1);
   }
 
-  updateData(updatedDepatment: ItemType) {
+  updateData(updatedDepartment: ItemType) {
     this.departments.update((departments) =>
-      departments.map((department) => (department._id === updatedDepatment._id ? updatedDepatment : department))
+      departments.map((department) => (department._id === updatedDepartment._id ? updatedDepartment : department))
     );
   }
 

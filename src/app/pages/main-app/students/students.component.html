@@ -1,11 +1,5 @@
 @if(!isCard()) {
-<app-content-header
-  [title]="title"
-  [subRoute]="title"
-  [lastRoute]="false"
-  buttonLabel="Add Student"
-  (onButtonClick)="openAddModal(addStudentTemplate)"
->
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
 </app-content-header>
 }
 
@@ -27,7 +21,7 @@
         'email',
         'photo',
         'year',
-        'semester',
+        'semester'
       ]"
     ></app-excel-button>
 
@@ -147,19 +141,21 @@
           <span class="tableHeader">ACTION</span>
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
-          <app-icon-round-button
-            icon="fa fa-edit"
-            addIconClass="edit"
-            tooltip="Edit"
-            (onClick)="editItem(row, addStudentTemplate)"
-          >
-          </app-icon-round-button>
-
+          <!-- delete button -->
           <app-icon-round-button
             icon="fa fa-trash"
             addIconClass="delete"
             tooltip="Delete"
             (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+
+          <!-- view profile button -->
+          <app-icon-round-button
+            icon="fa fa-eye"
+            addIconClass="edit"
+            tooltip="View"
+            (onClick)="viewProfile(row, viewProfileTemplate)"
           >
           </app-icon-round-button>
         </ng-template>
@@ -169,10 +165,10 @@
 </div>
 
 <!-- add user modal -->
-<ng-template #addStudentTemplate>
+<ng-template #viewProfileTemplate>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title mb-0 fw-bold">
-      {{ updateItem() ? "EDIT" : "ADD" }} STUDENT
+      {{ role() === "student" ? "STUDENT" : "FACULTY" }} PROFILE
     </h4>
     <button
       type="button"
@@ -183,10 +179,8 @@
   </div>
 
   <div class="modal-body">
-    <app-add-student
-    [updateItem]="updateItem()!"
-    (added)="addData($event)"
-    (updated)="updateData($event)"
-    ></app-add-student>
+    <app-view-profile
+      [updateProfileItem]="updateProfileItem()!"
+    ></app-view-profile>
   </div>
 </ng-template>

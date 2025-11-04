@@ -30,7 +30,7 @@ import { User } from '../../../interfaces/user.interface';
 export class ProfileComponent {
   title = 'PROFILE';
   formData = signal<FormGroup | null>(null);
-  
+
 
   readonly profile = computed<User | null>(() => this.profileService.profile());
 
@@ -61,7 +61,7 @@ export class ProfileComponent {
       ],
       password: [
         null,
-        [Validators.minLength(8)].filter(Boolean), 
+        [Validators.minLength(8)].filter(Boolean),
       ],
       photo: [null],
     });
@@ -72,7 +72,8 @@ export class ProfileComponent {
   async getProfileData() {
     try {
       this.global.showSpinner();
-      await this.profileService.getProfile();
+      const response = await this.profileService.getProfile();
+
 
       this.formData()?.patchValue({
         name: this.profile()?.name,

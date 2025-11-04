@@ -2,102 +2,48 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="row g-4 mb-6 mx-4">
-    <div class="form-group col-md-12">
-      <app-file-input
-        label="PHOTO"
-        [isOnlyImage]="true"
-        [control]="form.controls['photo']"
-      ></app-file-input>
+    <div class="col-12">
+      <h5>Assign Subjects</h5>
+
+      <div formArrayName="subjects">
+        @for (s of subjectsArray.controls; track $index) {
+        <div class="row g-3 mb-3 align-items-center" [formGroupName]="$index">
+          <div class="col-md-10">
+            <app-select-form
+              label="SUBJECT"
+              placeholder="Select Subject"
+              [required]="true"
+              [control]="s.get('subject')"
+              optionTextField="name"
+              optionValueField="_id"
+              [items]="subjects()"
+            ></app-select-form>
+          </div>
+
+          <div class="col-md-2 d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="removeSubject($index)"
+            >
+              <i class="bi bi-trash"></i> Remove
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary mt-2"
+        (click)="addSubject()"
+      >
+        <i class="bi bi-plus-circle"></i> Add Subject
+      </button>
     </div>
-
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="NAME"
-        placeholder="Name"
-        icon="user-graduate"
-        [required]="true"
-        [control]="form.controls['name']"
-      ></app-input-form>
-    </div>
-
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="EMAIL"
-        type="email"
-        placeholder="Email"
-        icon="envelope"
-        [required]="true"
-        [control]="form.controls['email']"
-      ></app-input-form>
-    </div>
-
-    <!-- phone -->
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="PHONE"
-        type="number"
-        placeholder="Phone Number"
-        icon="phone"
-        [required]="true"
-        [control]="form.controls['phone']"
-        [minlength]="10"
-        [maxlength]="10"
-      ></app-input-form>
-    </div>
-
-    <!-- roll no (optional)
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="ROLL NO"
-        type="number"
-        placeholder="Roll Call Number"
-        icon="table"
-        [minlength]="1"
-        [maxlength]="2"
-        [control]="form.controls['rollNo']"
-      ></app-input-form>
-    </div> -->
-
-    <!-- phone -->
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="USERNAME"
-        type="text"
-        placeholder="Username"
-        icon="user"
-        [required]="true"
-        [control]="form.controls['username']"
-      ></app-input-form>
-    </div>
-
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-input-form
-        label="PASSWORD"
-        type="password"
-        placeholder="Password"
-        icon="key"
-        [required]="updateItem() ? false : true"
-        [control]="form.controls['password']"
-        [minlength]="8"
-      ></app-input-form>
-    </div>
-
-    <!-- department -->
-    <div class="col-xl-6 col-sm-6 col-12">
-      <app-select-form
-        label="DEPARTMENT"
-        placeholder="Select Department"
-        [required]="true"
-        [control]="form.controls['department']"
-        optionTextField="name"
-        optionValueField="_id"
-        [items]="departments()"
-      ></app-select-form>
-    </div>
-
 
     <div class="box-footer mt-4 d-flex justify-content-center">
-      <app-submit-button> </app-submit-button>
+      <app-submit-button></app-submit-button>
     </div>
   </div>
 </form>

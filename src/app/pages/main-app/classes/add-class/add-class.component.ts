@@ -103,6 +103,7 @@ export class AddClassComponent {
           classData
         );
         //update records
+        
         this.updated.emit(data);
       } else {
         data = await this.classService.addClass(classData);
@@ -130,9 +131,9 @@ export class AddClassComponent {
 
   async getDepartments() {
     try {
-      const response = await this.departmentService.getDepartments();
+      const response = await this.departmentService.getAllDepartments();
       console.log('response ', response);
-      this.setDepartments(response?.Alldata);
+      this.setDepartments(response?.data);
       //set semester data
       this.setSemester([1, 2]);
     } catch (error) {

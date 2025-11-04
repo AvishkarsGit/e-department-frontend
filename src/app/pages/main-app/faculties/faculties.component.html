@@ -1,44 +1,13 @@
-@if(!isCard()) {
-<app-content-header
-  [title]="title"
-  [subRoute]="title"
-  [lastRoute]="false"
-  buttonLabel="Add Faculty"
-  (onButtonClick)="openAddModal(addStudentTemplate)"
->
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
 </app-content-header>
-}
 
-<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
+<div class="table-wrapper rounded">
   <div class="d-flex align-items-center justify-content-end">
+    <!-- search bar -->
     <app-search-filter-input
       class="search-table-input"
       (filteredData)="onFilterChange($event)"
     ></app-search-filter-input>
-
-    <!-- <app-excel-button
-      [fileName]="title"
-      [values]="users()"
-      api="user/allUsers"
-      [fields]="[
-        'id',
-        'name',
-        'role_id',
-        'role.name',
-        'phone',
-        'email',
-        'account_status'
-      ]"
-    ></app-excel-button> -->
-
-    <!--
-      [allValues]="allUsers()"
-      (exportAll)="getAllUsers()" -->
-
-    <!-- <app-add-button
-      label="ADD USER"
-      (onClick)="openAddModal(addUserTemplate)"
-    ></app-add-button> -->
   </div>
 
   <div class="col-md-12 mb-3">
@@ -50,9 +19,9 @@
       [headerHeight]="50"
       [footerHeight]="50"
       [rowHeight]="'auto'"
-      [externalPaging]="true"
       [loadingIndicator]="loadingIndicator()"
       [scrollbarH]="true"
+      [externalPaging]="true"
       [limit]="pageSize()"
       [count]="totalRecords()"
       [offset]="currentPage()"
@@ -72,7 +41,7 @@
         </ng-template>
       </ngx-datatable-column>
 
-      <!-- student name -->
+      <!-- faculty name -->
 
       <ngx-datatable-column prop="name">
         <ng-template
@@ -133,14 +102,16 @@
           <span class="tableHeader">ACTION</span>
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
+          <!-- assign subject icon -->
           <app-icon-round-button
-            icon="fa fa-edit"
+            icon="fa fa-book"
             addIconClass="edit"
-            tooltip="Edit"
-            (onClick)="editItem(row, addStudentTemplate)"
+            tooltip="Assign Subject"
+            (onClick)="uploadSubjects(row, assignSubjectsModal)"
           >
           </app-icon-round-button>
 
+          <!-- delete icon -->
           <app-icon-round-button
             icon="fa fa-trash"
             addIconClass="delete"
@@ -148,17 +119,25 @@
             (onClick)="deleteItemAlert(row)"
           >
           </app-icon-round-button>
+
+          <!-- view profile button -->
+          <app-icon-round-button
+            icon="fa fa-eye"
+            addIconClass="edit"
+            tooltip="View"
+            (onClick)="viewProfile(row, viewProfileTemplate)"
+          >
+          </app-icon-round-button>
         </ng-template>
       </ngx-datatable-column>
     </ngx-datatable>
   </div>
 </div>
-
 <!-- add user modal -->
-<ng-template #addStudentTemplate>
+<ng-template #viewProfileTemplate>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title mb-0 fw-bold">
-      {{ updateItem() ? "EDIT" : "ADD" }} FACULTY
+      {{ role() === "faculty" ? "FACULTY" : "STUDENT" }} PROFILE
     </h4>
     <button
       type="button"
@@ -169,11 +148,28 @@
   </div>
 
   <div class="modal-body">
+    <app-view-profile
+      [updateProfileItem]="updateProfileItem()!"
+    ></app-view-profile>
+  </div>
+</ng-template>
+
+<!-- assign subjects modal -->
+<ng-template #assignSubjectsModal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">ASSIGN SUBJECT</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
     <app-add-faculties
-    [updateItem]="updateItem()!"
-    (added)="addData($event)"
-    (updated)="updateData($event)"
-    >
-    </app-add-faculties>
+      [updateItem]="updateItem()!"
+      (updated)="updateData()"
+    ></app-add-faculties>
   </div>
 </ng-template>

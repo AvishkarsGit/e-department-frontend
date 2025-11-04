@@ -13,7 +13,7 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'Attendance',
     icon: 'bi bi-file-earmark-spreadsheet-fill',
     route: 'attendances',
-    allowedRoles: ['admin'],
+    allowedRoles: ['admin', 'faculty'],
   },
   {
     label: 'Reports',
@@ -27,20 +27,20 @@ export const MENU_ITEMS: MenuItem[] = [
         route: 'summaries',
       },
     ],
-    allowedRoles: ['admin'],
+    allowedRoles: ['admin', 'faculty'],
   },
 
   {
     label: 'MANAGE',
     isGroupTitle: true,
   },
+  // departments
   {
-    label: 'Users',
-    icon: 'bi bi-people-fill',
-    route: 'users',
+    label: 'Departments',
+    icon: 'bi bi-people',
+    route: 'departments',
     allowedRoles: ['admin'],
   },
-
   // classes
   {
     label: 'Classes',
@@ -48,25 +48,10 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'classes',
     allowedRoles: ['admin'],
   },
-  // periods
-  {
-    label: 'Periods',
-    icon: 'bi bi-clock-fill',
-    route: 'periods',
-    allowedRoles: ['admin'],
-  },
 
-  // subjects
+  // faculties
   {
-    label: 'Subjects',
-    icon: 'bi bi-book-fill',
-    route: 'subjects',
-  },
-
-// faculties
-
-  {
-    label: 'faculties',
+    label: 'Faculties',
     icon: 'bi bi-mortarboard',
     route: 'faculties',
     allowedRoles: ['admin'],
@@ -77,34 +62,21 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'Students',
     icon: 'bi bi-universal-access',
     route: 'students',
-    allowedRoles: ['admin'],
+    allowedRoles: ['admin', 'faculty'],
   },
 
-  // countries
+  // subjects
   {
-    label: 'Countries',
-    icon: 'fas fa-building',
-    route: 'countries',
+    label: 'Subjects',
+    icon: 'bi bi-book-fill',
+    route: 'subjects',
+    allowedRoles: ['admin', 'faculty', 'student'],
   },
-
-  // departments
+  // periods
   {
-    label:'Departments',
-    icon:'bi bi-people',
-    route:'departments',
-    allowedRoles: ['admin'],
-  },
-  // states
-  {
-    label: 'States',
-    icon: 'fas fa-building',
-    route: 'states',
-  },
-  // roles
-  {
-    label: 'Roles',
-    icon: 'fas fa-user-lock',
-    route: 'roles',
+    label: 'Periods',
+    icon: 'bi bi-clock-fill',
+    route: 'periods',
     allowedRoles: ['admin'],
   },
 ];

@@ -186,8 +186,14 @@ export class GlobalService {
     this.nestedModalRef()!.hide();
   }
 
-  showModal(template: TemplateRef<any>) {
-    this.modalRef.set(this.modalService.show(template, { class: 'modal-lg' }));
+  showModal(template: TemplateRef<any>, staticBackdrop: boolean = false) {
+    this.modalRef.set(
+      this.modalService.show(template, {
+        class: 'modal-lg',
+        backdrop: staticBackdrop ? 'static' : true,
+        keyboard: !staticBackdrop,
+      })
+    );
   }
 
   showNestedModal(template: TemplateRef<any>) {

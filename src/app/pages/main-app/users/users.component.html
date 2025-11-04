@@ -23,17 +23,19 @@
       (filteredData)="onFilterChange($event)"
     ></app-search-filter-input>
 
-    <app-excel-button
-      [fileName]="title"
-      [values]="users()"
-      api="user/allUsers"
-      [fields]="[
-        'name',
-        'phone',
-        'email',
-        'account_status'
-      ]"
-    ></app-excel-button>
+    @if (!isCard()) {
+      <app-excel-button
+        [fileName]="title"
+        [values]="users()"
+        api="user/allUsers"
+        [fields]="[
+          'name',
+          'phone',
+          'email',
+          'account_status'
+        ]"
+      ></app-excel-button>
+    }
 
     <!--
       [allValues]="allUsers()"
@@ -166,31 +168,32 @@
           <app-datepipe-text-format [value]="value"></app-datepipe-text-format>
         </ng-template>
       </ngx-datatable-column> -->
+      @if (!isCard()) {
+        <ngx-datatable-column [frozenRight]="true">
+          <ng-template ngx-datatable-header-template>
+            <span class="tableHeader">ACTION</span>
+          </ng-template>
+          <ng-template let-row="row" ngx-datatable-cell-template>
 
-      <ngx-datatable-column [frozenRight]="true">
-        <ng-template ngx-datatable-header-template>
-          <span class="tableHeader">ACTION</span>
-        </ng-template>
-        <ng-template let-row="row" ngx-datatable-cell-template>
+            <app-icon-round-button
+              icon="fa fa-edit"
+              addIconClass="edit"
+              tooltip="Edit"
+              (onClick)="editItem(row, addUserTemplate)"
+            >
+            </app-icon-round-button>
 
-          <app-icon-round-button
-            icon="fa fa-edit"
-            addIconClass="edit"
-            tooltip="Edit"
-            (onClick)="editItem(row, addUserTemplate)"
-          >
-          </app-icon-round-button>
+            <app-icon-round-button
+              icon="fa fa-trash"
+              addIconClass="delete"
+              tooltip="Delete"
+              (onClick)="deleteItemAlert(row)"
+            >
+            </app-icon-round-button>
 
-          <app-icon-round-button
-            icon="fa fa-trash"
-            addIconClass="delete"
-            tooltip="Delete"
-            (onClick)="deleteItemAlert(row)"
-          >
-          </app-icon-round-button>
-
-        </ng-template>
-      </ngx-datatable-column>
+          </ng-template>
+        </ngx-datatable-column>
+      }
     </ngx-datatable>
   </div>
 </div>

@@ -19,6 +19,21 @@ export class SubjectService {
       throw error;
     }
   }
+  async getAllSubjects() {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/allSubjects')
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async getAllClasses() {
     try {

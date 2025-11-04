@@ -1,0 +1,42 @@
+<form class="auth-form" [formGroup]="form()" (ngSubmit)="onSubmit()">
+  <div class="row g-4 pb-4 m-2 mb-4">
+    <div class="col-xl-6 col-sm-8 col-12 offset-xl-3 offset-sm-2">
+      <div class="mb-4 text-center">
+        <h3 class="fs-4 fw-bold mb-2">{{ stage().title }}</h3>
+        <p class="text-muted">{{ stage().subtitle }}</p>
+      </div>
+
+      @if(stage().flag === 1) {
+      <app-input-form
+        type="email"
+        icon="envelope"
+        placeholder="Enter your email"
+        [control]="f['email']"
+      ></app-input-form>
+      } @else {
+      <app-input-form
+        type="text"
+        icon="lock"
+        placeholder="Enter OTP"
+        [control]="f['otp']"
+      ></app-input-form>
+
+      <div class="text-center mt-2">
+        <button
+          type="button"
+          class="btn btn-link p-0"
+          [disabled]="resendDisabled()"
+          (click)="onResendClick()"
+        >
+          @if(resendDisabled()) { Resend OTP in {{ resendTimer() }}s } @else {
+          Resend OTP }
+        </button>
+      </div>
+      }
+
+      <div class="box-footer mt-4 d-flex justify-content-center">
+        <app-submit-button></app-submit-button>
+      </div>
+    </div>
+  </div>
+</form>

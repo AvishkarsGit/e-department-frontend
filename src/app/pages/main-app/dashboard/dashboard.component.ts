@@ -10,15 +10,19 @@ import { UsersComponent } from '../users/users.component';
 import { GlobalService } from '../../../services/global/global.service';
 import { DashboardService } from '../../../services/dashboard/dashboard.service';
 import { AppConstants } from '../../../constants/app.constants';
+import { FacultiesComponent } from "../faculties/faculties.component";
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    CardComponent,
     ChatBoxComponent,
     BoxesComponent,
+    CardComponent,
+    // FacultiesComponent,
+    PieChartComponent,
     UsersComponent,
-  ],
+    BarVerticalChartComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
