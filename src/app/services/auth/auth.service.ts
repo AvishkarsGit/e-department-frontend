@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable, of, tap } from 'rxjs';
 import { StorageService } from '../storage/storage.service';
 import { Router } from '@angular/router';
 import { HttpService } from '../http/http.service';
@@ -29,8 +29,9 @@ export class AuthService {
     this.isVerified.set(value);
   }
 
-  setUserData(token: string) {
+  setUserData(token: string, refreshToken: string) {
     this.storage.setStorage(Strings.TOKEN, token);
+    if (refreshToken) this.storage.setStorage(Strings.REFRESH_TOKEN, refreshToken);
     this.updateToken(token);
   }
 
@@ -74,7 +75,10 @@ export class AuthService {
       console.log(response);
 
       //save token in local storage
-      this.setUserData(response?.data?.accessToken);
+      this.setUserData(
+        response?.data?.accessToken,
+        response?.data?.refreshToken
+      );
 
       return response?.data;
     } catch (e) {
@@ -95,7 +99,10 @@ export class AuthService {
       console.log('response', response);
 
       //save token in local storage
-      this.setUserData(response?.data?.accessToken);
+      this.setUserData(
+        response?.data?.accessToken,
+        response?.data?.refreshToken
+      );
 
       return response;
     } catch (e) {
@@ -125,6 +132,7 @@ export class AuthService {
 
   logoutFromDevice() {
     this.storage.removeStorage(Strings.TOKEN);
+    this.storage.removeStorage(Strings.REFRESH_TOKEN);
     this.updateToken(null);
     this.profileService.setProfile(null);
     this.router.navigateByUrl(Strings.LOGIN, { replaceUrl: true });
@@ -179,5 +187,27 @@ export class AuthService {
     } catch (error) {
       throw error;
     }
+  }
+
+  refreshTokens(): Observable<any> {
+    const refreshToken = this.storage.getStorage(Strings.REFRESH_TOKEN);
+    if (!refreshToken) return of(null);
+
+    // Send refresh token to server
+    return this.http.post('user/refresh-token', { refreshToken }).pipe(
+      tap((response: any) => {
+        const accessToken = response?.accessToken;
+        const newRefreshToken = response?.refreshToken;
+
+        if (accessToken) {
+          this.storage.setStorage(Strings.TOKEN, accessToken);
+          this.updateToken(accessToken);
+        }
+
+        if (newRefreshToken) {
+          this.storage.setStorage(Strings.REFRESH_TOKEN, newRefreshToken);
+        }
+      })
+    );
   }
 }

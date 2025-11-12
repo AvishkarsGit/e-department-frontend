@@ -143,4 +143,19 @@ export class AttendanceService {
       throw error;
     }
   }
+
+  async fetchStudentAttendance(params: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/student/attendance', params)
+      );
+      if (!response?.success) this.http.throwResponseError(response);
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  
 }

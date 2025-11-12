@@ -1,5 +1,17 @@
-import { Component, inject, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnMode, DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  input,
+  signal,
+  TemplateRef,
+  viewChild,
+} from '@angular/core';
+import {
+  ColumnMode,
+  DatatableComponent,
+  NgxDatatableModule,
+} from '@swimlane/ngx-datatable';
 import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
 import { GlobalService } from '../../../services/global/global.service';
 import { SearchFilterInputComponent } from '../../../components/search-filter-input/search-filter-input.component';
@@ -10,6 +22,9 @@ import { FacultyService } from '../../../services/faculty/faculty.service';
 import { ViewProfileComponent } from '../view-profile/view-profile.component';
 import { UserProfile } from '../../../interfaces/user-profile.interface';
 import { AddFacultiesComponent } from './add-faculties/add-faculties.component';
+import { UserService } from '../../../services/user/user.service';
+import { ProfileService } from '../../../services/profile/profile.service';
+import { NgClass } from '@angular/common';
 
 type ItemType = Faculty;
 
@@ -22,6 +37,7 @@ type ItemType = Faculty;
     IconRoundButtonComponent,
     ViewProfileComponent,
     AddFacultiesComponent,
+    NgClass,
   ],
   templateUrl: './faculties.component.html',
   styleUrl: './faculties.component.scss',
@@ -38,6 +54,7 @@ export class FacultiesComponent {
   updateItem = signal<ItemType | null>(null);
   updateProfileItem = signal<UserProfile | null>(null);
   role = signal<string>('faculty');
+  userRole = signal<string | null>(null);
 
   totalRecords = signal<number>(0);
   currentPage = signal<number>(0);
@@ -46,8 +63,13 @@ export class FacultiesComponent {
   sortOrder = signal<string>('asc');
   filterText = signal<string>('');
 
+  // check card for component reusability
+  isCard = input<boolean>(false);
+
   public global = inject(GlobalService);
   private facultyService = inject(FacultyService);
+  private userService = inject(UserService);
+  public profileService = inject(ProfileService);
 
   ngOnInit() {
     this.loadData();
@@ -56,6 +78,32 @@ export class FacultiesComponent {
   async openAddModal(template: TemplateRef<any>, update: boolean = false) {
     if (!update) this.updateItem.set(null);
     this.global.showModal(template);
+  }
+
+  async onStatusChange(status: boolean, item: ItemType) {
+    if (this.profileService.profile()?.role === item?.user?.role) {
+      this.global.showAlert(
+        'Error',
+        'You can not accept/reject your status',
+        'Ok'
+      );
+      return;
+    }
+    //change status
+    let message = status === true ? 'accept' : 'reject';
+    const result = await this.global.showAlert(
+      'Are you sure?',
+      `You want to ${message} this faculty!`,
+      'YES',
+      false,
+      'NO',
+      'question'
+    );
+    if (result.isConfirmed && status === true) {
+      this.changeStatus(status, item);
+    } else {
+      return;
+    }
   }
 
   onPageChange(event: any) {
@@ -78,23 +126,12 @@ export class FacultiesComponent {
     this.loadData();
   }
 
-  async deleteItemAlert(item: ItemType) {
-    const result = await this.global.showAlert(
-      'Are you sure?',
-      'You want to delete this faculty!',
-      'YES',
-      false,
-      'NO',
-      'question'
-    );
-    if (result.isConfirmed) {
-      this.deleteItem(item);
-    }
-  }
-
   async loadData() {
     this.setLoadingIndicator(true);
     try {
+      const role = await this.profileService.profile()?.role!;
+      this.userRole.set(role);
+
       const params = {
         page: this.currentPage() + 1,
         size: this.pageSize(),
@@ -119,6 +156,20 @@ export class FacultiesComponent {
     } finally {
       this.setLoadingIndicator(false);
       this.global.hideSpinner();
+    }
+  }
+
+  async deleteItemAlert(item: ItemType) {
+    const result = await this.global.showAlert(
+      'Are you sure?',
+      'You want to delete this faculty!',
+      'YES',
+      false,
+      'NO',
+      'question'
+    );
+    if (result.isConfirmed) {
+      this.deleteItem(item);
     }
   }
 
@@ -189,5 +240,32 @@ export class FacultiesComponent {
       createdAt: item?.user?.created_at!,
     };
     this.updateProfileItem.set(data);
+  }
+
+  async changeStatus(status: boolean, item: ItemType) {
+    try {
+      this.global.showSpinner();
+      const data = {
+        id: item?.user?._id,
+        status,
+      };
+      await this.userService.changeStatus(data);
+
+      this.global.showSuccess(
+        'User accepted successfully...',
+        null,
+        5000,
+        false,
+        'increasing',
+        'toast-top-center'
+      );
+
+      //load latest
+      this.updateData();
+    } catch (err) {
+      this.global.showAlert('Error!', err, 'OK');
+    } finally {
+      this.global.hideSpinner();
+    }
   }
 }

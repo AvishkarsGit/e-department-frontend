@@ -10,6 +10,7 @@ import { GlobalService } from '../../../services/global/global.service';
 import { InputFormComponent } from '../../../components/forms/input-form/input-form.component';
 import { SubmitButtonComponent } from '../../../components/buttons/submit-button/submit-button.component';
 import { AuthService } from '../../../services/auth/auth.service';
+import { ProfileService } from '../../../services/profile/profile.service';
 
 interface StageModel {
   title: string;
@@ -29,6 +30,7 @@ export class VerifyEmailComponent {
   private global = inject(GlobalService);
   private auth = inject(AuthService);
   private isAuthenticated = this.auth.isLoggedIn();
+  private profileService = inject(ProfileService);
 
   // --- Signals ---
   form = signal<FormGroup>(this.createForm());
@@ -151,7 +153,6 @@ export class VerifyEmailComponent {
   private async verifyOtp() {
     try {
       this.global.showSpinner();
-
       const { email, otp } = this.form().value;
       console.log('Verifying OTP for', email, 'OTP:', otp);
 

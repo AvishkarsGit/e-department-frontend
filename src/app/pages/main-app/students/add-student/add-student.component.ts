@@ -259,6 +259,7 @@ export class AddStudentComponent {
 
       //verify the email
       this.auth.navigateByUrl('/verification');
+      
     } catch (e) {
       console.log(e);
       this.global.showAlert('Error!', e, 'OK');

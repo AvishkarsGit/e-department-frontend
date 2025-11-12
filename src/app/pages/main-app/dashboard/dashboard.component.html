@@ -1,42 +1,47 @@
 <div class="container-fluid">
-  <app-boxes [counts]="data()?.counts"></app-boxes>
+  <app-boxes></app-boxes>
 
   <!--begin::Row-->
   <div class="row">
     <!-- Start col -->
     <div class="col-lg-6 connectedSortable">
       <!-- sales chart -->
-      <app-card title="Sales Pie Chart">
+
+      <app-chat-box></app-chat-box>
+      <!-- <app-card title="Sales Pie Chart">
         <app-pie-chart [data]="pieChartData"></app-pie-chart>
-      </app-card>
+      </app-card> -->
 
       <!-- User Datatable -->
-      @if(profile()?.role === 'admin') {
+      <!-- @if(profile()?.role === 'admin') {
       <app-card title="USERS" classes="bg-color">
         <app-users [isCard]="true"></app-users>
       </app-card>
-      }
+      } -->
     </div>
     <!-- /.Start col -->
 
     <!-- Start col -->
     <div class="col-lg-6 connectedSortable">
-      <app-card title="Sales Bar Chart">
-        <app-bar-vertical-chart
-          [data]="verticalBarChartData"
-        ></app-bar-vertical-chart>
-      </app-card>
-
-      <!-- DIRECT CHAT -->
-      <app-card
+      <!-- AI CHAT -->
+      <!-- <app-card
         title="Direct Chat"
         classes="direct-chat direct-chat-primary"
-        >
-        <!-- main content -->
-        <app-chat-box></app-chat-box>
+        > -->
+      <!-- main content -->
+      <!-- <app-card title="Sales Pie Chart">
+        <app-pie-chart [data]="pieChartData"></app-pie-chart>
+      </app-card> -->
 
-        <!-- dynamic footer -->
-        <!-- <div card-footer>
+      <!-- User Datatable -->
+      <!-- @if(profile()?.role === 'admin') { -->
+      <app-card title="FACULTIES" classes="bg-color">
+        <app-faculties [isCard]="true"></app-faculties>
+      </app-card>
+      <!-- } -->
+
+      <!-- dynamic footer -->
+      <!-- <div card-footer>
           <form action="#" method="post">
             <div class="input-group">
               <input
@@ -51,7 +56,7 @@
             </div>
           </form>
         </div> -->
-      </app-card>
+      <!-- </app-card> -->
       <!-- /.direct-chat -->
     </div>
 

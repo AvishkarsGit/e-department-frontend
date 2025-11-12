@@ -1,10 +1,10 @@
 <app-spinner></app-spinner>
-<div class="mx-4 my-1 border-0">
+<div class="mx-2 mx-md-4 my-1 border-0">
   <app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
   </app-content-header>
 
-  <div class="col-md-12 mb-3 mt-1 bg-white p-4 rounded">
-    @let form = formData()!;
+  <div class="col-12 mb-3 mt-1 bg-white p-3 p-md-4 rounded">
+    @let form = formData()!; @let userProfile = profile();
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row g-4 mb-6 mx-4">
@@ -16,7 +16,7 @@
           ></app-file-input>
         </div>
 
-        <div class="col-xl-6 col-sm-6 col-12">
+        <div class="col-lg-6 col-md-6 col-sm-12">
           <app-input-form
             label="NAME"
             placeholder="Name"
@@ -26,7 +26,7 @@
           ></app-input-form>
         </div>
 
-        <div class="col-xl-6 col-sm-6 col-12">
+        <div class="col-lg-6 col-md-6 col-sm-12">
           <app-input-form
             label="EMAIL"
             type="email"
@@ -37,7 +37,7 @@
           ></app-input-form>
         </div>
 
-        <div class="col-xl-6 col-sm-6 col-12">
+        <div class="col-lg-6 col-md-6 col-sm-12">
           <app-input-form
             label="PHONE"
             type="number"
@@ -50,21 +50,184 @@
           ></app-input-form>
         </div>
 
-
-        <div class="col-xl-6 col-sm-6 col-12">
+        <div class="col-lg-6 col-md-6 col-sm-12">
           <app-input-form
-            label="NEW PASSWORD"
-            type="text"
-            placeholder="Password"
-            icon="key"
+            label="USERNAME"
+            placeholder="Username"
+            icon="user-circle"
             [required]="false"
-            [control]="form.controls['password']"
-            [minlength]="8"
+            [control]="form.controls['username']"
           ></app-input-form>
         </div>
 
+        <!-- Account Status - Display Only -->
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <label class="form-label">ACCOUNT STATUS</label>
+          <div class="input-group">
+            <span class="input-group-text"
+              ><i class="bi bi-shield-check"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              [value]="userProfile?.account_status || 'Active'"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Created At - Display Only -->
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <label class="form-label">MEMBER SINCE</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              [value]="userProfile?.created_at | date : 'MMM dd, yyyy'"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Subjects - Display Only for Faculty/Admin -->
+        @if (isFacultyOrAdmin()) {
+        <div class="col-12">
+          <label class="form-label">ASSIGNED SUBJECTS</label>
+          <div class="border rounded p-3 bg-light">
+            @if (userProfile?.subjects && userProfile?.subjects!.length > 0) {
+            @for (subject of userProfile?.subjects; track subject._id) {
+            <span class="badge bg-primary me-2 mb-2 fs-6 p-2">{{
+              subject.name
+            }}</span>
+            } } @else {
+            <span class="text-muted">No subjects assigned</span>
+            }
+          </div>
+        </div>
+        }
+
+        <!-- Student Academic Information -->
+        @if (isStudent()) {
+        <!-- roll NO -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <app-input-form
+            label="ROLL NO"
+            placeholder="Roll No"
+            icon="list"
+            [required]="true"
+            [control]="form.controls['rollNo']"
+          ></app-input-form>
+        </div>
+
+        <!-- select department -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <app-select-form
+            label="DEPARTMENT"
+            placeholder="Select Department"
+            [required]="true"
+            [control]="form.controls['department']"
+            optionTextField="name"
+            optionValueField="_id"
+            [items]="departments()"
+          ></app-select-form>
+        </div>
+
+        <!-- select semester -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <app-select-form
+            label="SEMESTER"
+            placeholder="Select Semester"
+            [required]="true"
+            [control]="form.controls['semester']"
+            optionTextField="name"
+            optionValueField="_id"
+            [items]="semesters()"
+          ></app-select-form>
+        </div>
+        <!-- select year -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <app-select-form
+            label="YEAR"
+            placeholder="Select Year"
+            [required]="true"
+            [control]="form.controls['year']"
+            optionTextField="name"
+            optionValueField="_id"
+            [items]="years()"
+          ></app-select-form>
+        </div>
+        }
+
+        <!-- Guardians - Editable for Students -->
+        @if (isStudent()) {
+        <div class="col-12">
+          <h5>Guardian Information</h5>
+          <div formArrayName="guardians">
+            @for (g of guardiansArray.controls; track $index) {
+            <div
+              class="row g-3 mb-3 p-3 border rounded align-items-center"
+              [formGroupName]="$index"
+            >
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <app-input-form
+                  label="GUARDIAN NAME"
+                  placeholder="Guardian Name"
+                  icon="person"
+                  [required]="true"
+                  [control]="g.get('name')"
+                ></app-input-form>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <app-input-form
+                  label="PHONE"
+                  type="number"
+                  placeholder="Phone Number"
+                  icon="phone"
+                  [required]="true"
+                  [control]="g.get('phone')"
+                ></app-input-form>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <app-input-form
+                  label="RELATION"
+                  placeholder="Relation"
+                  icon="people"
+                  [required]="true"
+                  [control]="g.get('relation')"
+                ></app-input-form>
+              </div>
+
+              <div
+                class="col-lg-2 col-md-6 col-sm-12 d-flex justify-content-center"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="removeGuardian($index)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="addGuardian()"
+          >
+            <i class="bi bi-plus-circle me-2"></i>
+            Add Guardian
+          </button>
+        </div>
+        }
+
         <div class="box-footer mt-4 d-flex justify-content-center">
-          <app-submit-button> </app-submit-button>
+          <app-submit-button></app-submit-button>
         </div>
       </div>
     </form>

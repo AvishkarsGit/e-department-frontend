@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth/auth.guard';
 import { roleGuard } from './guards/role/role.guard';
 import { verifyEmailGuardGuard } from './guards/verify-email/verify-email.guard';
+import { statusGuard } from './guards/status/status.guard';
 
 export const routes: Routes = [
   {
@@ -22,10 +23,17 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'unauthorized',
+    loadComponent: () =>
+      import('./pages/main-app/unauthorized/unauthorized.component').then(
+        (c) => c.UnauthorizedComponent
+      ),
+  },
+  {
     path: 'app',
     loadComponent: () =>
       import('./layout/layout.component').then((c) => c.LayoutComponent),
-    canActivate: [authGuard, verifyEmailGuardGuard],
+    canActivate: [authGuard, verifyEmailGuardGuard, statusGuard],
     children: [
       {
         path: '',
@@ -119,6 +127,18 @@ export const routes: Routes = [
           ),
         data: {
           roles: ['admin', 'faculty'],
+        },
+        canActivate: [roleGuard],
+      },
+      // student attendance : only student can access
+      {
+        path: 'student-attendance',
+        loadComponent: () =>
+          import(
+            './pages/main-app/students/attendance/attendance.component'
+          ).then((c) => c.AttendanceComponent),
+        data: {
+          role: 'student',
         },
         canActivate: [roleGuard],
       },

@@ -33,6 +33,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     label: 'MANAGE',
     isGroupTitle: true,
+    allowedRoles: ['admin', 'faculty'],
   },
   // departments
   {
@@ -52,7 +53,7 @@ export const MENU_ITEMS: MenuItem[] = [
   // faculties
   {
     label: 'Faculties',
-    icon: 'bi bi-mortarboard',
+    icon: 'bi bi-person-workspace',
     route: 'faculties',
     allowedRoles: ['admin'],
   },
@@ -60,11 +61,17 @@ export const MENU_ITEMS: MenuItem[] = [
   // students
   {
     label: 'Students',
-    icon: 'bi bi-universal-access',
+    icon: 'bi bi-mortarboard-fill',
     route: 'students',
     allowedRoles: ['admin', 'faculty'],
   },
-
+  // student attendance : only student can access
+  {
+    label: 'Attendance',
+    icon: 'bi bi-file-earmark-spreadsheet-fill',
+    route: 'student-attendance',
+    allowedRoles: ['student'],
+  },
   // subjects
   {
     label: 'Subjects',

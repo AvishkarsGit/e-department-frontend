@@ -22,8 +22,10 @@ export class ProfileService {
         return this.profile();
       }
 
-      const response = await this.http.lastValueFrom(this.http.get('user/profile'));
-      console.log('profile',response);
+      const response = await this.http.lastValueFrom(
+        this.http.get('user/profile')
+      );
+      console.log('profile', response);
 
       if (!response?.success) {
         this.http.throwResponseError(response);
@@ -51,8 +53,12 @@ export class ProfileService {
         isFormData = true;
       }
 
+      const data = {
+        ...formValue,
+        guardians: JSON.stringify(formValue.guardians),
+      };
       const response = await this.http.lastValueFrom(
-        this.http.post('user/update_profile', formValue, isFormData)
+        this.http.post('user/update_profile', data, isFormData)
       );
       console.log(response);
 

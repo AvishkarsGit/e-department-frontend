@@ -219,6 +219,7 @@ export class ResetPasswordComponent {
       this.global.showSpinner();
 
       const data = this.getFormValue();
+
       await this.resetPasswordService.resetPassword(data);
 
       this.global.showSuccess(

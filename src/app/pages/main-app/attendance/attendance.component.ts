@@ -289,6 +289,7 @@ export class AttendanceComponent {
         attendance: JSON.stringify(this.attendances()),
       };
 
+      console.log('payload', payload);
       //save attendance
       const response = await this.attendanceService.markAttendance(payload);
 

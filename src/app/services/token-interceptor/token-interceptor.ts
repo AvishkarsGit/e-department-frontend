@@ -12,11 +12,11 @@ export const TokenInterceptor = (
   const auth = inject(AuthService);
   const global = inject(GlobalService);
 
-  const refreshingInProgress = signal(false);  // Track refresh status
-  const accessToken = signal<string | null>(null);  // Store the latest token
+  const refreshingInProgress = signal(false); // Track refresh status
+  const accessToken = signal<string | null>(null); // Store the latest token
 
   auth.getToken();
-  const token = computed(() => auth.token());  // Get the latest token directly from auth service
+  const token = computed(() => auth.token()); // Get the latest token directly from auth service
 
   if (!token()) {
     // If no token, proceed with the request as usual without an Authorization header
@@ -30,7 +30,6 @@ export const TokenInterceptor = (
     },
   });
 
-
   return next(reqWithToken).pipe(
     catchError((err) => {
       // Handle token refresh for 401 errors (Unauthorized)
@@ -39,7 +38,7 @@ export const TokenInterceptor = (
       // }
 
       console.log('error: ', err);
-      
+
       // Handle other error cases (e.g., 403 Forbidden)
       if (err.status === 401 || err.status === 403) {
         return handleLogout(err, auth, global);
@@ -92,7 +91,7 @@ const handleLogout = (error: any, auth: AuthService, global: GlobalService) => {
 
   // Log out the user and handle UI-related tasks
   auth.logout();
-  global.showAlert('Alert', error, 'OK');  // Show an alert message to the user
-  
-  return throwError(() => error);  // Return the error to be handled downstream
+  global.showAlert('Alert', error, 'OK'); // Show an alert message to the user
+
+  return throwError(() => error); // Return the error to be handled downstream
 };

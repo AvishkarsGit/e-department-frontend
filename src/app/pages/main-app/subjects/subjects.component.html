@@ -1,3 +1,4 @@
+@if (userRole() !=="student") {
 <app-content-header
   [title]="title"
   [subRoute]="title"
@@ -6,7 +7,10 @@
   (onButtonClick)="openAddModal(addSubjectTemplate)"
 >
 </app-content-header>
-
+} @else {
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
+</app-content-header>
+}
 <div class="table-wrapper rounded">
   <div class="d-flex align-items-center justify-content-end">
     <app-search-filter-input
@@ -101,7 +105,7 @@
           {{ row?.classData?.semester }}
         </ng-template>
       </ngx-datatable-column>
-
+      @if(userRole() !== "student") {
       <ngx-datatable-column [frozenRight]="true">
         <ng-template ngx-datatable-header-template>
           <span class="tableHeader">ACTION</span>
@@ -124,6 +128,7 @@
           </app-icon-round-button>
         </ng-template>
       </ngx-datatable-column>
+      }
     </ngx-datatable>
   </div>
 </div>

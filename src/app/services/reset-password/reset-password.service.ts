@@ -32,9 +32,8 @@ export class ResetPasswordService {
         otp,
       };
       const response = await this.http.lastValueFrom(
-        this.http.post('verifyOtp', data)
+        this.http.patch(this.apiUrl+'/verifyOtp', data)
       );
-      console.log(response);
       return response;
     } catch (e) {
       throw e;
@@ -44,7 +43,7 @@ export class ResetPasswordService {
   async resetPassword(data: any) {
     try {
       const response = await this.http.lastValueFrom(
-        this.http.post('resetPassword', data)
+        this.http.patch(this.apiUrl + '/reset/password', data)
       );
       console.log(response);
       return response;

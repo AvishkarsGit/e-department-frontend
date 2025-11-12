@@ -1,4 +1,4 @@
-import { Component, OnInit, input, model } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, input, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
@@ -14,9 +14,17 @@ export class ToggleButtonComponent implements OnInit {
   readonly color = input<string>('accent');
   // readonly control = input<any>();
 
-  checked = model<boolean>();
+  checked = input<boolean>(false);
+
+  @Output() checkedChange = new EventEmitter<boolean>();
 
   constructor() {}
 
   ngOnInit() {}
+
+  onToggleClick(event: MouseEvent) {
+    event.preventDefault(); // Prevent immediate flip
+    const newValue = !this.checked;
+    this.checkedChange.emit(newValue);
+  }
 }

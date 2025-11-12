@@ -1,4 +1,6 @@
+import { Class } from './class.interface';
 import { Department } from './department.interface';
+import { Guardian } from './guardian.interface';
 import { Subject } from './subject.interface';
 
 export type Role = 'admin' | 'faculty' | 'student';
@@ -13,8 +15,10 @@ export interface User {
   account_status: boolean;
   email_verified: string;
   photo?: string;
+  rollNo?: number;
   subjects?: Subject[];
-  department?: Department;
+  guardian?: Guardian[];
+  classData?: Class;
   created_at?: Date;
   updated_at?: Date;
 }

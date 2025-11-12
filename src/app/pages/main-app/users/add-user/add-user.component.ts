@@ -73,7 +73,7 @@ export class AddUserComponent {
           this.updateItem() ? null : Validators.required,
         ].filter(Boolean), // Removes `null` values
       ],
-      department: [item?.department?._id || null, Validators.required],
+      department: [item?.classData?.department?._id || null, Validators.required],
       photo: [item?.photo ?? null],
     });
 

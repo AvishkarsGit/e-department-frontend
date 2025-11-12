@@ -171,4 +171,19 @@ export class UserService {
       throw err;
     }
   }
+
+  async changeStatus(data: any) {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.post(`${this.apiUrl}/accept-user`, data)
+      );
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 }

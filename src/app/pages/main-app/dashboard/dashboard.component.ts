@@ -10,7 +10,7 @@ import { UsersComponent } from '../users/users.component';
 import { GlobalService } from '../../../services/global/global.service';
 import { DashboardService } from '../../../services/dashboard/dashboard.service';
 import { AppConstants } from '../../../constants/app.constants';
-import { FacultiesComponent } from "../faculties/faculties.component";
+import { FacultiesComponent } from '../faculties/faculties.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,62 +18,37 @@ import { FacultiesComponent } from "../faculties/faculties.component";
     ChatBoxComponent,
     BoxesComponent,
     CardComponent,
-    // FacultiesComponent,
-    PieChartComponent,
-    UsersComponent,
-    BarVerticalChartComponent
-],
+    FacultiesComponent,
+    // PieChartComponent,
+    //UsersComponent,
+
+    // BarVerticalChartComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   data = signal<any>(null);
 
-  pieChartData: any[] = [
-    {
-      name: 'Germany',
-      value: 3940000,
-    },
-    {
-      name: 'USA',
-      value: 5000000,
-    },
-    {
-      name: 'France',
-      value: 5200000,
-    },
-    {
-      name: 'UK',
-      value: 10200000,
-    },
-  ];
+  // pieChartData: any[] = [
+  //   {
+  //     name: 'Germany',
+  //     value: 3940000,
+  //   },
+  //   {
+  //     name: 'USA',
+  //     value: 5000000,
+  //   },
+  //   {
+  //     name: 'France',
+  //     value: 5200000,
+  //   },
+  //   {
+  //     name: 'UK',
+  //     value: 10200000,
+  //   },
+  // ];
 
-  verticalBarChartData = [
-    {
-      name: 'China',
-      value: 2243772,
-    },
-    {
-      name: 'USA',
-      value: 1126000,
-    },
-    {
-      name: 'Norway',
-      value: 296215,
-    },
-    {
-      name: 'Japan',
-      value: 257363,
-    },
-    {
-      name: 'Germany',
-      value: 196750,
-    },
-    {
-      name: 'France',
-      value: 204617,
-    },
-  ];
 
   readonly profile = computed<User | null>(() => this.profileService.profile());
 

@@ -24,6 +24,8 @@ import { Subject } from '../../../interfaces/subject.interface';
 import { SubjectService } from '../../../services/subject/subject.service';
 import { AddSubjectComponent } from './add-subject/add-subject.component';
 import { Class } from '../../../interfaces/class.interface';
+import { ProfileService } from '../../../services/profile/profile.service';
+import { NgClass } from '@angular/common';
 
 type ItemType = Subject;
 
@@ -40,7 +42,7 @@ type ItemType = Subject;
     //  ToggleButtonComponent,
     SafeHtmlPipe,
     AddSubjectComponent,
-  ],
+],
   templateUrl: './subjects.component.html',
   styleUrl: './subjects.component.scss',
 })
@@ -61,9 +63,11 @@ export class SubjectsComponent {
   sortField = signal<string>('id');
   sortOrder = signal<string>('asc');
   filterText = signal<string>('');
+  userRole = signal<string | null>(null);
 
   public global = inject(GlobalService);
   private subjectService = inject(SubjectService);
+  private profileService = inject(ProfileService);
 
   constructor() {}
 
@@ -85,6 +89,8 @@ export class SubjectsComponent {
 
   async loadData() {
     this.setLoadingIndicator(true);
+    const role = await this.profileService.profile()?.role!;
+    this.userRole.set(role);
     try {
       const params = {
         page: this.currentPage() + 1,
@@ -97,7 +103,6 @@ export class SubjectsComponent {
       this.global.showSpinner();
 
       const response = await this.subjectService.getSubjects(params);
-      console.log('subjects',response);
 
       this.setSubjects(response?.data);
       this.totalRecords.set(response?.pagination?.total);

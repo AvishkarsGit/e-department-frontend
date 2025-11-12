@@ -10,16 +10,16 @@ import { NgOtpInputModule } from 'ng-otp-input';
 })
 export class OtpInputComponent {
   config = {
-    length: 4,
+    length: 6,
     allowNumbersOnly: true,
     inputClass: 'otp-input-style',
   };
   otp = output<any>();
   // length = output<number>();
   // readonly control = input<any>();
-  
+
   readonly control = input<AbstractControl | null>();
-  
+
   get controlInput(): FormControl {
     const raw = this.control();
     return raw instanceof FormControl ? raw : new FormControl();

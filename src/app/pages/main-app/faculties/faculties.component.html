@@ -1,7 +1,9 @@
+@if (!isCard()) {
 <app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
 </app-content-header>
+}
 
-<div class="table-wrapper rounded">
+<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
   <div class="d-flex align-items-center justify-content-end">
     <!-- search bar -->
     <app-search-filter-input
@@ -56,6 +58,9 @@
         </ng-template>
       </ngx-datatable-column>
 
+      <!-- not accessible for faculties -->
+       @if (userRole()==="admin" ) {
+
       <ngx-datatable-column prop="email">
         <ng-template
           let-column="column"
@@ -68,7 +73,7 @@
           {{ row?.user?.email }}
         </ng-template>
       </ngx-datatable-column>
-
+      }
       <!-- phone number -->
       <ngx-datatable-column prop="phone">
         <ng-template
@@ -80,6 +85,40 @@
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- account_status -->
+      <ngx-datatable-column prop="account_status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ACCOUNT STATUS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          @if (row.user.account_status) {
+          <i class="fa fa-check" style="color: green"></i> Accepted } @else {
+          <!-- accept or reject -->
+          <!-- accept -->
+          <app-icon-round-button
+            icon="fa fa-check"
+            addIconClass="edit"
+            tooltip="Accept"
+            (onClick)="onStatusChange(true, row)"
+          >
+          </app-icon-round-button>
+
+          <!-- reject -->
+          <app-icon-round-button
+            icon="fa fa-ban"
+            addIconClass="delete"
+            tooltip="Reject"
+            (onClick)="onStatusChange(false, row)"
+          >
+          </app-icon-round-button>
+          }
         </ng-template>
       </ngx-datatable-column>
 
@@ -96,40 +135,42 @@
           {{ row?.department?.name }}
         </ng-template>
       </ngx-datatable-column>
+        <!-- not accessible for faculties -->
+       @if (userRole()==="admin") {
+        <ngx-datatable-column [frozenRight]="true">
+          <ng-template ngx-datatable-header-template>
+            <span class="tableHeader">ACTION</span>
+          </ng-template>
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <!-- assign subject icon -->
+            <app-icon-round-button
+              icon="fa fa-book"
+              addIconClass="edit"
+              tooltip="Assign Subject"
+              (onClick)="uploadSubjects(row, assignSubjectsModal)"
+            >
+            </app-icon-round-button>
 
-      <ngx-datatable-column [frozenRight]="true">
-        <ng-template ngx-datatable-header-template>
-          <span class="tableHeader">ACTION</span>
-        </ng-template>
-        <ng-template let-row="row" ngx-datatable-cell-template>
-          <!-- assign subject icon -->
-          <app-icon-round-button
-            icon="fa fa-book"
-            addIconClass="edit"
-            tooltip="Assign Subject"
-            (onClick)="uploadSubjects(row, assignSubjectsModal)"
-          >
-          </app-icon-round-button>
+            <!-- delete icon -->
+            <app-icon-round-button
+              icon="fa fa-trash"
+              addIconClass="delete"
+              tooltip="Delete"
+              (onClick)="deleteItemAlert(row)"
+            >
+            </app-icon-round-button>
 
-          <!-- delete icon -->
-          <app-icon-round-button
-            icon="fa fa-trash"
-            addIconClass="delete"
-            tooltip="Delete"
-            (onClick)="deleteItemAlert(row)"
-          >
-          </app-icon-round-button>
-
-          <!-- view profile button -->
-          <app-icon-round-button
-            icon="fa fa-eye"
-            addIconClass="edit"
-            tooltip="View"
-            (onClick)="viewProfile(row, viewProfileTemplate)"
-          >
-          </app-icon-round-button>
-        </ng-template>
-      </ngx-datatable-column>
+            <!-- view profile button -->
+            <app-icon-round-button
+              icon="fa fa-eye"
+              addIconClass="edit"
+              tooltip="View"
+              (onClick)="viewProfile(row, viewProfileTemplate)"
+            >
+            </app-icon-round-button>
+          </ng-template>
+        </ngx-datatable-column>
+       }
     </ngx-datatable>
   </div>
 </div>

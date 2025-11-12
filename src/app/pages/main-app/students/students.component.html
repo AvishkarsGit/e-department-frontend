@@ -3,8 +3,60 @@
 </app-content-header>
 }
 
-<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
+<div class="table-wrapper rounded">
+  @let form = filterForm()!;
+
+  <form [formGroup]="form" (ngSubmit)="applyFilters()">
+    <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
+      <!-- classes names -->
+     <!-- department names -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="DEPARTMENT"
+        placeholder="Select Department"
+        [required]="true"
+        [control]="form.controls['department']"
+        optionTextField="name"
+        optionValueField="_id"
+        [items]="departments()"
+
+      ></app-select-form>
+    </div>
+
+    <!-- year -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="YEAR"
+        placeholder="Select Year"
+        [required]="true"
+        [control]="form.controls['year']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="years()"
+      ></app-select-form>
+    </div>
+
+    <!-- semesters -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="SEMESTER"
+        placeholder="Select Semester"
+        [required]="true"
+        [control]="form.controls['semester']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="semesters()"
+      ></app-select-form>
+    </div>
+
+      <div class="box-footer mt-4 d-flex justify-content-center">
+        <app-submit-button> </app-submit-button>
+      </div>
+    </div>
+  </form>
+
   <div class="d-flex align-items-center justify-content-end">
+    <!-- search -->
     <app-search-filter-input
       class="search-table-input"
       (filteredData)="onFilterChange($event)"
@@ -24,15 +76,6 @@
         'semester'
       ]"
     ></app-excel-button>
-
-    <!--
-      [allValues]="allUsers()"
-      (exportAll)="getAllUsers()" -->
-
-    <!-- <app-add-button
-      label="ADD USER"
-      (onClick)="openAddModal(addUserTemplate)"
-    ></app-add-button> -->
   </div>
 
   <div class="col-md-12 mb-3">
@@ -105,6 +148,40 @@
         </ng-template>
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- account_status -->
+      <ngx-datatable-column prop="account_status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ACCOUNT STATUS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          @if (row.user.account_status) {
+          <i class="fa fa-check" style="color: green"></i> Accepted } @else {
+          <!-- accept or reject -->
+          <!-- accept -->
+          <app-icon-round-button
+            icon="fa fa-check"
+            addIconClass="edit"
+            tooltip="Accept"
+            (onClick)="onStatusChange(true, row)"
+          >
+          </app-icon-round-button>
+
+          <!-- reject -->
+          <app-icon-round-button
+            icon="fa fa-ban"
+            addIconClass="delete"
+            tooltip="Reject"
+            (onClick)="onStatusChange(false, row)"
+          >
+          </app-icon-round-button>
+          }
         </ng-template>
       </ngx-datatable-column>
 
