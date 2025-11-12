@@ -1,0 +1,56 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <div class="form-group col-md-12">
+      <!-- choose document -->
+      <app-file-input
+        label="DOCUMENT"
+        [isOnlyImage]="false"
+        [control]="form.controls['uploaded_url']"
+        [required]="false"
+      ></app-file-input>
+    </div>
+    
+    <!-- document title -->
+    <div class="col-xl-12 col-sm-12 col-12">
+      <app-input-form
+        label="DOCUMENT TITLE"
+        placeholder="Document title"
+        icon="file"
+        [required]="true"
+        [control]="form.controls['title']"
+      ></app-input-form>
+    </div>
+
+      <!-- subject names -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="SUBJECT"
+        placeholder="Select subject"
+        [required]="true"
+        [control]="form.controls['subject_id']"
+        optionTextField="name"
+        optionValueField="_id"
+        [items]="subjects()"
+      ></app-select-form>
+    </div>
+
+    <!-- uploader type -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="UPLOAD TYPE"
+        placeholder="Select upload type"
+        [required]="true"
+        [control]="form.controls['upload_type']"
+        optionTextField="label"
+        optionValueField="value"
+        [items]="uploadTypes()"
+      ></app-select-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button> </app-submit-button>
+    </div>
+  </div>
+</form>

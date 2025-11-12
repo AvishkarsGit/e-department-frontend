@@ -59,7 +59,7 @@ export class FileInputComponent implements OnInit {
     Array.from(files).forEach((file) => {
       console.log(file);
 
-      if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) {
         console.log('size error: ', file.size);
         this.controlInput?.setErrors({ maxSize: true });
         this.setIsError('* File size exceeds limit');

@@ -77,7 +77,7 @@ export class SigninComponent {
     try {
       // Step 1: Check user status
       const userStatus = await this.auth.checkUser(email);
-
+      
       if (!userStatus?.data?.exists) {
         this.global.showAlert(
           'Account Not Found',

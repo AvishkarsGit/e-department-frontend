@@ -72,6 +72,14 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'student-attendance',
     allowedRoles: ['student'],
   },
+  // upload material
+  {
+    label: 'Upload Material',
+    icon: 'bi bi-cloud-arrow-up-fill',
+    route: 'uploads',
+    allowedRoles: ['admin', 'faculty'],
+  },
+
   // subjects
   {
     label: 'Subjects',

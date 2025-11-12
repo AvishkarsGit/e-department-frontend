@@ -142,6 +142,18 @@ export const routes: Routes = [
         },
         canActivate: [roleGuard],
       },
+      // upload study-material : only admin and faculty can access
+      {
+        path: 'uploads',
+        loadComponent: () =>
+          import(
+            './pages/main-app/study-material/study-material.component'
+          ).then((c) => c.StudyMaterialComponent),
+        data: {
+          roles: ['admin', 'faculty'],
+        },
+        canActivate: [roleGuard],
+      },
       {
         path: 'departments',
         loadComponent: () =>
