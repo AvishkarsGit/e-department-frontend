@@ -123,13 +123,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/main-app/students/students.component').then(
             (c) => c.StudentsComponent)
-},
-        {
+      },
+      {
         path: 'departments',
         loadComponent: () =>
           import('./pages/main-app/departments/departments.component').then(
             (c) => c.DepartmentsComponent
-         ),
+          ),
         data: {
           role: 'admin',
           // role_name: 'Admin'
@@ -166,6 +166,19 @@ export const routes: Routes = [
           ).then((c) => c.ManagerReportComponent),
         data: {
           role: 'admin',
+        },
+        canActivate: [roleGuard],
+      },
+
+      {
+        path: 'studymaterial',
+        loadComponent: () =>
+          import('./pages/main-app/studymaterial/studymaterial.component').then(
+            (c) => c.StudymaterialComponent
+          ),
+        data: {
+          role: 'admin',
+          // role_name: 'Admin'
         },
         canActivate: [roleGuard],
       },

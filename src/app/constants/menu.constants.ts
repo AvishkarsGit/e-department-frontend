@@ -63,7 +63,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'subjects',
   },
 
-// faculties
+  // faculties
 
   {
     label: 'faculties',
@@ -87,11 +87,18 @@ export const MENU_ITEMS: MenuItem[] = [
     route: 'countries',
   },
 
+  //study materail
+  {
+    label:'StudyMaterial',
+    icon:'bi bi-file',
+    route:'studymaterial',
+  },
+  
   // departments
   {
-    label:'Departments',
-    icon:'bi bi-people',
-    route:'departments',
+    label: 'Departments',
+    icon: 'bi bi-people',
+    route: 'departments',
     allowedRoles: ['admin'],
   },
   // states
