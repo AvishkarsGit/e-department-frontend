@@ -71,6 +71,7 @@ export class AuthService {
       console.log(data);
 
       const response = await lastValueFrom(this.http.post('user/login', data));
+      //http://localhost:4000/api/user/login
 
       console.log('response', response);
 

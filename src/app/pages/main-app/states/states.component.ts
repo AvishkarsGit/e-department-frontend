@@ -92,11 +92,11 @@ export class StatesComponent {
 
       this.global.showSpinner();
 
-      const response = await this.stateService.getStates(params);
-      console.log(response);
+      // const response = await this.stateService.getStates(params);
+      // console.log(response);
 
-      this.setStates(response?.data);
-      this.totalRecords.set(response?.pagination?.total);
+      // this.setStates(response?.data);
+      // this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
       console.log(e);
       this.global.showErrorMessage(
@@ -121,9 +121,9 @@ export class StatesComponent {
 
   onSortChange(event: any) {
     const sort = event.sorts[0];
-    
+
     if(!sort?.prop) return;
-    
+
     this.sortField.set(sort.prop);
     this.sortOrder.set(sort.dir);
     this.loadData();
