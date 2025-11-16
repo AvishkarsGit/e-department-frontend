@@ -34,11 +34,11 @@
       </app-card> -->
 
       <!-- User Datatable -->
-      <!-- @if(profile()?.role === 'admin') { -->
+      @if(profile()?.role === 'admin') {
       <app-card title="FACULTIES" classes="bg-color">
         <app-faculties [isCard]="true"></app-faculties>
       </app-card>
-      <!-- } -->
+      }
 
       <!-- dynamic footer -->
       <!-- <div card-footer>
