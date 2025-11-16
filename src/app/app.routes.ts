@@ -150,7 +150,7 @@ export const routes: Routes = [
             './pages/main-app/study-material/study-material.component'
           ).then((c) => c.StudyMaterialComponent),
         data: {
-          roles: ['admin', 'faculty'],
+          roles: ['admin', 'faculty','student'],
         },
         canActivate: [roleGuard],
       },

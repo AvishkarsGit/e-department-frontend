@@ -9,6 +9,7 @@ export const TokenInterceptor = (
   req: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
+
   const auth = inject(AuthService);
   const global = inject(GlobalService);
 

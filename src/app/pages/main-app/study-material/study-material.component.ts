@@ -15,9 +15,6 @@ import { GlobalService } from '../../../services/global/global.service';
 import { IconRoundButtonComponent } from '../../../components/buttons/icon-round-button/icon-round-button.component';
 import { ContentHeaderComponent } from '../../../components/content-header/content-header.component';
 import { SearchFilterInputComponent } from '../../../components/search-filter-input/search-filter-input.component';
-import { ExcelButtonComponent } from '../../../components/buttons/excel-button/excel-button.component';
-// import { AddButtonComponent } from '../../../components/buttons/add-button/add-button.component';
-// import { AddCountryComponent } from './add-country/add-country.component';
 import { ToggleButtonComponent } from '../../../components/buttons/toggle-button/toggle-button.component';
 import { SafeHtmlPipe } from '../../../pipes/safe-html/safe-html.pipe';
 import { Subject } from '../../../interfaces/subject.interface';
@@ -29,6 +26,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { UploadService } from '../../../services/uploads/upload.service';
 import { Upload } from '../../../interfaces/upload.interface';
 import { AddStudyMaterialComponent } from './add-study-material/add-study-material.component';
+import { saveAs } from 'file-saver';
 
 type ItemType = Upload;
 @Component({
@@ -44,8 +42,8 @@ type ItemType = Upload;
     //  ToggleButtonComponent,
     DatePipe,
     //AddSubjectComponent,
-    AddStudyMaterialComponent
-  ],
+    AddStudyMaterialComponent,
+],
   templateUrl: './study-material.component.html',
   styleUrl: './study-material.component.scss',
 })
@@ -53,7 +51,7 @@ export class StudyMaterialComponent {
   table = viewChild<DatatableComponent>(DatatableComponent);
 
   ColumnMode = ColumnMode;
-  title = 'UPLOAD MATERIAL';
+  title = 'MATERIAL';
 
   uploads = signal<ItemType[]>([]);
   loadingIndicator = signal<boolean>(false);
@@ -68,7 +66,6 @@ export class StudyMaterialComponent {
   userRole = signal<string | null>(null);
 
   public global = inject(GlobalService);
-  private subjectService = inject(SubjectService);
   private profileService = inject(ProfileService);
   private uploadService = inject(UploadService);
 
@@ -104,11 +101,7 @@ export class StudyMaterialComponent {
       };
 
       this.global.showSpinner();
-
-      //const response = await this.subjectService.getSubjects(params);
       const response = await this.uploadService.getAllMaterial(params);
-      console.log('result:', response);
-
       this.setUploads(response?.data);
       this.totalRecords.set(response?.pagination?.total);
     } catch (e) {
@@ -200,14 +193,13 @@ export class StudyMaterialComponent {
     try {
       this.global.showSpinner();
 
-    //  const data = await this.subjectService.deleteSubject(item?._id);
-      //console.log(data);
-//
-      //update table
-      //this.deleteData(item?._id);
+      await this.uploadService.deleteMaterial(item?._id!);
+
+      // update table
+      this.deleteData(item?._id!);
 
       this.global.showSuccess(
-        'Country deleted successfully',
+        'Material deleted successfully',
         null,
         5000,
         false,
@@ -226,5 +218,29 @@ export class StudyMaterialComponent {
     this.updateItem.set(item);
     console.log(this.updateItem());
     this.openAddModal(template, true);
+  }
+
+  async downloadPdf(item: ItemType) {
+    try {
+      this.global.showSpinner();
+
+      const response = await this.uploadService.downloadFile(item?._id!);
+
+      //save to local (download)
+      saveAs(response?.data, 'myfile.pdf');
+
+      this.global.showSuccess(
+        'Material deleted successfully',
+        null,
+        5000,
+        false,
+        'increasing',
+        'toast-top-center'
+      );
+    } catch (error) {
+      this.global.showAlert('Error!', error, 'OK');
+    } finally {
+      this.global.hideSpinner();
+    }
   }
 }

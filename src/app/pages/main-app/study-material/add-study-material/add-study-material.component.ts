@@ -51,14 +51,12 @@ export class AddStudyMaterialComponent {
   private uploadService = inject(UploadService);
   private subjectService = inject(SubjectService);
 
-  constructor() {
-    this.initForm();
-  }
+  constructor() {}
 
   ngOnInit() {
     //load subjects and upload types
     this.loadSubjectsAndUploads();
-    console.log('updated item:', this.updateItem());
+    this.initForm();
   }
 
   initForm() {
@@ -66,7 +64,7 @@ export class AddStudyMaterialComponent {
     const form = this.formBuilder.group({
       title: [item?.title ?? null, Validators.required],
       upload_type: [item?.upload_type ?? null, Validators.required],
-      subject_id: [item?._id ?? null, Validators.required],
+      subject_id: [item?.subject_id?._id ?? null, Validators.required],
       uploaded_url: [item?.uploaded_url ?? null],
     });
 
@@ -87,7 +85,6 @@ export class AddStudyMaterialComponent {
     try {
       this.global.showSpinner();
       let msg = 'added';
-      let data: Upload;
 
       const dataValue = this.formData()?.value;
 
@@ -96,26 +93,17 @@ export class AddStudyMaterialComponent {
         // update item
 
         msg = 'updated';
-
-        // const response = await this.subjectService.updateSubject(
-        //   this.updateItem()!._id,
-        //   {
-        //     name: dataValue.name.trim(),
-        //     code: dataValue.code.trim(),
-        //     class_id: classId,
-        //   }
-        // );
-
-        // const result = response?.data;
-        // data = {
-        //   _id: result?.subject?._id,
-        //   name: result?.subject?.name,
-        //   code: result?.subject?.code,
-        //   class_id: result?.subject?.class_id,
-        //   classData: result?.classData,
-        // };
-        // //  update records
-        // this.updated.emit(data);
+        const payload = {
+          title: dataValue.title,
+          upload_type: dataValue.upload_type,
+          subject_id: dataValue.subject_id,
+          uploaded_url: dataValue.uploaded_url,
+        };
+        const response = await this.uploadService.updateMaterial(
+          this.updateItem()?._id!,
+          payload
+        );
+        this.updated.emit(response?.data);
       } else {
         const payload = {
           title: dataValue.title,

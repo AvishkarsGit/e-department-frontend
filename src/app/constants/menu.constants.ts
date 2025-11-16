@@ -74,10 +74,10 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   // upload material
   {
-    label: 'Upload Material',
-    icon: 'bi bi-cloud-arrow-up-fill',
+    label: 'Study Material',
+    icon: 'bi bi-journal-text',
     route: 'uploads',
-    allowedRoles: ['admin', 'faculty'],
+    allowedRoles: ['admin', 'faculty','student'],
   },
 
   // subjects
