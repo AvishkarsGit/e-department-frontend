@@ -160,6 +160,12 @@ export class FacultiesComponent {
   }
 
   async deleteItemAlert(item: ItemType) {
+    const profile = await this.profileService.profile()!;
+    if (item?.user?.role === profile?.role) {
+      this.global.showAlert('Error', 'You can not delete your account', 'Ok');
+      return;
+    }
+
     const result = await this.global.showAlert(
       'Are you sure?',
       'You want to delete this faculty!',
