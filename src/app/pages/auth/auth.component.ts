@@ -59,7 +59,7 @@ export class AuthComponent {
     try {
       // this.global.showSpinner();
       const isAdminExists = await this.userService.checkAdminExists();
-      console.log('isAdminExists: ', isAdminExists);
+
       this.setIsSignup(!isAdminExists);
 
       if (!this.isSignup()) {
@@ -108,6 +108,7 @@ export class AuthComponent {
       this.isAdmin.set(true);
       return;
     }
+    this.isAdmin.set(false);
     this.global.showModal(template);
   }
 
@@ -120,7 +121,7 @@ export class AuthComponent {
       this.global.hideSpinner();
 
       //open email verification modal
-      this.openVerificationModal();
+     this.openVerificationModal();
     } catch (e) {
       this.global.hideSpinner();
       // let msg: string = 'Could not sign you up, please try again.';

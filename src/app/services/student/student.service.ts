@@ -24,8 +24,6 @@ export class StudentService {
         this.http.post(`${this.apiUrl}/add`, formValues, isFormData)
       );
 
-      console.log('add student response: ', response);
-
       if (!response?.success) {
         this.http.throwResponseError(response);
       }
