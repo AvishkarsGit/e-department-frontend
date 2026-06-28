@@ -1,0 +1,189 @@
+@if (userRole()!== 'student') {
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+  buttonLabel="Add Study Material"
+  (onButtonClick)="openAddModal(addStudyMaterialTemplate)"
+>
+</app-content-header>
+} @else {
+  <app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+>
+</app-content-header>
+}
+
+<div class="table-wrapper rounded">
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="uploads()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column name="S.No" [sortable]="false" [width]="80">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">S.No</span>
+        </ng-template>
+
+        <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+          {{ rowIndex + 1 }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="title">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DOCUMENT TITLE</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+          <!-- {{ value ? (value | stripeHtml) : "-" }} -->
+          <!-- <div [innerHTML]="value ?? '-' | safeHtml"></div> -->
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- document type -->
+      <ngx-datatable-column prop="upload_type">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DOCUMENT TYPE</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value.toUpperCase() }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- uploaded by -->
+      <ngx-datatable-column prop="uploaded_by">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">UPLOAD BY</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.uploaded_by?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- subject -->
+      <ngx-datatable-column prop="subject_id">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">SUBJECT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.subject_id?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- upload at -->
+      <ngx-datatable-column prop="created_at">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">UPLOAD AT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value | date }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- actions  -->
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          @if (userRole()!=="student") {
+          <!-- edit -->
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addStudyMaterialTemplate)"
+          >
+          </app-icon-round-button>
+          }
+
+          <!-- download -->
+          <app-icon-round-button
+            icon="fa fa-download"
+            addIconClass="edit"
+            tooltip="Download"
+            (onClick)="downloadPdf(row)"
+          >
+          </app-icon-round-button>
+
+          @if (userRole()!=="student") {
+          <!-- delete -->
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+          }
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add material modal -->
+<ng-template #addStudyMaterialTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} STUDY MATERIAL
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-study-material
+      [updateItem]="updateItem()!"
+      (added)="addData()"
+      (updated)="updateData()"
+    ></app-add-study-material>
+  </div>
+</ng-template>

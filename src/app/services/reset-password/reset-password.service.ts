@@ -2,45 +2,53 @@ import { inject, Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ResetPasswordService {
   private http = inject(HttpService);
+  private apiUrl = 'user';
 
-  constructor() { }
+  constructor() {}
 
   async sendResetPasswordOtp(email: string) {
     try {
-      const data = { email };
-      const response = await this.http.lastValueFrom(this.http.post('sendOtp', data));
+      const data = {
+        email,
+      };
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/send/reset/password/token', data, false)
+      );
       console.log(response);
       return response;
-    } catch(e) {
-      throw(e);
+    } catch (e) {
+      throw e;
     }
   }
 
   async verifyResetPasswordOtp(email: string, otp: string) {
     try {
-      const data = { 
+      const data = {
         email,
-        otp 
+        otp,
       };
-      const response = await this.http.lastValueFrom(this.http.post('verifyOtp', data));
-      console.log(response);
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl+'/verifyOtp', data)
+      );
       return response;
-    } catch(e) {
-      throw(e);
+    } catch (e) {
+      throw e;
     }
   }
 
   async resetPassword(data: any) {
     try {
-      const response = await this.http.lastValueFrom(this.http.post('resetPassword', data));
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/reset/password', data)
+      );
       console.log(response);
       return response;
-    } catch(e) {
-      throw(e);
+    } catch (e) {
+      throw e;
     }
   }
 }

@@ -1,0 +1,216 @@
+@if (!isCard()) {
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
+</app-content-header>
+}
+
+<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
+  <div class="d-flex align-items-center justify-content-end">
+    <!-- search bar -->
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="faculties()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+    >
+      <ngx-datatable-column prop="photo">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHOTO</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <img [src]="row?.user?.photo" class="avatar-image rounded-circle" />
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- faculty name -->
+
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- not accessible for faculties -->
+       @if (userRole()==="admin" ) {
+
+      <ngx-datatable-column prop="email">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">EMAIL</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.email }}
+        </ng-template>
+      </ngx-datatable-column>
+      }
+      <!-- phone number -->
+      <ngx-datatable-column prop="phone">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PHONE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.user?.phone }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- account_status -->
+      <ngx-datatable-column prop="account_status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ACCOUNT STATUS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          @if (row.user.account_status) {
+          <i class="fa fa-check" style="color: green"></i> Accepted } @else {
+          <!-- accept or reject -->
+          <!-- accept -->
+          <app-icon-round-button
+            icon="fa fa-check"
+            addIconClass="edit"
+            tooltip="Accept"
+            (onClick)="onStatusChange(true, row)"
+          >
+          </app-icon-round-button>
+
+          <!-- reject -->
+          <app-icon-round-button
+            icon="fa fa-ban"
+            addIconClass="delete"
+            tooltip="Reject"
+            (onClick)="onStatusChange(false, row)"
+          >
+          </app-icon-round-button>
+          }
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- department -->
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DEPARTMENT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.department?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+        <!-- not accessible for faculties -->
+       @if (userRole()==="admin") {
+        <ngx-datatable-column [frozenRight]="true">
+          <ng-template ngx-datatable-header-template>
+            <span class="tableHeader">ACTION</span>
+          </ng-template>
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <!-- assign subject icon -->
+            <app-icon-round-button
+              icon="fa fa-book"
+              addIconClass="edit"
+              tooltip="Assign Subject"
+              (onClick)="uploadSubjects(row, assignSubjectsModal)"
+            >
+            </app-icon-round-button>
+
+            <!-- delete icon -->
+            <app-icon-round-button
+              icon="fa fa-trash"
+              addIconClass="delete"
+              tooltip="Delete"
+              (onClick)="deleteItemAlert(row)"
+            >
+            </app-icon-round-button>
+
+            <!-- view profile button -->
+            <app-icon-round-button
+              icon="fa fa-eye"
+              addIconClass="edit"
+              tooltip="View"
+              (onClick)="viewProfile(row, viewProfileTemplate)"
+            >
+            </app-icon-round-button>
+          </ng-template>
+        </ngx-datatable-column>
+       }
+    </ngx-datatable>
+  </div>
+</div>
+<!-- add user modal -->
+<ng-template #viewProfileTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ role() === "faculty" ? "FACULTY" : "STUDENT" }} PROFILE
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-view-profile
+      [updateProfileItem]="updateProfileItem()!"
+    ></app-view-profile>
+  </div>
+</ng-template>
+
+<!-- assign subjects modal -->
+<ng-template #assignSubjectsModal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">ASSIGN SUBJECT</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-faculties
+      [updateItem]="updateItem()!"
+      (updated)="updateData()"
+    ></app-add-faculties>
+  </div>
+</ng-template>

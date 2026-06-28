@@ -1,0 +1,37 @@
+<div class="form-group {{ noMarginBottom() ? 'mb-0' : '' }}">
+  @if(label()) {
+    <label>
+      {{ label() }}
+      @if(required()) {
+        <small>*</small>
+      }
+    </label>
+  }
+
+  <div
+    class="checkbox-container"
+    [ngStyle]="scrollable() ? { 'max-height': height(), 'overflow-y': 'auto' } : {}"
+  >
+    @for (item of items(); track item[optionValueField()]) {
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [id]="item[optionValueField()]"
+          [checked]="isChecked(item[optionValueField()])"
+          (change)="onCheckboxChange($event, item)"
+
+        />
+        <label class="form-check-label" [for]="item[optionValueField()]">
+          {{ item[optionTextField()] }}
+        </label>
+      </div>
+    }
+  </div>
+
+  @if(required() && controlArray.touched && controlArray.invalid) {
+    <div class="invalid-feedback d-block">
+      <small class="text-danger">* Required</small>
+    </div>
+  }
+</div>

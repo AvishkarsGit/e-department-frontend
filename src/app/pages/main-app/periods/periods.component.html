@@ -1,0 +1,137 @@
+<app-content-header
+  [title]="title"
+  [subRoute]="title"
+  [lastRoute]="false"
+  buttonLabel="Add Periods"
+  (onButtonClick)="openAddModal(addSubjectTemplate)"
+>
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="periods()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+    >
+      <!-- period text -->
+      <ngx-datatable-column prop="period_text">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PERIOD_TEXT</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- period -->
+      <ngx-datatable-column prop="period">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PERIOD</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- starting time -->
+      <ngx-datatable-column prop="start_time">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">STARTING TIME</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- ending time -->
+      <ngx-datatable-column prop="ending_time">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ENDING TIME</span>
+        </ng-template>
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addSubjectTemplate)"
+          >
+          </app-icon-round-button>
+
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add user modal -->
+<ng-template #addSubjectTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} PERIOD
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <app-add-period
+      [updateItem]="updateItem()!"
+      (added)="addData($event)"
+      (updated)="updateData($event)"
+    ></app-add-period>
+  </div>
+</ng-template>

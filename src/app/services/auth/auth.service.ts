@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable, of, tap } from 'rxjs';
 import { StorageService } from '../storage/storage.service';
 import { Router } from '@angular/router';
 import { HttpService } from '../http/http.service';
@@ -14,6 +14,8 @@ export class AuthService {
   private storage = inject(StorageService);
   private http = inject(HttpService);
   private profileService = inject(ProfileService);
+  private apiUrl = 'user';
+  private isVerified = signal<boolean>(false);
 
   token = signal<string | null>(null);
 
@@ -23,54 +25,84 @@ export class AuthService {
     this.token.set(token);
   }
 
-  setUserData(token: string) {
+  updateIsVerified(value: boolean) {
+    this.isVerified.set(value);
+  }
+
+  setUserData(token: string, refreshToken: string) {
     this.storage.setStorage(Strings.TOKEN, token);
+    if (refreshToken) this.storage.setStorage(Strings.REFRESH_TOKEN, refreshToken);
     this.updateToken(token);
   }
 
   getToken() {
-    if(!this.token()) {
+    if (!this.token()) {
       const token = this.storage.getStorage(Strings.TOKEN);
       this.updateToken(token);
     }
   }
 
-  async register(formValue: any) {
+  setIsVerified(value: boolean) {
+    this.storage.setStorage(Strings.IS_VERIFIED, value);
+    this.updateIsVerified(value);
+  }
+
+  getIsVerified(): Boolean {
+    let value: boolean;
+    if (!this.isVerified()) {
+      const result = this.storage.getStorage(Strings.IS_VERIFIED);
+      if (result === 'true') value = true;
+      else value = false;
+      this.updateIsVerified(value);
+    }
+    return value!;
+  }
+
+  async register(formData: any) {
     try {
+      let formValues: any = formData;
+      let isFormData = false;
+
+      // Check if photo is selected (File type)
+      if (formValues?.photo instanceof File) {
+        formValues = this.http.convertToFormData(formValues);
+        isFormData = true;
+      }
+
       const response = await lastValueFrom(
-        this.http.post('signup', formValue)
+        this.http.post(this.apiUrl + '/signup', formValues, isFormData)
       );
       console.log(response);
 
       //save token in local storage
-      this.setUserData(response?.data?.accessToken);
+      this.setUserData(
+        response?.data?.accessToken,
+        response?.data?.refreshToken
+      );
 
       return response?.data;
     } catch (e) {
-      
       throw e;
     }
   }
 
   async login(email: string, password: string): Promise<any> {
     try {
-
       const data = {
         email,
         password,
       };
       console.log(data);
 
-      const response = await lastValueFrom(
-        this.http.post('user/login', data)
-      );
+      const response = await lastValueFrom(this.http.post('user/login', data));
 
-      console.log('response',response);
+      console.log('response', response);
 
       //save token in local storage
-      this.setUserData(response?.data?.accessToken);
-
-      
+      this.setUserData(
+        response?.data?.accessToken,
+        response?.data?.refreshToken
+      );
 
       return response;
     } catch (e) {
@@ -89,9 +121,7 @@ export class AuthService {
 
   async logout() {
     try {
-      const response = await lastValueFrom(
-        this.http.get('logout')
-      );
+      const response = await lastValueFrom(this.http.get('user/logout'));
       console.log(response);
       this.logoutFromDevice();
     } catch (e) {
@@ -102,8 +132,82 @@ export class AuthService {
 
   logoutFromDevice() {
     this.storage.removeStorage(Strings.TOKEN);
+    this.storage.removeStorage(Strings.REFRESH_TOKEN);
     this.updateToken(null);
     this.profileService.setProfile(null);
     this.router.navigateByUrl(Strings.LOGIN, { replaceUrl: true });
+  }
+
+  async checkUser(email: string) {
+    try {
+      const data = { email };
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/exists', data)
+      );
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendOtp(email: string) {
+    try {
+      const data = { email };
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/send/verification/token', data)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async verifyEmail(email: string, otp: string) {
+    try {
+      const data = { email, otp };
+      const response = await this.http.lastValueFrom(
+        this.http.patch(this.apiUrl + '/verify-email', data)
+      );
+
+      if (!response?.success) {
+        this.http.throwResponseError(response);
+      }
+      //set email is verified
+      this.setIsVerified(true);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  refreshTokens(): Observable<any> {
+    const refreshToken = this.storage.getStorage(Strings.REFRESH_TOKEN);
+    if (!refreshToken) return of(null);
+
+    // Send refresh token to server
+    return this.http.post('user/refresh-token', { refreshToken }).pipe(
+      tap((response: any) => {
+        const accessToken = response?.accessToken;
+        const newRefreshToken = response?.refreshToken;
+
+        if (accessToken) {
+          this.storage.setStorage(Strings.TOKEN, accessToken);
+          this.updateToken(accessToken);
+        }
+
+        if (newRefreshToken) {
+          this.storage.setStorage(Strings.REFRESH_TOKEN, newRefreshToken);
+        }
+      })
+    );
   }
 }

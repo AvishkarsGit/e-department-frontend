@@ -1,0 +1,49 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <div class="col-12">
+      <h5>Assign Subjects</h5>
+
+      <div formArrayName="subjects">
+        @for (s of subjectsArray.controls; track $index) {
+        <div class="row g-3 mb-3 align-items-center" [formGroupName]="$index">
+          <div class="col-md-10">
+            <app-select-form
+              label="SUBJECT"
+              placeholder="Select Subject"
+              [required]="true"
+              [control]="s.get('subject')"
+              optionTextField="name"
+              optionValueField="_id"
+              [items]="subjects()"
+            ></app-select-form>
+          </div>
+
+          <div class="col-md-2 d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="removeSubject($index)"
+            >
+              <i class="bi bi-trash"></i> Remove
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary mt-2"
+        (click)="addSubject()"
+      >
+        <i class="bi bi-plus-circle"></i> Add Subject
+      </button>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button></app-submit-button>
+    </div>
+  </div>
+</form>

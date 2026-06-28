@@ -20,7 +20,12 @@ interface ModelData {
 
 @Component({
   selector: 'app-reset-password',
-  imports: [ReactiveFormsModule, SubmitButtonComponent, InputFormComponent, OtpInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    SubmitButtonComponent,
+    InputFormComponent,
+    OtpInputComponent,
+  ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
 })
@@ -106,25 +111,33 @@ export class ResetPasswordComponent {
   updateValidations() {
     const currentForm = this.resetPasswordForm()!; // Get the form instance
     const flag = this.model().flag;
-  
+
     // Reset all fields first
     currentForm.controls['otp'].clearValidators();
     currentForm.controls['password'].clearValidators();
-  
+
     if (flag === 1) {
       // Step 1: Email validation only
-      currentForm.controls['email'].setValidators([Validators.required, Validators.email]);
+      currentForm.controls['email'].setValidators([
+        Validators.required,
+        Validators.email,
+      ]);
     } else if (flag === 2) {
       // Step 2: OTP validation
       currentForm.controls['otp'].setValidators([Validators.required]);
     } else {
       // Step 3: Password validation
-      currentForm.controls['password'].setValidators([Validators.required, Validators.minLength(8)]);
+      currentForm.controls['password'].setValidators([
+        Validators.required,
+        Validators.minLength(8),
+      ]);
     }
-  
+
     // Update form validity
-    Object.values(currentForm.controls).forEach((control) => control.updateValueAndValidity());
-  
+    Object.values(currentForm.controls).forEach((control) =>
+      control.updateValueAndValidity()
+    );
+
     // **Reassign updated form to the signal to trigger UI update**
     this.resetPasswordForm.set(this.formBuilder.group(currentForm.controls));
   }
@@ -206,6 +219,7 @@ export class ResetPasswordComponent {
       this.global.showSpinner();
 
       const data = this.getFormValue();
+
       await this.resetPasswordService.resetPassword(data);
 
       this.global.showSuccess(

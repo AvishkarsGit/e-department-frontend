@@ -1,0 +1,49 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <!-- department names -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="DEPARTMENT"
+        placeholder="Select Department"
+        [required]="true"
+        [control]="form.controls['department']"
+        optionTextField="name"
+        optionValueField="_id"
+        [items]="departments()"
+        
+      ></app-select-form>
+    </div>
+
+    <!-- year -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="YEAR"
+        placeholder="Select Year"
+        [required]="true"
+        [control]="form.controls['year']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="years()"
+      ></app-select-form>
+    </div>
+
+    <!-- semesters -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="SEMESTER"
+        placeholder="Select Semester"
+        [required]="true"
+        [control]="form.controls['semester']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="semesters()"
+      ></app-select-form>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button> </app-submit-button>
+    </div>
+  </div>
+</form>

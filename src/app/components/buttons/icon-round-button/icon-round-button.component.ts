@@ -10,6 +10,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 export class IconRoundButtonComponent {
   readonly icon = input<string>();
   readonly color = input<string>();
+  readonly backgroundColor = input<string>();
   readonly addBtnClass = input<string>('me-1');
   readonly addIconClass = input<string>();
   readonly tooltip = input<string>();

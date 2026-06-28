@@ -1,0 +1,105 @@
+@if(!isCard()) {
+  <app-content-header 
+    [title]="title" 
+    [subRoute]="title" 
+    [lastRoute]="false"
+    buttonLabel="Add Departments"
+    (onButtonClick)="openAddModal(addDepartmentTemplate)">
+  </app-content-header>
+}
+
+<div [ngClass]="{ 'table-wrapper rounded': !isCard() }">
+
+  <div class="d-flex align-items-center justify-content-end">
+    <app-search-filter-input
+      class="search-table-input"
+      (filteredData)="onFilterChange($event)"
+    ></app-search-filter-input>
+
+  </div>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="departments()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+      (sort)="onSortChange($event)"
+      >
+
+      <ngx-datatable-column prop="name">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">NAME</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [frozenRight]="true">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">ACTION</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+
+          <app-icon-round-button
+            icon="fa fa-edit"
+            addIconClass="edit"
+            tooltip="Edit"
+            (onClick)="editItem(row, addDepartmentTemplate)"
+          >
+          </app-icon-round-button>
+          
+          <app-icon-round-button
+            icon="fa fa-trash"
+            addIconClass="delete"
+            tooltip="Delete"
+            (onClick)="deleteItemAlert(row)"
+          >
+          </app-icon-round-button>
+          
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- add department modal -->
+<ng-template #addDepartmentTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0 fw-bold">
+      {{ updateItem() ? "EDIT" : "ADD" }} DEPARTMENT
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="global.hideModal()"
+    ></button>
+  </div>
+
+   <div class="modal-body">
+    <app-add-department
+      [updateItem]="updateItem()!"
+      (added)="addData($event)"
+      (updated)="updateData($event)"
+    ></app-add-department>
+  </div>
+
+
+</ng-template>
+

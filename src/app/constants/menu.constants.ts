@@ -6,43 +6,92 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'bi bi-house-door-fill',
     route: 'dashboard',
   },
+
+  // attendance
+
+  {
+    label: 'Attendance',
+    icon: 'bi bi-file-earmark-spreadsheet-fill',
+    route: 'attendances',
+    allowedRoles: ['admin', 'faculty'],
+  },
   {
     label: 'Reports',
     // icon: 'fas fa-chart-line',
     icon: 'bi bi-bar-chart-fill',
     children: [
+      // summaries
       {
-        label: 'Manager Report',
-        icon: 'bi bi-bar-chart-line',
-        route: 'manager-report',
+        label: 'Attendance Summary',
+        icon: 'bi bi-file-person-fill',
+        route: 'summaries',
       },
     ],
-    allowedRoles: ['admin'],
+    allowedRoles: ['admin', 'faculty'],
   },
+
   {
     label: 'MANAGE',
     isGroupTitle: true,
+    allowedRoles: ['admin', 'faculty'],
   },
+  // departments
   {
-    label: 'Users',
-    icon: 'bi bi-people-fill',
-    route: 'users',
+    label: 'Departments',
+    icon: 'bi bi-people',
+    route: 'departments',
     allowedRoles: ['admin'],
   },
+  // classes
   {
-    label: 'Countries',
-    icon: 'fas fa-building',
-    route: 'countries',
+    label: 'Classes',
+    icon: 'bi bi-buildings-fill',
+    route: 'classes',
+    allowedRoles: ['admin'],
   },
+
+  // faculties
   {
-    label: 'States',
-    icon: 'fas fa-building',
-    route: 'states',
+    label: 'Faculties',
+    icon: 'bi bi-person-workspace',
+    route: 'faculties',
+    allowedRoles: ['admin'],
   },
+
+  // students
   {
-    label: 'Roles',
-    icon: 'fas fa-user-lock',
-    route: 'roles',
+    label: 'Students',
+    icon: 'bi bi-mortarboard-fill',
+    route: 'students',
+    allowedRoles: ['admin', 'faculty'],
+  },
+  // student attendance : only student can access
+  {
+    label: 'Attendance',
+    icon: 'bi bi-file-earmark-spreadsheet-fill',
+    route: 'student-attendance',
+    allowedRoles: ['student'],
+  },
+  // upload material
+  {
+    label: 'Study Material',
+    icon: 'bi bi-journal-text',
+    route: 'uploads',
+    allowedRoles: ['admin', 'faculty','student'],
+  },
+
+  // subjects
+  {
+    label: 'Subjects',
+    icon: 'bi bi-book-fill',
+    route: 'subjects',
+    allowedRoles: ['admin', 'faculty', 'student'],
+  },
+  // periods
+  {
+    label: 'Periods',
+    icon: 'bi bi-clock-fill',
+    route: 'periods',
     allowedRoles: ['admin'],
   },
 ];

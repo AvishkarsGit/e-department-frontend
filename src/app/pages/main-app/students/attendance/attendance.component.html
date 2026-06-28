@@ -1,0 +1,174 @@
+<app-content-header [title]="title" [subRoute]="title" [lastRoute]="false">
+</app-content-header>
+
+<div class="table-wrapper rounded">
+  @let form = filterForm()!;
+
+  <form [formGroup]="form" (ngSubmit)="applyFilters()">
+    <div class="row g-4 my-4 mx-1 p-4 bg-white rounded">
+      <!-- dates -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-mat-datepicker-form
+          label="FROM DATE"
+          placeholder="Pick a date"
+          [required]="true"
+          [control]="form.controls['from_date']"
+        ></app-mat-datepicker-form>
+      </div>
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-mat-datepicker-form
+          label="TO DATE"
+          placeholder="Pick a date"
+          [required]="true"
+          [control]="form.controls['to_date']"
+        ></app-mat-datepicker-form>
+      </div>
+
+      <!-- subjects -->
+      <div class="col-xl-6 col-sm-6 col-12">
+        <app-select-form
+          label="SUBJECTS"
+          placeholder="Select Subjects"
+          [required]="false"
+          [control]="form.controls['subject']"
+          optionTextField="name"
+          optionValueField="_id"
+          [items]="subjects()"
+        ></app-select-form>
+      </div>
+
+      <div class="box-footer mt-4 d-flex justify-content-center">
+        <app-submit-button> </app-submit-button>
+      </div>
+    </div>
+  </form>
+
+  <div class="col-md-12 mb-3">
+    <ngx-datatable
+      #table
+      class="material"
+      [rows]="students()"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [loadingIndicator]="loadingIndicator()"
+      [scrollbarH]="true"
+      [externalPaging]="true"
+      [limit]="pageSize()"
+      [count]="totalRecords()"
+      [offset]="currentPage()"
+      (page)="onPageChange($event)"
+    >
+      <ngx-datatable-column name="S.No" [sortable]="false" [width]="80">
+        <ng-template ngx-datatable-header-template>
+          <span class="tableHeader">S.No</span>
+        </ng-template>
+
+        <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+          {{ rowIndex + 1 }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- dates -->
+
+      <ngx-datatable-column prop="date">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">DATE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.date | date : "MMM dd, yyyy" }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="status">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">STATUS</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.status.toUpperCase() }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- period text -->
+       <ngx-datatable-column prop="period_text">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PERIOD</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.period_text }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- subjects-->
+      <ngx-datatable-column prop="subject">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">SUBJECT</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.subject_name }}
+        </ng-template>
+      </ngx-datatable-column>
+
+
+
+      <!-- total classes -->
+      <!-- <ngx-datatable-column prop="total_classes">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">TOTAL CLASSES</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ summary().total_classes }}
+        </ng-template>
+      </ngx-datatable-column> -->
+
+      <!-- department -->
+      <!-- <ngx-datatable-column prop="attended_classes">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">ATTENDED CLASSES</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ summary().attended_classes }}
+        </ng-template>
+      </ngx-datatable-column> -->
+
+      <!-- year -->
+      <!-- <ngx-datatable-column prop="percentage">
+        <ng-template
+          let-column="column"
+          ngx-datatable-header-template
+          let-sort="sortFn"
+        >
+          <span class="tableHeader">PERCENTAGE</span>
+        </ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ summary().attendance_percentage }}%
+        </ng-template>
+      </ngx-datatable-column> -->
+    </ngx-datatable>
+  </div>
+</div>

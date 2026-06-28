@@ -101,7 +101,7 @@ export class AddCountryComponent {
       console.log(data);
 
       this.global.showSuccess(
-        `Country ${msg} successfully`,
+      `Country ${msg} successfully`,
         null,
         5000,
         false,

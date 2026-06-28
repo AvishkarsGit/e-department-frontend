@@ -8,6 +8,7 @@ import { ProfileService } from '../profile/profile.service';
 export class DashboardService {
   private http = inject(HttpService);
   private profileService = inject(ProfileService);
+  private apiUrl = 'dashboard';
 
   constructor() {}
 
@@ -57,4 +58,15 @@ export class DashboardService {
     }
   }
 
+  async getBoxesData() {
+    try {
+      const response = await this.http.lastValueFrom(
+        this.http.get(this.apiUrl + '/boxes')
+      );
+      if (!response?.success) this.http.throwResponseError(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

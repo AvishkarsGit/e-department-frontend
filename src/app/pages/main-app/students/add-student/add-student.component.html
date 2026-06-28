@@ -1,0 +1,197 @@
+@let form = formData()!;
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="row g-4 mb-6 mx-4">
+    <div class="form-group col-md-12">
+      <app-file-input
+        label="PHOTO"
+        [isOnlyImage]="true"
+        [control]="form.controls['photo']"
+      ></app-file-input>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="NAME"
+        placeholder="Name"
+        icon="user-graduate"
+        [required]="true"
+        [control]="form.controls['name']"
+      ></app-input-form>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="EMAIL"
+        type="email"
+        placeholder="Email"
+        icon="envelope"
+        [required]="true"
+        [control]="form.controls['email']"
+      ></app-input-form>
+    </div>
+
+    <!-- phone -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="PHONE"
+        type="number"
+        placeholder="Phone Number"
+        icon="phone"
+        [required]="true"
+        [control]="form.controls['phone']"
+        [minlength]="10"
+        [maxlength]="10"
+      ></app-input-form>
+    </div>
+
+    <!-- roll no (optional) -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="ROLL NO"
+        type="number"
+        placeholder="Roll Call Number"
+        icon="table"
+        [minlength]="1"
+        [maxlength]="2"
+        [control]="form.controls['rollNo']"
+      ></app-input-form>
+    </div>
+
+    <!-- phone -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="USERNAME"
+        type="text"
+        placeholder="Username"
+        icon="user"
+        [required]="true"
+        [control]="form.controls['username']"
+      ></app-input-form>
+    </div>
+
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-input-form
+        label="PASSWORD"
+        type="password"
+        placeholder="Password"
+        icon="key"
+        [required]="updateItem() ? false : true"
+        [control]="form.controls['password']"
+        [minlength]="8"
+      ></app-input-form>
+    </div>
+
+    <!-- department -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="DEPARTMENT"
+        placeholder="Select Department"
+        [required]="true"
+        [control]="form.controls['department']"
+        optionTextField="name"
+        optionValueField="_id"
+        [items]="departments()"
+      ></app-select-form>
+    </div>
+
+    <!-- year -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="YEAR"
+        placeholder="Select Year"
+        [required]="true"
+        [control]="form.controls['year']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="years()"
+      ></app-select-form>
+    </div>
+
+    <!-- semesters -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <app-select-form
+        label="SEMESTER"
+        placeholder="Select Semester"
+        [required]="true"
+        [control]="form.controls['semester']"
+        optionTextField="name"
+        optionValueField="id"
+        [items]="semesters()"
+      ></app-select-form>
+    </div>
+
+    <!-- dynamic phone numbers -->
+    <div class="col-12">
+      <h5>Guardian Details</h5>
+
+      <div formArrayName="guardian">
+        @for (g of guardianArray.controls; track $index) {
+        <div class="row g-3 mb-3" [formGroupName]="$index">
+          <div class="col-md-4">
+            <app-input-form
+              label="Guardian Name"
+              placeholder="Enter Guardian Name"
+              icon="user"
+              [required]="true"
+              [control]="g.get('name')"
+            ></app-input-form>
+          </div>
+
+          <div class="col-md-4">
+            <app-input-form
+              label="Relation"
+              placeholder="Father / Mother / Other"
+              icon="person"
+              [required]="true"
+              [control]="g.get('relation')"
+            ></app-input-form>
+          </div>
+
+          <div class="col-md-3">
+            <app-input-form
+              label="Phone"
+              type="number"
+              icon="phone"
+              placeholder="Guardian Phone"
+              [required]="true"
+              [control]="g.get('phone')"
+              [minlength]="10"
+              [maxlength]="10"
+            ></app-input-form>
+          </div>
+
+          <div class="col-md-1 d-flex align-items-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="removeGuardian($index)"
+            >
+              X
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- error if no guardian -->
+      @if (guardianArray.errors) {
+      <div class="text-danger small mt-1">
+        At least one guardian must be added
+      </div>
+      }
+
+      <button
+        type="button"
+        class="btn btn-primary mt-2"
+        (click)="addGuardian()"
+      >
+        + Add Guardian
+      </button>
+    </div>
+
+    <div class="box-footer mt-4 d-flex justify-content-center">
+      <app-submit-button></app-submit-button>
+    </div>
+  </div>
+</form>

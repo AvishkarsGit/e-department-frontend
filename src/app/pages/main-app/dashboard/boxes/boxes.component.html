@@ -1,10 +1,11 @@
 <!--begin::Row-->
 <div class="row my-4">
   <!--begin::Col-->
+  <!-- total users: common for all -->
   <div class="col-xl-3 col-sm-6 col-12">
     <app-medium-box
       title="Users"
-      [value]="counts()?.users"
+      [value]="data()?.totalUsers"
       icon="people"
       iconBgColor="primary-color"
       badgeBgColor="white"
@@ -12,33 +13,24 @@
     ></app-medium-box>
   </div>
 
+  @if (role() === "admin" || role() ==="faculty") {
+    <!-- total students  -->
   <div class="col-xl-3 col-sm-6 col-12">
     <app-medium-box
-      title="Orders"
-      [value]="counts()?.orders"
-      icon="box-seam"
+      title="Students"
+      [value]="data()?.totalStudents"
+      icon="mortarboard-fill"
       iconBgColor="tertiary-color"
       badgeBgColor="white"
       [isShortInfo]="false"
     ></app-medium-box>
   </div>
 
+  <!-- total faculties -->
   <div class="col-xl-3 col-sm-6 col-12">
     <app-medium-box
-      title="Vendors"
-      [value]="counts()?.vendors"
-      icon="inbox"
-      iconBgColor="secondary-color"
-      badgeBgColor="white"
-      badgeTextColor="muted"
-      [isShortInfo]="false"
-    ></app-medium-box>
-  </div>
-
-  <div class="col-xl-3 col-sm-6 col-12">
-    <app-medium-box
-      title="Managers"
-      [value]="counts()?.managers"
+      title="Faculties"
+      [value]="data()?.totalFaculties"
       icon="person-workspace"
       iconBgColor="warning-color"
       iconColor="text-dark"
@@ -46,5 +38,59 @@
       [isShortInfo]="false"
     ></app-medium-box>
   </div>
+
+  <!-- total lectures  -->
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Lectures conducted"
+      [value]="data()?.lectures"
+      icon="collection-play"
+      iconBgColor="warning-color"
+      iconColor="text-dark"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+  }
+  @else {
+    <!-- total lectures for students -->
+     
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Lectures conducted"
+      [value]="data()?.lectures"
+      icon="calendar-fill"
+      iconBgColor="warning-color"
+      iconColor="text-dark"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+
+  <!-- total attended by loggedIn student  -->
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Lectures Attended"
+      [value]="data()?.lecturesAttended"
+      icon="calendar3"
+      iconBgColor="warning-color"
+      iconColor="text-dark"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+  <!-- total attendance percentage of that student who is logged-in -->
+  <div class="col-xl-3 col-sm-6 col-12">
+    <app-medium-box
+      title="Total Percentage"
+      [value]="data()?.percentage"
+      icon="percent"
+      iconBgColor="warning-color"
+      iconColor="text-dark"
+      badgeBgColor="white"
+      [isShortInfo]="false"
+    ></app-medium-box>
+  </div>
+  }
 </div>
 <!--end::Row-->

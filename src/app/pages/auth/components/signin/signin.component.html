@@ -11,4 +11,15 @@
   } @else {
   <button class="signin auth-button" (click)="onSubmit()">Sign In</button>
   }
+
 </form>
+<!-- email verification modal -->
+<ng-template #emailVerificationTemplate>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title mb-0">VERIFY EMAIL</h4>
+  </div>
+
+  <div class="modal-body">
+    <app-verify-email></app-verify-email>
+  </div>
+</ng-template>

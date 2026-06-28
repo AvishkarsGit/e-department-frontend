@@ -130,7 +130,9 @@ export class GlobalService {
 
     if (isError) {
       message =
-        message?.error?.message || 'Something went wrong, please try again';
+        typeof message === 'string'
+          ? message
+          : message?.error?.message ?? 'Something went wrong, please try again';
     }
 
     const result = await swalWithBootstrapButtons.fire({
@@ -184,8 +186,14 @@ export class GlobalService {
     this.nestedModalRef()!.hide();
   }
 
-  showModal(template: TemplateRef<any>) {
-    this.modalRef.set(this.modalService.show(template, { class: 'modal-lg' }));
+  showModal(template: TemplateRef<any>, staticBackdrop: boolean = false) {
+    this.modalRef.set(
+      this.modalService.show(template, {
+        class: 'modal-lg',
+        backdrop: staticBackdrop ? 'static' : true,
+        keyboard: !staticBackdrop,
+      })
+    );
   }
 
   showNestedModal(template: TemplateRef<any>) {
@@ -218,7 +226,7 @@ export class GlobalService {
       });
       this.printService.print(customPrintOptions);
     } catch (e) {
-      throw(e);
+      throw e;
     }
   }
 
@@ -228,5 +236,4 @@ export class GlobalService {
     audio.load();
     audio.play();
   }
-  
 }

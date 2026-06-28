@@ -1,0 +1,204 @@
+<div class="col-md-12 mb-3 mt-1 bg-white p-4 rounded">
+  <div class="row g-4 mb-6 mx-4">
+    <!-- Photo -->
+    <div class="form-group col-md-12 text-center">
+      <div class="profile-photo-container">
+        <img [src]="profile()?.photo" [alt]="profile()?.name" class="profile-photo">
+        @if (profile()?.emailVerified === 'true') {
+          <div class="verified-badge">
+            <i class="bi bi-patch-check-fill"></i>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-person me-2"></i>
+          NAME
+        </label>
+        <div class="field-value">{{ profile()?.name }}</div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-envelope me-2"></i>
+          EMAIL
+        </label>
+        <div class="field-value">{{ profile()?.email }}</div>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-telephone me-2"></i>
+          PHONE
+        </label>
+        <div class="field-value">{{ profile()?.phone }}</div>
+      </div>
+    </div>
+
+    <!-- Username -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-at me-2"></i>
+          USERNAME
+        </label>
+        <div class="field-value">{{ profile()?.username }}</div>
+      </div>
+    </div>
+
+    <!-- Department -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-building me-2"></i>
+          DEPARTMENT
+        </label>
+        <div class="field-value">{{ profile()?.department }}</div>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-shield-check me-2"></i>
+          ROLE
+        </label>
+        <div class="field-value">{{ profile()?.role | titlecase }}</div>
+      </div>
+    </div>
+
+    <!-- Created At -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-calendar-check me-2"></i>
+          MEMBER SINCE
+        </label>
+        <div class="field-value">{{ profile()?.createdAt | date:'MMM dd, yyyy' }}</div>
+      </div>
+    </div>
+
+    <!-- Email Verified -->
+    <div class="col-xl-6 col-sm-6 col-12">
+      <div class="view-field">
+        <label class="field-label">
+          <i class="bi bi-patch-check me-2"></i>
+          EMAIL STATUS
+        </label>
+        <div class="field-value">
+          @if (profile()?.emailVerified === 'true') {
+            <span class="badge bg-success">Verified</span>
+          } @else {
+            <span class="badge bg-danger">Not Verified</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Specific Fields -->
+    @if (isStudent()) {
+      <!-- Class -->
+      @if (profile()?.class) {
+        <div class="col-xl-6 col-sm-6 col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-mortarboard me-2"></i>
+              CLASS
+            </label>
+            <div class="field-value">{{ profile()?.class }}</div>
+          </div>
+        </div>
+      }
+
+      <!-- Roll Number -->
+      @if (profile()?.rollNo) {
+        <div class="col-xl-6 col-sm-6 col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-card-text me-2"></i>
+              ROLL NUMBER
+            </label>
+            <div class="field-value">{{ profile()?.rollNo }}</div>
+          </div>
+        </div>
+      }
+
+      <!-- Year -->
+      @if (profile()?.year) {
+        <div class="col-xl-6 col-sm-6 col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-calendar3 me-2"></i>
+              YEAR
+            </label>
+            <div class="field-value">{{ profile()?.year }}</div>
+          </div>
+        </div>
+      }
+
+      <!-- Semester -->
+      @if (profile()?.semester) {
+        <div class="col-xl-6 col-sm-6 col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-bookmark me-2"></i>
+              SEMESTER
+            </label>
+            <div class="field-value">{{ profile()?.semester }}</div>
+          </div>
+        </div>
+      }
+
+      <!-- Guardians -->
+      @if (profile()?.guardians && profile()?.guardians!.length > 0) {
+        <div class="col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-people me-2"></i>
+              GUARDIANS
+            </label>
+            <div class="guardians-list">
+              @for (guardian of profile()?.guardians; track guardian.name) {
+                <div class="guardian-item">
+                  <strong>{{ guardian.name }}</strong> ({{ guardian.relation }}) - {{ guardian.phone }}
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    }
+
+    <!-- Faculty Specific Fields -->
+    @if (isFaculty()) {
+      @if (profile()?.subjects && profile()?.subjects!.length > 0) {
+        <div class="col-12">
+          <div class="view-field">
+            <label class="field-label">
+              <i class="bi bi-book me-2"></i>
+              ASSIGNED SUBJECTS
+            </label>
+            <div class="subjects-list">
+              @for (subject of profile()?.subjects; track subject._id) {
+                <div class="subject-item">
+                  <strong>{{ subject.name }}</strong> ({{ subject.code }})
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
