@@ -169,7 +169,7 @@ export class StudentsComponent {
     let message = status === true ? 'accept' : 'reject';
     const result = await this.global.showAlert(
       'Are you sure?',
-      `You want to ${message} this faculty!`,
+      `You want to ${message} this student!`,
       'YES',
       false,
       'NO',

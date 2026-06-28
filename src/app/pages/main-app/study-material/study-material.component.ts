@@ -43,7 +43,7 @@ type ItemType = Upload;
     DatePipe,
     //AddSubjectComponent,
     AddStudyMaterialComponent,
-],
+  ],
   templateUrl: './study-material.component.html',
   styleUrl: './study-material.component.scss',
 })
@@ -69,7 +69,7 @@ export class StudyMaterialComponent {
   private profileService = inject(ProfileService);
   private uploadService = inject(UploadService);
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.loadData();
@@ -225,9 +225,10 @@ export class StudyMaterialComponent {
       this.global.showSpinner();
 
       const response = await this.uploadService.downloadFile(item?._id!);
+      console.log('response', response);
 
       //save to local (download)
-      saveAs(response?.data, 'myfile.pdf');
+      saveAs(response?.data, response?.data);
 
       this.global.showSuccess(
         'Material deleted successfully',
