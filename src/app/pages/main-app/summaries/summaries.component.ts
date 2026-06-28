@@ -320,8 +320,11 @@ export class SummariesComponent {
         true
       );
 
+      const formValue = this.filterForm()?.value;
+      const criteria = formValue?.criteria ? Number(formValue.criteria) : 75;
+
       //send bulk message to the whatsapp
-      await this.attendanceReportService.sendBulkMessage();
+      await this.attendanceReportService.sendBulkMessage(this.classId(), criteria);
 
       this.global.showSuccess(
         `${msg}`,

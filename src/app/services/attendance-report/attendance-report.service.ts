@@ -132,10 +132,13 @@ export class AttendanceReportService {
     saveAs(new Blob([buffer]), `Attendance.xlsx`);
   }
 
-  async sendBulkMessage() {
+  async sendBulkMessage(classId?: string, criteria?: number) {
     try {
       const response = await this.http.lastValueFrom(
-        this.http.post(this.apiUrl + '/send/bulk/message', {})
+        this.http.post(this.apiUrl + '/send/bulk/message', {
+          class_id: classId,
+          criteria: criteria
+        })
       );
 
       if (!response?.success) {
