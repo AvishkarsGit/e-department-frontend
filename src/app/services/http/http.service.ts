@@ -11,7 +11,7 @@ export class HttpService {
 
   private http = inject(HttpClient);
 
-  constructor() {}
+  constructor() { }
 
   get(url: string, data?: any) {
     return this.http.get<any>(this.baseUrl + url, { params: data });
@@ -111,14 +111,17 @@ export class HttpService {
     const formData = new FormData();
 
     Object.keys(formValues).forEach((key) => {
-      formData.append(key, formValues[key]);
-      // if (key === 'photo') {
-      //   formData.append(key, formValues[key]); // No need to convert to Blob
-      // } else {
-      //   formData.append(key, formValues[key] as string); // Append other fields
-      // }
+      const value = formValues[key];
+      if (value instanceof File || value instanceof Blob) {
+        formData.append(key, value);
+      } else if (typeof value === 'object' && value !== null) {
+        formData.append(key, JSON.stringify(value));
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, String(value));
+      }
     });
-    console.log('converted to formdata', formData);
+
+    console.log('converted to formdata', Array.from(formData.entries()));
 
     return formData;
   }

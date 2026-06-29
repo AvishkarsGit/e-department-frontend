@@ -10,7 +10,7 @@ export class ProfileService {
 
   private http = inject(HttpService);
 
-  constructor() {}
+  constructor() { }
 
   setProfile(value: User | null) {
     this.profile.set(value);
@@ -47,16 +47,19 @@ export class ProfileService {
       formValue = this.http.cleanFormValues(formValue);
       console.log(formValue);
 
+      let data: any;
+
       // Check if photo is selected (File type)
       if (formValue?.photo instanceof File) {
-        formValue = this.http.convertToFormData(formValue);
+        data = this.http.convertToFormData(formValue);
         isFormData = true;
+      } else {
+        data = {
+          ...formValue,
+          guardians: formValue.guardians ? JSON.stringify(formValue.guardians) : undefined,
+        };
       }
 
-      const data = {
-        ...formValue,
-        guardians: JSON.stringify(formValue.guardians),
-      };
       const response = await this.http.lastValueFrom(
         this.http.post('user/update_profile', data, isFormData)
       );
